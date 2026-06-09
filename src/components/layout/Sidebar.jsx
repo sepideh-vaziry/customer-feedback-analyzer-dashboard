@@ -8,17 +8,89 @@ import {
   Settings,
   PanelLeftClose,
   PanelLeft,
+  Import,
+  Plug,
 } from 'lucide-react';
 import { useState } from 'react';
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
-  { to: '/feedback', label: 'Feedback', icon: MessageSquare },
+  {
+    label: 'Feedback',
+    icon: MessageSquare,
+    children: [
+      { to: '/feedback', label: 'Feedback List', icon: MessageSquare },
+      { to: '/feedback/import', label: 'Import Feedback', icon: Import },
+      { to: '/connectors', label: 'Connectors', icon: Plug },
+    ],
+  },
   { to: '/analytics', label: 'Analytics', icon: BarChart3 },
   { to: '/insights', label: 'AI Insights', icon: Sparkles },
   { to: '/trends', label: 'Trends', icon: TrendingUp },
   { to: '/settings', label: 'Settings', icon: Settings },
 ];
+
+function SidebarItem({ item, collapsed }) {
+  const [expanded, setExpanded] = useState(true);
+
+  if (item.children) {
+    return (
+      <div className="space-y-1">
+        {!collapsed && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="flex items-center gap-3 px-3 py-2 w-full rounded-lg text-sm font-medium text-slate-400 hover:bg-white/5 hover:text-white transition-colors"
+          >
+            <item.icon size={18} />
+            <span className="flex-1 text-left">{item.label}</span>
+          </button>
+        )}
+        {collapsed && (
+          <div className="px-3 py-2 rounded-lg text-slate-400" title={item.label}>
+            <item.icon size={18} />
+          </div>
+        )}
+        {(expanded || collapsed) &&
+          item.children.map((child) => (
+            <NavLink
+              key={child.to}
+              to={child.to}
+              className={({ isActive }) =>
+                `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  collapsed ? '' : 'ml-4'
+                } ${
+                  isActive
+                    ? 'bg-primary-600/20 text-primary-400'
+                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                }`
+              }
+              title={collapsed ? child.label : undefined}
+            >
+              <child.icon size={16} />
+              {!collapsed && <span>{child.label}</span>}
+            </NavLink>
+          ))}
+      </div>
+    );
+  }
+
+  return (
+    <NavLink
+      to={item.to}
+      className={({ isActive }) =>
+        `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+          isActive
+            ? 'bg-primary-600/20 text-primary-400'
+            : 'text-slate-400 hover:bg-white/5 hover:text-white'
+        }`
+      }
+      title={collapsed ? item.label : undefined}
+    >
+      <item.icon size={18} />
+      {!collapsed && <span>{item.label}</span>}
+    </NavLink>
+  );
+}
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
@@ -48,34 +120,13 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex-1 py-4 px-2 space-y-1">
-        {navItems.map((item) => {
-          const Icon = item.icon;
-          return (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-                  isActive
-                    ? 'bg-primary-600/20 text-primary-400'
-                    : 'text-slate-400 hover:bg-white/5 hover:text-white'
-                }`
-              }
-              title={collapsed ? item.label : undefined}
-            >
-              <Icon size={18} />
-              {!collapsed && <span>{item.label}</span>}
-            </NavLink>
-          );
-        })}
+        {navItems.map((item) => (
+          <SidebarItem key={item.label} item={item} collapsed={collapsed} />
+        ))}
       </nav>
 
       <div className="p-4 border-t border-white/10">
-        {!collapsed && (
-          <div className="text-xs text-slate-500">
-            v0.1.0
-          </div>
-        )}
+        {!collapsed && <div className="text-xs text-slate-500">v0.1.0</div>}
       </div>
     </aside>
   );

@@ -5,6 +5,8 @@ import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import DashboardPage from './pages/dashboard/DashboardPage';
 import FeedbackPage from './pages/feedback/FeedbackPage';
+import ImportFeedbackPage from './pages/feedback/ImportFeedbackPage';
+import ConnectorsPage from './pages/connectors/ConnectorsPage';
 import AnalyticsPage from './pages/analytics/AnalyticsPage';
 import InsightsPage from './pages/insights/InsightsPage';
 import SettingsPage from './pages/settings/SettingsPage';
@@ -28,6 +30,22 @@ export default function App() {
           element={
             <ProtectedRoute>
               <FeedbackPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/feedback/import"
+          element={
+            <ProtectedRoute>
+              <ImportFeedbackPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/connectors"
+          element={
+            <ProtectedRoute>
+              <ConnectorsPage />
             </ProtectedRoute>
           }
         />
