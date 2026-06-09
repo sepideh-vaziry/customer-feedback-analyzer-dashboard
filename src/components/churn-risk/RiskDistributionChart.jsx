@@ -1,0 +1,69 @@
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip, Legend } from 'recharts';
+import { ShieldAlert } from 'lucide-react';
+import EmptyState from '../ui/EmptyState';
+
+const COLORS = {
+  LOW: '#22c55e',
+  MEDIUM: '#f59e0b',
+  HIGH: '#ef4444',
+  CRITICAL: '#b91c1c',
+};
+
+export default function RiskDistributionChart({ data, loading }) {
+  if (loading) {
+    return (
+      <div className="bg-bg-card rounded-xl border border-border p-6 shadow-xs animate-pulse">
+        <div className="h-5 bg-border-light rounded w-1/3 mb-6" />
+        <div className="h-64 bg-border-light rounded" />
+      </div>
+    );
+  }
+
+  if (!data || data.totalCustomersAssessed === 0) {
+    return (
+      <div className="bg-bg-card rounded-xl border border-border p-6 shadow-xs">
+        <h3 className="text-base font-semibold text-text-primary mb-4">Risk Distribution</h3>
+        <EmptyState icon={ShieldAlert} title="No risk data" description="Churn risk assessments will appear as feedback is analyzed." />
+      </div>
+    );
+  }
+
+  const chartData = [
+    { name: 'Low', value: data.lowCount || 0, key: 'LOW' },
+    { name: 'Medium', value: data.mediumCount || 0, key: 'MEDIUM' },
+    { name: 'High', value: data.highCount || 0, key: 'HIGH' },
+    { name: 'Critical', value: data.criticalCount || 0, key: 'CRITICAL' },
+  ].filter((d) => d.value > 0);
+
+  return (
+    <div className="bg-bg-card rounded-xl border border-border p-6 shadow-xs">
+      <h3 className="text-base font-semibold text-text-primary mb-4">Risk Distribution</h3>
+
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-4">
+        {chartData.map((item) => {
+          const percent = data.totalCustomersAssessed ? Math.round((item.value / data.totalCustomersAssessed) * 100) : 0;
+          return (
+            <div key={item.key} className="text-center p-3 rounded-lg bg-bg-base border border-border">
+              <p className="text-lg font-semibold" style={{ color: COLORS[item.key] }}>{percent}%</p>
+              <p className="text-xs text-text-muted">{item.name}</p>
+            </div>
+          );
+        })}
+      </div>
+
+      <div className="h-48">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart>
+            <Pie data={chartData} cx="50%" cy="50%" innerRadius={50} outerRadius={75} paddingAngle={3} dataKey="value">
+              {chartData.map((entry) => (
+                <Cell key={entry.key} fill={COLORS[entry.key]} />
+              ))}
+            </Pie>
+            <Tooltip contentStyle={{ backgroundColor: '#fff', border: '1px solid #e2e8f0', borderRadius: '8px', fontSize: '13px' }} />
+            <Legend verticalAlign="bottom" height={24} iconType="circle" />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+  );
+}

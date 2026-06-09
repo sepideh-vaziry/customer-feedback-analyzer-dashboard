@@ -16,6 +16,11 @@ import FeatureRequestsOverviewPage from './pages/feature-requests/FeatureRequest
 import DemandRankingPage from './pages/feature-requests/DemandRankingPage';
 import FeatureRequestExplorerPage from './pages/feature-requests/FeatureRequestExplorerPage';
 import FeatureRequestTrendsPage from './pages/feature-requests/FeatureRequestTrendsPage';
+import ChurnRiskOverviewPage from './pages/churn-risk/ChurnRiskOverviewPage';
+import HighRiskCustomersPage from './pages/churn-risk/HighRiskCustomersPage';
+import CustomerExplorerPage from './pages/churn-risk/CustomerExplorerPage';
+import RiskTrendsPage from './pages/churn-risk/RiskTrendsPage';
+import RetentionInsightsPage from './pages/churn-risk/RetentionInsightsPage';
 import AnalyticsPage from './pages/analytics/AnalyticsPage';
 import InsightsPage from './pages/insights/InsightsPage';
 import SettingsPage from './pages/settings/SettingsPage';
@@ -127,6 +132,46 @@ export default function App() {
           element={
             <ProtectedRoute>
               <FeatureRequestTrendsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/churn-risk"
+          element={
+            <ProtectedRoute>
+              <ChurnRiskOverviewPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/churn-risk/high-risk"
+          element={
+            <ProtectedRoute>
+              <HighRiskCustomersPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/churn-risk/explorer"
+          element={
+            <ProtectedRoute>
+              <CustomerExplorerPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/churn-risk/trends"
+          element={
+            <ProtectedRoute>
+              <RiskTrendsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/churn-risk/insights"
+          element={
+            <ProtectedRoute>
+              <RetentionInsightsPage />
             </ProtectedRoute>
           }
         />

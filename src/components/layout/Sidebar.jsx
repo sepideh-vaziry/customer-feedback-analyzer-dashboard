@@ -15,6 +15,8 @@ import {
   Tag,
   Repeat,
   Lightbulb,
+  ShieldAlert,
+  UserSearch,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -47,6 +49,17 @@ const navItems = [
       { to: '/feature-requests/demand', label: 'Demand Ranking', icon: TrendingUp },
       { to: '/feature-requests/explorer', label: 'Explorer', icon: Search },
       { to: '/feature-requests/trends', label: 'Trends', icon: TrendingUp },
+    ],
+  },
+  {
+    label: 'Churn Risk',
+    icon: ShieldAlert,
+    children: [
+      { to: '/churn-risk', label: 'Overview', icon: BarChart3 },
+      { to: '/churn-risk/high-risk', label: 'High Risk Customers', icon: AlertTriangle },
+      { to: '/churn-risk/explorer', label: 'Customer Explorer', icon: UserSearch },
+      { to: '/churn-risk/trends', label: 'Risk Trends', icon: TrendingUp },
+      { to: '/churn-risk/insights', label: 'Retention Insights', icon: Lightbulb },
     ],
   },
   { to: '/analytics', label: 'Analytics', icon: BarChart3 },
