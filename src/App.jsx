@@ -4,7 +4,8 @@ import ProtectedRoute from './components/auth/ProtectedRoute';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import DashboardPage from './pages/dashboard/DashboardPage';
-import FeedbackPage from './pages/feedback/FeedbackPage';
+import FeedbackListPage from './pages/feedback/FeedbackListPage';
+import FeedbackDetailsPage from './pages/feedback/FeedbackDetailsPage';
 import ImportFeedbackPage from './pages/feedback/ImportFeedbackPage';
 import ConnectorsPage from './pages/connectors/ConnectorsPage';
 import AnalyticsPage from './pages/analytics/AnalyticsPage';
@@ -29,7 +30,15 @@ export default function App() {
           path="/feedback"
           element={
             <ProtectedRoute>
-              <FeedbackPage />
+              <FeedbackListPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/feedback/:feedbackId"
+          element={
+            <ProtectedRoute>
+              <FeedbackDetailsPage />
             </ProtectedRoute>
           }
         />

@@ -5,9 +5,10 @@ Context:
 - React.js
 - Feature-Based Architecture
 - Follow documents inside /docs directory
+- Any API you need is available in /docs/api/openapi.json.
 
 Task:
-Implement the feature explained in the: /FEATURES/0003-feedback-ingestion-and-connector/feedback-ingestion-and-connector-feature.md
+Implement the feature explained in the: /FEATURES/0004-feedback-management-module/feedback-management-module-feature.md.
 
 Constraints:
 

@@ -1,36 +1,44 @@
-# Task 3: Feedback Ingestion & Connector Management Module
+# Task 4 - Feedback Management Module
 
 You are a senior React.js architect, SaaS product designer, and frontend engineer.
 
-Your task is to implement the Feedback Ingestion and Connector Management module for the AI Customer Feedback Analyzer platform.
+Your task is to implement the **Feedback Management Module** for the AI Customer Feedback Analyzer platform.
 
-Follow modern React best practices and create scalable, production-ready code.
+The Feedback Ingestion module is already completed.
 
----
+Users can already:
 
-# Business Context
+* Submit feedback manually
+* Upload feedback via CSV
+* Configure webhooks
+* Configure external connectors
 
-Organizations can send customer feedback into the platform through multiple channels.
+Now users need a way to browse, search, filter, and inspect feedback that has been imported into the platform.
 
-The platform supports:
-
-1. Manual Feedback Entry
-2. CSV Upload
-3. Webhook Integration
-4. External Source Connectors
-
-The UI should be modern and comparable to SaaS products such as:
-
-* Linear
-* PostHog
-* Datadog
-* HubSpot
+Follow modern React best practices and build a production-ready implementation.
 
 ---
 
-# Sidebar Navigation
+# Business Goal
 
-Add a new navigation section:
+The Feedback Management module is the central place where users can view and manage all customer feedback collected by the platform.
+
+Users should be able to:
+
+* Browse feedback
+* Search feedback
+* Filter feedback
+* View feedback details
+* Monitor processing status
+* Access AI analysis results (future feature)
+
+The implementation must be scalable because future AI analysis features will be added to feedback records.
+
+---
+
+# Navigation
+
+Add a new page:
 
 ```text
 Feedback
@@ -39,457 +47,327 @@ Feedback
 └── Connectors
 ```
 
+The Feedback List page should become the default feedback page.
+
 ---
 
-# Page 1: Import Feedback
+# API Discovery
+
+Before implementing the UI:
+
+1. Read the Postman collection.
+2. Identify all feedback-related endpoints.
+3. Generate a service layer based on the actual APIs.
+4. Do not invent API contracts.
+5. Use the actual response structures from the collection.
+
+---
+
+# Page 1 - Feedback List
 
 Create:
 
 ```text
-src/pages/feedback/ImportFeedbackPage.jsx
+src/pages/feedback/FeedbackListPage.jsx
 ```
 
-This page must use tabs.
+---
+
+## Layout
 
 ```text
-┌──────────────────────────────────────┐
-│ Import Feedback                      │
-├──────────────────────────────────────┤
-│ Manual Entry | CSV Upload | Webhook  │
-└──────────────────────────────────────┘
+┌────────────────────────────────────────────┐
+│ Feedback List                             │
+├────────────────────────────────────────────┤
+│ Search                                    │
+│ Filters                                   │
+├────────────────────────────────────────────┤
+│ Feedback Table                            │
+└────────────────────────────────────────────┘
 ```
 
 ---
 
-# Tab 1: Manual Feedback Entry
-
-API:
-
-POST /api/v1/feedback
-
-Request:
-
-```json
-{
-  "source": "MANUAL",
-  "content": "Customer feedback text",
-  "externalId": "feedback-001",
-  "customerName": "John Doe",
-  "customerEmail": "john@example.com",
-  "customerIdentifier": "cus-123",
-  "language": "en"
-}
-```
-
-Response:
-
-```json
-{
-  "id": "uuid",
-  "source": "MANUAL",
-  "content": "string",
-  "customerIdentifier": "string",
-  "status": "PENDING",
-  "createdAt": "2026-06-09T07:21:36.189Z"
-}
-```
-
----
-
-## Manual Entry Form
-
-Fields:
-
-* Feedback Content (textarea)
-* External ID
-* Customer Name
-* Customer Email
-* Customer Identifier
-* Language
-
-Requirements:
-
-* Validation
-* Loading state
-* Success notification
-* Error handling
-
-After successful submission:
-
-Show success card:
-
-```text
-Feedback Created Successfully
-
-Feedback ID
-Status
-Created At
-```
-
----
-
-# Tab 2: CSV Upload
-
-API:
-
-POST /api/v1/feedback/csv
-
-Content-Type:
-
-multipart/form-data
-
-Request:
-
-```text
-file=<csv-file>
-```
-
-Response:
-
-```json
-{
-  "totalRows": 100,
-  "successCount": 95,
-  "failureCount": 5,
-  "errors": [
-    "row 5 invalid email"
-  ],
-  "feedbackIds": [
-    "uuid1",
-    "uuid2"
-  ]
-}
-```
-
----
-
-## CSV Upload Requirements
+# Search
 
 Provide:
 
-* Drag & Drop area
-* File picker
-* Upload button
+* Search input
+* Debounced search
+* Clear search button
 
-Validate:
+Search should work against:
 
-* CSV extension only
-* Maximum file size configurable
+* Feedback content
+* Customer name
+* Customer email
+* Customer identifier
+* External ID
 
-Display upload result:
+Use API support if available.
 
-```text
-Total Rows
-Successful Imports
-Failed Imports
-Errors
-```
-
-Use progress indicators.
+Otherwise implement client-side filtering.
 
 ---
 
-# Tab 3: Webhook Integration
+# Filters
 
-This tab does NOT call the webhook endpoint.
+Implement filters based on APIs available in the collection.
 
-Instead it helps the user configure external systems.
-
-Display:
-
-## Webhook URL
-
-```text
-POST /api/v1/feedback/webhook
-```
-
-## Required Payload
-
-```json
-{
-  "source": "WEBHOOK",
-  "payload": "{\"message\":\"Great service!\"}",
-  "apiKey": "your-api-key"
-}
-```
-
-Features:
-
-* Copy Webhook URL button
-* Copy JSON Example button
-* Code block formatting
-* API Key placeholder
-
-Use documentation-style layout.
-
----
-
-# Page 2: Connectors
-
-Create:
-
-```text
-src/pages/connectors/ConnectorsPage.jsx
-```
-
----
-
-# Metadata Endpoint
-
-Load available sources from:
-
-GET /api/v1/metadata/info
-
-Response:
-
-```json
-{
-  "feedbackSources": [
-    {
-      "key": "ZENDESK",
-      "label": "Zendesk"
-    }
-  ]
-}
-```
-
-Use this endpoint to populate connector source dropdowns.
-
-Do NOT hardcode connector types.
-
----
-
-# Register / Update Connector
-
-API:
-
-POST /api/v1/connectors
-
-Request:
-
-```json
-{
-  "source": "ZENDESK",
-  "credentials": {
-    "apiToken": "token",
-    "subdomain": "company"
-  }
-}
-```
-
-Response:
-
-```json
-{
-  "id": "uuid",
-  "source": "ZENDESK",
-  "status": "ACTIVE",
-  "isMock": false,
-  "lastPulledAt": "date",
-  "createdAt": "date"
-}
-```
-
----
-
-## Connector Form
-
-Fields:
-
-### Source
-
-Dropdown populated from metadata endpoint.
-
-### Credentials
-
-Dynamic JSON editor.
-
-Example:
-
-```json
-{
-  "apiToken": "",
-  "subdomain": ""
-}
-```
-
-Requirements:
-
-* Pretty JSON editor
-* Validation
-* Submit button
-
-After success:
-
-Refresh connector list automatically.
-
----
-
-# Connector List
-
-API:
-
-GET /api/v1/connectors
-
-Response:
-
-```json
-[
-  {
-    "id": "uuid",
-    "source": "ZENDESK",
-    "status": "ACTIVE",
-    "isMock": false,
-    "lastPulledAt": "date",
-    "createdAt": "date"
-  }
-]
-```
-
-Display table:
-
-Columns:
+Potential examples:
 
 * Source
 * Status
-* Mock
-* Last Pulled
-* Created
-* Actions
+* Language
+* Date range
 
-Actions:
+Only implement filters supported by backend APIs.
 
-* View Details
-* Pull Now
+Do not hardcode assumptions.
 
 ---
 
-# Connector Details
-
-API:
-
-GET /api/v1/connectors/{id}
+# Feedback Table
 
 Display:
 
-```text
-Connector Information
-Status
-Source
-Created Date
-Last Pulled Date
-Mock Mode
-```
-
-Use a modal or side drawer.
-
----
-
-# Pull Connector
-
-API:
-
-POST /api/v1/connectors/{id}/pull
-
-Response:
-
-```json
-{
-  "additionalProp1": 10,
-  "additionalProp2": 5,
-  "additionalProp3": 3
-}
-```
+* Created Date
+* Source
+* Customer Name
+* Customer Email
+* Customer Identifier
+* Status
+* Content Preview
+* Actions
 
 Requirements:
 
-* Pull Now button
+* Responsive
+* Sortable columns if supported
+* Pagination if supported
+* Empty state
 * Loading state
-* Success notification
-* Refresh connector information afterward
 
 ---
 
-# Services Layer
+# Content Preview
+
+Long feedback should be truncated.
+
+Example:
+
+```text
+The product itself is excellent and your support...
+```
+
+---
+
+# Status Badges
+
+Support status display.
+
+Example:
+
+```text
+PENDING
+PROCESSING
+COMPLETED
+FAILED
+```
+
+Use color-coded badges.
+
+---
+
+# Actions
+
+Provide:
+
+```text
+View Details
+```
+
+Additional actions should be designed for future expansion.
+
+---
+
+# Page 2 - Feedback Details
 
 Create:
 
 ```text
-src/services/
-├── feedbackService.js
-├── connectorService.js
-├── metadataService.js
+src/pages/feedback/FeedbackDetailsPage.jsx
 ```
 
 ---
 
-# feedbackService.js
+# Route
 
-Functions:
+```text
+/feedback/:feedbackId
+```
+
+---
+
+# Feedback Details Layout
+
+```text
+Feedback Details
+
+General Information
+--------------------------------
+ID
+Source
+Status
+Created At
+
+Customer Information
+--------------------------------
+Name
+Email
+Identifier
+
+Feedback Content
+--------------------------------
+Full customer feedback text
+```
+
+---
+
+# Detail Loading
+
+Use skeleton loaders.
+
+Handle:
+
+* Not found
+* Permission denied
+* Server error
+
+---
+
+# Future AI Analysis Section
+
+Prepare placeholder cards.
+
+Do NOT implement analysis logic.
+
+Show:
+
+```text
+AI Analysis
+--------------------------------
+Sentiment
+Summary
+Complaints
+Feature Requests
+Churn Risk
+```
+
+Display:
+
+```text
+Analysis not available yet
+```
+
+The architecture should allow easy integration later.
+
+---
+
+# Service Layer
+
+Inspect the Postman collection and generate services from actual endpoints.
+
+Create:
+
+```text
+src/services/feedbackManagementService.js
+```
+
+Potential functions:
 
 ```javascript
-createFeedback()
-uploadCsv()
+getFeedbackList()
+getFeedbackDetails()
+searchFeedback()
 ```
+
+Only create methods that correspond to real APIs.
 
 ---
 
-# connectorService.js
+# Components
 
-Functions:
-
-```javascript
-createOrUpdateConnector()
-getConnectors()
-getConnector()
-pullConnector()
-```
-
----
-
-# metadataService.js
-
-Functions:
-
-```javascript
-getMetadata()
-```
-
----
-
-# UI Components
-
-Create reusable components:
+Create:
 
 ```text
 src/components/feedback/
-├── ManualFeedbackForm.jsx
-├── CsvUploadForm.jsx
-├── WebhookDocumentation.jsx
-
-src/components/connectors/
-├── ConnectorForm.jsx
-├── ConnectorTable.jsx
-├── ConnectorDetailsModal.jsx
+├── FeedbackTable.jsx
+├── FeedbackFilters.jsx
+├── FeedbackSearch.jsx
+├── FeedbackDetailsCard.jsx
+├── FeedbackStatusBadge.jsx
+└── FeedbackContentPreview.jsx
 ```
+
+All components must be reusable.
+
+---
+
+# State Management
+
+Use:
+
+* React Query (preferred)
+  or
+* Existing project data-fetching pattern
+
+Implement:
+
+* Query caching
+* Refetching
+* Loading states
+* Error states
 
 ---
 
 # UX Requirements
 
-Use:
+Use existing project stack:
 
 * Tailwind CSS
 * shadcn/ui
 * Lucide Icons
 
-Include:
+Support:
+
+* Mobile
+* Tablet
+* Desktop
+
+Provide:
 
 * Empty states
 * Loading states
-* Success alerts
-* Error alerts
-* Responsive design
+* Error states
+* Success states
+
+---
+
+# Future Compatibility
+
+Design the module so future AI analysis APIs can be added without major refactoring.
+
+Upcoming features include:
+
+* Sentiment Analysis
+* Complaint Detection
+* Feature Requests
+* Churn Risk
+* Trend Detection
+* Semantic Search
+
+The feedback detail page will become the primary location where these insights are displayed.
 
 ---
 
@@ -497,18 +375,19 @@ Include:
 
 Generate:
 
-1. Import Feedback page.
-2. Manual feedback form.
-3. CSV upload workflow.
-4. Webhook documentation page.
-5. Connector management page.
-6. Connector creation form.
-7. Connector table.
-8. Connector details modal.
-9. API service layer.
-10. Metadata integration.
-11. Responsive UI.
-12. Clean architecture.
+1. Feedback List page.
+2. Feedback Details page.
+3. Feedback service layer.
+4. Search component.
+5. Filter component.
+6. Feedback table.
+7. Status badge component.
+8. Detail view.
+9. Placeholder AI Analysis section.
+10. Routing integration.
+11. Responsive design.
+12. Production-ready architecture.
 
-The implementation must be production-ready and fit into a growing AI SaaS platform.
+Important:
 
+First inspect the Postman collection and identify the real feedback endpoints. Build the UI based on actual backend capabilities instead of assumptions.
