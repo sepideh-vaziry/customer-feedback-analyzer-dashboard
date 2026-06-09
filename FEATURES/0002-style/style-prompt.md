@@ -7,7 +7,7 @@ Context:
 - Follow documents inside /docs directory
 
 Task:
-Implement the feature explained in the: /FEATURES/0002-style/style-prompt.md
+Implement the feature explained in the: /FEATURES/0002-style/style-feature.md
 
 Constraints:
 
