@@ -21,6 +21,12 @@ import HighRiskCustomersPage from './pages/churn-risk/HighRiskCustomersPage';
 import CustomerExplorerPage from './pages/churn-risk/CustomerExplorerPage';
 import RiskTrendsPage from './pages/churn-risk/RiskTrendsPage';
 import RetentionInsightsPage from './pages/churn-risk/RetentionInsightsPage';
+import TrendOverviewPage from './pages/trends/TrendOverviewPage';
+import EmergingTopicsPage from './pages/trends/EmergingTopicsPage';
+import TrendExplorerPage from './pages/trends/TrendExplorerPage';
+import ComplaintTrendsPage from './pages/trends/ComplaintTrendsPage';
+import FeatureTrendsPage from './pages/trends/FeatureTrendsPage';
+import TrendHistoryPage from './pages/trends/TrendHistoryPage';
 import AnalyticsPage from './pages/analytics/AnalyticsPage';
 import InsightsPage from './pages/insights/InsightsPage';
 import SettingsPage from './pages/settings/SettingsPage';
@@ -195,7 +201,47 @@ export default function App() {
           path="/trends"
           element={
             <ProtectedRoute>
-              <DashboardPage />
+              <TrendOverviewPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/trends/emerging"
+          element={
+            <ProtectedRoute>
+              <EmergingTopicsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/trends/explorer"
+          element={
+            <ProtectedRoute>
+              <TrendExplorerPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/trends/complaints"
+          element={
+            <ProtectedRoute>
+              <ComplaintTrendsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/trends/features"
+          element={
+            <ProtectedRoute>
+              <FeatureTrendsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/trends/history"
+          element={
+            <ProtectedRoute>
+              <TrendHistoryPage />
             </ProtectedRoute>
           }
         />

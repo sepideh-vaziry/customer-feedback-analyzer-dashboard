@@ -17,6 +17,8 @@ import {
   Lightbulb,
   ShieldAlert,
   UserSearch,
+  Zap,
+  History,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -62,9 +64,20 @@ const navItems = [
       { to: '/churn-risk/insights', label: 'Retention Insights', icon: Lightbulb },
     ],
   },
+  {
+    label: 'Trend Intelligence',
+    icon: Zap,
+    children: [
+      { to: '/trends', label: 'Overview', icon: BarChart3 },
+      { to: '/trends/emerging', label: 'Emerging Topics', icon: Lightbulb },
+      { to: '/trends/explorer', label: 'Trend Explorer', icon: Search },
+      { to: '/trends/complaints', label: 'Complaint Trends', icon: AlertTriangle },
+      { to: '/trends/features', label: 'Feature Trends', icon: TrendingUp },
+      { to: '/trends/history', label: 'Trend History', icon: History },
+    ],
+  },
   { to: '/analytics', label: 'Analytics', icon: BarChart3 },
   { to: '/insights', label: 'AI Insights', icon: Sparkles },
-  { to: '/trends', label: 'Trends', icon: TrendingUp },
   { to: '/settings', label: 'Settings', icon: Settings },
 ];
 
