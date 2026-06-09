@@ -14,6 +14,7 @@ import {
   Search,
   Tag,
   Repeat,
+  Lightbulb,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -36,6 +37,16 @@ const navItems = [
       { to: '/complaints/categories', label: 'Categories', icon: Tag },
       { to: '/complaints/recurring', label: 'Recurring', icon: Repeat },
       { to: '/complaints/explorer', label: 'Explorer', icon: Search },
+    ],
+  },
+  {
+    label: 'Feature Requests',
+    icon: Lightbulb,
+    children: [
+      { to: '/feature-requests', label: 'Overview', icon: BarChart3 },
+      { to: '/feature-requests/demand', label: 'Demand Ranking', icon: TrendingUp },
+      { to: '/feature-requests/explorer', label: 'Explorer', icon: Search },
+      { to: '/feature-requests/trends', label: 'Trends', icon: TrendingUp },
     ],
   },
   { to: '/analytics', label: 'Analytics', icon: BarChart3 },

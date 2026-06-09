@@ -12,6 +12,10 @@ import ComplaintsOverviewPage from './pages/complaints/ComplaintsOverviewPage';
 import ComplaintCategoriesPage from './pages/complaints/ComplaintCategoriesPage';
 import RecurringComplaintsPage from './pages/complaints/RecurringComplaintsPage';
 import ComplaintExplorerPage from './pages/complaints/ComplaintExplorerPage';
+import FeatureRequestsOverviewPage from './pages/feature-requests/FeatureRequestsOverviewPage';
+import DemandRankingPage from './pages/feature-requests/DemandRankingPage';
+import FeatureRequestExplorerPage from './pages/feature-requests/FeatureRequestExplorerPage';
+import FeatureRequestTrendsPage from './pages/feature-requests/FeatureRequestTrendsPage';
 import AnalyticsPage from './pages/analytics/AnalyticsPage';
 import InsightsPage from './pages/insights/InsightsPage';
 import SettingsPage from './pages/settings/SettingsPage';
@@ -91,6 +95,38 @@ export default function App() {
           element={
             <ProtectedRoute>
               <ComplaintExplorerPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/feature-requests"
+          element={
+            <ProtectedRoute>
+              <FeatureRequestsOverviewPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/feature-requests/demand"
+          element={
+            <ProtectedRoute>
+              <DemandRankingPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/feature-requests/explorer"
+          element={
+            <ProtectedRoute>
+              <FeatureRequestExplorerPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/feature-requests/trends"
+          element={
+            <ProtectedRoute>
+              <FeatureRequestTrendsPage />
             </ProtectedRoute>
           }
         />
