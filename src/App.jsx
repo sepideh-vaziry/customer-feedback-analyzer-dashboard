@@ -8,6 +8,10 @@ import FeedbackListPage from './pages/feedback/FeedbackListPage';
 import FeedbackDetailsPage from './pages/feedback/FeedbackDetailsPage';
 import ImportFeedbackPage from './pages/feedback/ImportFeedbackPage';
 import ConnectorsPage from './pages/connectors/ConnectorsPage';
+import ComplaintsOverviewPage from './pages/complaints/ComplaintsOverviewPage';
+import ComplaintCategoriesPage from './pages/complaints/ComplaintCategoriesPage';
+import RecurringComplaintsPage from './pages/complaints/RecurringComplaintsPage';
+import ComplaintExplorerPage from './pages/complaints/ComplaintExplorerPage';
 import AnalyticsPage from './pages/analytics/AnalyticsPage';
 import InsightsPage from './pages/insights/InsightsPage';
 import SettingsPage from './pages/settings/SettingsPage';
@@ -55,6 +59,38 @@ export default function App() {
           element={
             <ProtectedRoute>
               <ConnectorsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/complaints"
+          element={
+            <ProtectedRoute>
+              <ComplaintsOverviewPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/complaints/categories"
+          element={
+            <ProtectedRoute>
+              <ComplaintCategoriesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/complaints/recurring"
+          element={
+            <ProtectedRoute>
+              <RecurringComplaintsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/complaints/explorer"
+          element={
+            <ProtectedRoute>
+              <ComplaintExplorerPage />
             </ProtectedRoute>
           }
         />

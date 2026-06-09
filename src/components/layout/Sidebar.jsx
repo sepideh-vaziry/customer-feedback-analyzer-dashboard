@@ -10,6 +10,10 @@ import {
   PanelLeft,
   Import,
   Plug,
+  AlertTriangle,
+  Search,
+  Tag,
+  Repeat,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -22,6 +26,16 @@ const navItems = [
       { to: '/feedback', label: 'Feedback List', icon: MessageSquare },
       { to: '/feedback/import', label: 'Import Feedback', icon: Import },
       { to: '/connectors', label: 'Connectors', icon: Plug },
+    ],
+  },
+  {
+    label: 'Complaints',
+    icon: AlertTriangle,
+    children: [
+      { to: '/complaints', label: 'Overview', icon: BarChart3 },
+      { to: '/complaints/categories', label: 'Categories', icon: Tag },
+      { to: '/complaints/recurring', label: 'Recurring', icon: Repeat },
+      { to: '/complaints/explorer', label: 'Explorer', icon: Search },
     ],
   },
   { to: '/analytics', label: 'Analytics', icon: BarChart3 },
