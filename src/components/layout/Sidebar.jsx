@@ -170,7 +170,7 @@ export default function Sidebar() {
         </button>
       </div>
 
-      <nav className="flex-1 py-4 px-2 space-y-1">
+      <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
         {navItems.map((item) => (
           <SidebarItem key={item.label} item={item} collapsed={collapsed} />
         ))}
