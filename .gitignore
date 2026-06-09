@@ -9,7 +9,9 @@ dist-ssr/
 *.local
 
 # Environment files
-
+.env
+.env.local
+.env.*.local
 
 # IDE
 .idea/
