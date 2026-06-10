@@ -21,6 +21,9 @@ import {
   History,
   BrainCircuit,
   GitCompare,
+  CreditCard,
+  FileText,
+  Activity,
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 
@@ -87,6 +90,17 @@ const navItems = [
       { to: '/ai-discovery/similar-complaints', label: 'Similar Complaints', icon: AlertTriangle },
       { to: '/ai-discovery/similar-features', label: 'Similar Features', icon: GitCompare },
       { to: '/ai-discovery/history', label: 'Search History', icon: History },
+    ],
+  },
+  {
+    label: 'Billing',
+    icon: CreditCard,
+    children: [
+      { to: '/billing', label: 'Current Plan', icon: CreditCard },
+      { to: '/billing/plans', label: 'Plans & Pricing', icon: BarChart3 },
+      { to: '/billing/usage', label: 'Usage', icon: Activity },
+      { to: '/billing/invoices', label: 'Invoices', icon: FileText },
+      { to: '/billing/history', label: 'Subscription History', icon: History },
     ],
   },
   { to: '/analytics', label: 'Analytics', icon: BarChart3 },

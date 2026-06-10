@@ -32,6 +32,11 @@ import SimilarFeedbackPage from './pages/ai-discovery/SimilarFeedbackPage';
 import SimilarComplaintsPage from './pages/ai-discovery/SimilarComplaintsPage';
 import SimilarFeatureRequestsPage from './pages/ai-discovery/SimilarFeatureRequestsPage';
 import SearchHistoryPage from './pages/ai-discovery/SearchHistoryPage';
+import CurrentPlanPage from './pages/billing/CurrentPlanPage';
+import PlansPage from './pages/billing/PlansPage';
+import UsagePage from './pages/billing/UsagePage';
+import InvoicesPage from './pages/billing/InvoicesPage';
+import SubscriptionHistoryPage from './pages/billing/SubscriptionHistoryPage';
 import AnalyticsPage from './pages/analytics/AnalyticsPage';
 import InsightsPage from './pages/insights/InsightsPage';
 import SettingsPage from './pages/settings/SettingsPage';
@@ -287,6 +292,46 @@ export default function App() {
           element={
             <ProtectedRoute>
               <SearchHistoryPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/billing"
+          element={
+            <ProtectedRoute>
+              <CurrentPlanPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/billing/plans"
+          element={
+            <ProtectedRoute>
+              <PlansPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/billing/usage"
+          element={
+            <ProtectedRoute>
+              <UsagePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/billing/invoices"
+          element={
+            <ProtectedRoute>
+              <InvoicesPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/billing/history"
+          element={
+            <ProtectedRoute>
+              <SubscriptionHistoryPage />
             </ProtectedRoute>
           }
         />
