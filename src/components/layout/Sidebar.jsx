@@ -1,4 +1,4 @@
-import { NavLink } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   MessageSquare,
@@ -22,7 +22,7 @@ import {
   BrainCircuit,
   GitCompare,
 } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
 
 const navItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -94,8 +94,14 @@ const navItems = [
   { to: '/settings', label: 'Settings', icon: Settings },
 ];
 
+function isChildActive(children, pathname) {
+  return children.some((child) => pathname === child.to);
+}
+
 function SidebarItem({ item, collapsed }) {
-  const [expanded, setExpanded] = useState(true);
+  const location = useLocation();
+  const hasActiveChild = item.children ? isChildActive(item.children, location.pathname) : false;
+  const [expanded, setExpanded] = useState(() => (item.children ? hasActiveChild : true));
 
   if (item.children) {
     return (
@@ -119,6 +125,7 @@ function SidebarItem({ item, collapsed }) {
             <NavLink
               key={child.to}
               to={child.to}
+              end
               className={({ isActive }) =>
                 `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                   collapsed ? '' : 'ml-4'
@@ -141,6 +148,7 @@ function SidebarItem({ item, collapsed }) {
   return (
     <NavLink
       to={item.to}
+      end
       className={({ isActive }) =>
         `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
           isActive
