@@ -101,7 +101,7 @@ export default function OrganizationsPage() {
         <EmptyState
           icon={Building2}
           title="No organizations"
-          description="Organizations will appear here once the backend API is implemented."
+          description="No organizations found."
         />
       ) : (
         <div className="bg-bg-card rounded-xl border border-border shadow-xs overflow-hidden">

@@ -109,7 +109,7 @@ export default function PlatformOverviewPage() {
         <EmptyState
           icon={TrendingUp}
           title="Platform overview unavailable"
-          description="Platform overview data will appear once the backend API is implemented."
+          description="No platform overview data available."
         />
       )}
     </AdminLayout>

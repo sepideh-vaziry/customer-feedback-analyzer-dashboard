@@ -93,7 +93,7 @@ export default function GlobalSettingsPage() {
               <Settings size={40} className="mx-auto text-text-muted mb-3" />
               <h3 className="text-sm font-medium text-text-primary">No settings available</h3>
               <p className="text-sm text-text-muted mt-1">
-                Global settings will appear here once the backend API is implemented.
+                No global settings configured.
               </p>
             </div>
           ) : (

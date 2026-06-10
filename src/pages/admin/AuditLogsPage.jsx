@@ -79,7 +79,7 @@ export default function AuditLogsPage() {
         <EmptyState
           icon={ClipboardList}
           title="No audit logs"
-          description="Audit logs will appear here once the backend API is implemented."
+          description="No audit logs found."
         />
       ) : (
         <div className="bg-bg-card rounded-xl border border-border shadow-xs overflow-hidden">

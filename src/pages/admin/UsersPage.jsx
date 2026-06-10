@@ -102,7 +102,7 @@ export default function UsersPage() {
         <EmptyState
           icon={Users}
           title="No users"
-          description="Users will appear here once the backend API is implemented."
+          description="No users found."
         />
       ) : (
         <div className="bg-bg-card rounded-xl border border-border shadow-xs overflow-hidden">

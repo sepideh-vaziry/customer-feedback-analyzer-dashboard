@@ -94,7 +94,7 @@ export default function AIUsagePage() {
         <EmptyState
           icon={Cpu}
           title="AI usage data unavailable"
-          description="AI usage data will appear once the backend API is implemented."
+          description="No AI usage data available."
         />
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -122,7 +122,7 @@ export default function SystemHealthPage() {
         <EmptyState
           icon={HeartPulse}
           title="System health unavailable"
-          description="System health data will appear once the backend API is implemented."
+          description="No system health data available."
         />
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -140,7 +140,7 @@ export default function SystemHealthPage() {
               <EmptyState
                 icon={HeartPulse}
                 title="No service data"
-                description="Service health data will appear once the backend API is implemented."
+                description="No service health data available."
               />
             </div>
           )}

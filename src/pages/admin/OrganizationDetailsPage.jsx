@@ -71,9 +71,7 @@ export default function OrganizationDetailsPage() {
         <div className="bg-bg-card rounded-xl border border-border p-8 text-center">
           <Building2 size={40} className="mx-auto text-text-muted mb-3" />
           <h3 className="text-sm font-medium text-text-primary">Organization details unavailable</h3>
-          <p className="text-sm text-text-muted mt-1">
-            Organization details will appear here once the backend API is implemented.
-          </p>
+          <p className="text-sm text-text-muted mt-1">No organization details available.</p>
         </div>
       ) : org ? (
         <div className="space-y-6">
