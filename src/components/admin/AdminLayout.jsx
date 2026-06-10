@@ -20,6 +20,7 @@ const adminNavItems = [
   { to: '/admin/organizations', label: 'Organizations', icon: Building2 },
   { to: '/admin/users', label: 'Users', icon: Users },
   { to: '/admin/subscriptions', label: 'Subscriptions', icon: CreditCard },
+  { to: '/admin/plans', label: 'Plans & Pricing', icon: CreditCard },
   { to: '/admin/ai-usage', label: 'AI Usage', icon: Cpu },
   { to: '/admin/system-health', label: 'System Health', icon: HeartPulse },
   { to: '/admin/audit-logs', label: 'Audit Logs', icon: ClipboardList },

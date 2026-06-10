@@ -8,6 +8,11 @@ export async function getAllSubscriptions() {
   return response.data;
 }
 
+export async function getPlans() {
+  const response = await apiClient.get(`/api/v1/subscriptions/plans`);
+  return response.data;
+}
+
 export async function createPlan(planData) {
   const response = await apiClient.post(`${ADMIN_BASE}/subscriptions/plans`, planData);
   return response.data;

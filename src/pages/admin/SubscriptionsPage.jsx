@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { RefreshCw, AlertTriangle, Search, CreditCard, Eye } from 'lucide-react';
+import { RefreshCw, AlertTriangle, Search, CreditCard, Eye, Ban, CheckCircle } from 'lucide-react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import PageHeader from '../../components/ui/PageHeader';
 import EmptyState from '../../components/ui/EmptyState';
@@ -30,11 +30,24 @@ export default function SubscriptionsPage() {
   }, [loadData]);
 
   const filtered = subscriptions.filter((s) =>
-    s.organizationName?.toLowerCase().includes(search.toLowerCase()) ||
-    s.planName?.toLowerCase().includes(search.toLowerCase())
+    s.organizationId?.toLowerCase().includes(search.toLowerCase()) ||
+    s.subscriptionPlanId?.toLowerCase().includes(search.toLowerCase()) ||
+    s.status?.toLowerCase().includes(search.toLowerCase())
   );
 
   const formatDate = (d) => d ? new Date(d).toLocaleDateString() : '—';
+
+  const statusBadge = (status) => {
+    const map = {
+      ACTIVE: 'bg-success-50 text-success-700',
+      EXPIRED: 'bg-danger-50 text-danger-700',
+      CANCELED: 'bg-text-muted/10 text-text-muted',
+      PENDING: 'bg-warning-50 text-warning-700',
+      TRIAL: 'bg-primary-50 text-primary-700',
+      SCHEDULED: 'bg-info-50 text-info-700',
+    };
+    return map[status] || 'bg-text-muted/10 text-text-muted';
+  };
 
   return (
     <AdminLayout>
@@ -78,18 +91,21 @@ export default function SubscriptionsPage() {
         <EmptyState
           icon={CreditCard}
           title="No subscriptions"
-          description="Subscriptions will appear here once the backend API is implemented."
+          description="No subscriptions found."
         />
       ) : (
         <div className="bg-bg-card rounded-xl border border-border shadow-xs overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-bg-base border-b border-border">
               <tr>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Organization</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Plan</th>
+                <th className="text-left px-4 py-3 font-medium text-text-secondary">Organization ID</th>
+                <th className="text-left px-4 py-3 font-medium text-text-secondary">Plan ID</th>
                 <th className="text-left px-4 py-3 font-medium text-text-secondary">Status</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Renewal Date</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Revenue</th>
+                <th className="text-left px-4 py-3 font-medium text-text-secondary">Billing</th>
+                <th className="text-left px-4 py-3 font-medium text-text-secondary">Start</th>
+                <th className="text-left px-4 py-3 font-medium text-text-secondary">End</th>
+                <th className="text-left px-4 py-3 font-medium text-text-secondary">Seats</th>
+                <th className="text-left px-4 py-3 font-medium text-text-secondary">Auto Renew</th>
                 <th className="text-right px-4 py-3 font-medium text-text-secondary">Actions</th>
               </tr>
             </thead>
@@ -97,25 +113,24 @@ export default function SubscriptionsPage() {
               {filtered.map((s) => (
                 <tr key={s.id} className="hover:bg-bg-base/50">
                   <td className="px-4 py-3">
-                    <span className="font-medium text-text-primary">{s.organizationName || '—'}</span>
+                    <span className="font-medium text-text-primary">{s.organizationId?.slice(0, 8)}...</span>
                   </td>
-                  <td className="px-4 py-3 text-text-secondary">{s.planName || '—'}</td>
+                  <td className="px-4 py-3 text-text-secondary">{s.subscriptionPlanId?.slice(0, 8)}...</td>
                   <td className="px-4 py-3">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
-                      s.status === 'ACTIVE'
-                        ? 'bg-success-50 text-success-700'
-                        : s.status === 'CANCELLED'
-                        ? 'bg-danger-50 text-danger-700'
-                        : s.status === 'PAST_DUE'
-                        ? 'bg-warning-50 text-warning-700'
-                        : 'bg-text-muted/10 text-text-muted'
-                    }`}>
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${statusBadge(s.status)}`}>
                       {s.status || 'UNKNOWN'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-text-secondary">{formatDate(s.renewalDate)}</td>
-                  <td className="px-4 py-3 text-text-secondary">
-                    {s.revenue != null ? `$${s.revenue}` : '—'}
+                  <td className="px-4 py-3 text-text-secondary">{s.billingCycle || '—'}</td>
+                  <td className="px-4 py-3 text-text-secondary">{formatDate(s.startDate)}</td>
+                  <td className="px-4 py-3 text-text-secondary">{formatDate(s.endDate)}</td>
+                  <td className="px-4 py-3 text-text-secondary">{s.seats ?? '—'}</td>
+                  <td className="px-4 py-3">
+                    {s.autoRenew ? (
+                      <CheckCircle size={14} className="text-success-600" />
+                    ) : (
+                      <Ban size={14} className="text-text-muted" />
+                    )}
                   </td>
                   <td className="px-4 py-3 text-right">
                     <button className="p-1.5 rounded-lg hover:bg-border-light text-text-muted hover:text-text-primary transition-colors" title="View">

@@ -46,6 +46,7 @@ import OrganizationsPage from './pages/admin/OrganizationsPage';
 import OrganizationDetailsPage from './pages/admin/OrganizationDetailsPage';
 import UsersPage from './pages/admin/UsersPage';
 import SubscriptionsPage from './pages/admin/SubscriptionsPage';
+import AdminPlansPage from './pages/admin/PlansPage';
 import AIUsagePage from './pages/admin/AIUsagePage';
 import SystemHealthPage from './pages/admin/SystemHealthPage';
 import AuditLogsPage from './pages/admin/AuditLogsPage';
@@ -391,6 +392,14 @@ export default function App() {
           element={
             <AdminRoute>
               <SubscriptionsPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/plans"
+          element={
+            <AdminRoute>
+              <AdminPlansPage />
             </AdminRoute>
           }
         />
