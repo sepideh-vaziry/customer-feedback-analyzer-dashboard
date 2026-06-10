@@ -13,6 +13,7 @@ export default function SimilarComplaintsPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [hasSearched, setHasSearched] = useState(false);
+  const [minSimilarity, setMinSimilarity] = useState(0.6);
 
   const search = useCallback(async () => {
     if (!query.trim()) return;
@@ -20,7 +21,7 @@ export default function SimilarComplaintsPage() {
     setError('');
     setHasSearched(true);
     try {
-      const data = await findSimilarComplaints(query.trim(), 20, 0.6);
+      const data = await findSimilarComplaints(query.trim(), 20, minSimilarity);
       setResults(data || []);
     } catch (err) {
       setError('Failed to find similar complaints.');
@@ -28,7 +29,7 @@ export default function SimilarComplaintsPage() {
     } finally {
       setLoading(false);
     }
-  }, [query]);
+  }, [query, minSimilarity]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -43,7 +44,7 @@ export default function SimilarComplaintsPage() {
       />
 
       <form onSubmit={handleSubmit} className="mb-6 max-w-2xl">
-        <div className="flex gap-2">
+        <div className="flex gap-2 mb-3">
           <div className="relative flex-1">
             <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-text-muted" />
             <input
@@ -61,6 +62,19 @@ export default function SimilarComplaintsPage() {
           >
             {loading ? <RefreshCw size={16} className="animate-spin" /> : 'Find Similar'}
           </button>
+        </div>
+        <div className="flex items-center gap-3">
+          <span className="text-xs text-text-muted">Min Similarity</span>
+          <input
+            type="range"
+            min={0}
+            max={1}
+            step={0.05}
+            value={minSimilarity}
+            onChange={(e) => setMinSimilarity(Number(e.target.value))}
+            className="w-48 accent-primary-600"
+          />
+          <span className="text-sm font-medium text-text-primary">{Math.round(minSimilarity * 100)}%</span>
         </div>
       </form>
 
