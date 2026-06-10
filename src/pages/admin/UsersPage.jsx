@@ -4,31 +4,50 @@ import AdminLayout from '../../components/admin/AdminLayout';
 import PageHeader from '../../components/ui/PageHeader';
 import EmptyState from '../../components/ui/EmptyState';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import Pagination from '../../components/ui/Pagination';
 import { getAllUsers, disableUser, enableUser } from '../../services/adminService';
 
 export default function UsersPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [users, setUsers] = useState([]);
+  const [page, setPage] = useState(0);
+  const [size] = useState(20);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
   const [search, setSearch] = useState('');
   const [actionInProgress, setActionInProgress] = useState(null);
 
-  const loadData = useCallback(async () => {
+  const loadData = useCallback(async (pageNum = page, searchQuery = search) => {
     setLoading(true);
     setError('');
     try {
-      const data = await getAllUsers();
-      setUsers(data || []);
+      const data = await getAllUsers({ page: pageNum, size, search: searchQuery });
+      setUsers(data.content || []);
+      setTotalPages(data.totalPages || 0);
+      setTotalElements(data.totalElements || 0);
+      setPage(data.page || 0);
     } catch (err) {
       setError(err.message || 'Failed to load users.');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page, size, search]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    loadData(newPage);
+  };
+
+  const handleSearch = (value) => {
+    setSearch(value);
+    setPage(0);
+    loadData(0, value);
+  };
 
   const handleDisable = async (id) => {
     setActionInProgress(id);
@@ -54,12 +73,6 @@ export default function UsersPage() {
     }
   };
 
-  const filtered = users.filter((u) =>
-    u.name?.toLowerCase().includes(search.toLowerCase()) ||
-    u.email?.toLowerCase().includes(search.toLowerCase()) ||
-    u.organizationName?.toLowerCase().includes(search.toLowerCase())
-  );
-
   return (
     <AdminLayout>
       <PageHeader
@@ -67,7 +80,7 @@ export default function UsersPage() {
         description="Manage all users across organizations"
       >
         <button
-          onClick={loadData}
+          onClick={() => loadData()}
           disabled={loading}
           className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
         >
@@ -88,7 +101,7 @@ export default function UsersPage() {
         <input
           type="text"
           value={search}
-          onChange={(e) => setSearch(e.target.value)}
+          onChange={(e) => handleSearch(e.target.value)}
           placeholder="Search users..."
           className="w-full pl-9 pr-4 py-2 text-sm bg-bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
         />
@@ -98,7 +111,7 @@ export default function UsersPage() {
         <div className="flex items-center justify-center py-24">
           <LoadingSpinner size="xl" />
         </div>
-      ) : filtered.length === 0 ? (
+      ) : users.length === 0 ? (
         <EmptyState
           icon={Users}
           title="No users"
@@ -118,7 +131,7 @@ export default function UsersPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {filtered.map((u) => (
+              {users.map((u) => (
                 <tr key={u.id} className="hover:bg-bg-base/50">
                   <td className="px-4 py-3">
                     <span className="font-medium text-text-primary">{u.name}</span>
@@ -167,6 +180,13 @@ export default function UsersPage() {
               ))}
             </tbody>
           </table>
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            totalElements={totalElements}
+            size={size}
+            onPageChange={handlePageChange}
+          />
         </div>
       )}
     </AdminLayout>

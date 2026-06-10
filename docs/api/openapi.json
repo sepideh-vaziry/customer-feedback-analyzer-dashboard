@@ -1,1 +1,4918 @@
-{"openapi":"3.1.0","info":{"title":"OpenAPI definition","version":"v0"},"servers":[{"url":"http://localhost:8081","description":"Generated server url"}],"tags":[{"name":"Authentication","description":"Authentication API endpoints"},{"name":"Admin Subscriptions","description":"Admin subscription management APIs"},{"name":"Organization Subscriptions","description":"Organization subscription management APIs"},{"name":"Captcha","description":"Endpoints for generating CAPTCHA challenges"}],"paths":{"/api/v1/tenant/ai-config":{"get":{"tags":["Tenant Management"],"summary":"Get current AI configuration for this organization","operationId":"getAIConfig","responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/TenantAIConfigResponse"}}}}}},"put":{"tags":["Tenant Management"],"summary":"Update AI configuration for this organization","operationId":"updateAIConfig","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/TenantAIConfigRequest"}}},"required":true},"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/TenantAIConfigResponse"}}}}}}},"/api/v1/admin/subscriptions/plans/{id}":{"put":{"tags":["Admin Subscriptions"],"summary":"Update subscription plan","operationId":"updatePlan","parameters":[{"name":"id","in":"path","required":true,"schema":{"type":"string","format":"uuid"}}],"requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UpdateSubscriptionPlanRequest"}}},"required":true},"responses":{"200":{"description":"Plan updated successfully","content":{"*/*":{"schema":{"$ref":"#/components/schemas/SubscriptionPlanResponse"}}}},"404":{"description":"Plan not found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/SubscriptionPlanResponse"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/SubscriptionPlanResponse"}}}}}}},"/api/v1/vector/search":{"post":{"tags":["Vector Search"],"summary":"AI-powered dashboard search — find feedback by natural language query","operationId":"dashboardSearch","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/DashboardSearchRequest"}}},"required":true},"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/VectorSearchResponse"}}}}}}}},"/api/v1/trends/detect":{"post":{"tags":["Trend Monitoring"],"summary":"Trigger an on-demand trend detection run","operationId":"detect","responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/TrendSnapshotResponse"}}}}}}},"/api/v1/tenant/provision":{"post":{"tags":["Tenant Management"],"summary":"Provision a new tenant organization (super-admin only)","operationId":"provision","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/TenantProvisionRequest"}}},"required":true},"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/TenantProvisionResponse"}}}}}}},"/api/v1/subscriptions/upgrade":{"post":{"tags":["Organization Subscriptions"],"summary":"Upgrade or downgrade current subscription","operationId":"upgradeSubscription","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/UpgradeSubscriptionRequest"}}},"required":true},"responses":{"200":{"description":"Subscription upgraded successfully","content":{"*/*":{"schema":{"$ref":"#/components/schemas/SubscriptionPaymentResponse"}}}},"400":{"description":"Invalid request","content":{"*/*":{"schema":{"$ref":"#/components/schemas/SubscriptionPaymentResponse"}}}},"404":{"description":"No active subscription found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/SubscriptionPaymentResponse"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/SubscriptionPaymentResponse"}}}}}}},"/api/v1/subscriptions/subscribe":{"post":{"tags":["Organization Subscriptions"],"summary":"Subscribe to a plan","operationId":"subscribe","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/SubscribeRequest"}}},"required":true},"responses":{"201":{"description":"Subscription created successfully","content":{"*/*":{"schema":{"$ref":"#/components/schemas/SubscriptionPaymentResponse"}}}},"400":{"description":"Invalid request","content":{"*/*":{"schema":{"$ref":"#/components/schemas/SubscriptionPaymentResponse"}}}},"409":{"description":"Organization already has active subscription","content":{"*/*":{"schema":{"$ref":"#/components/schemas/SubscriptionPaymentResponse"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/SubscriptionPaymentResponse"}}}}}}},"/api/v1/subscriptions/cancel":{"post":{"tags":["Organization Subscriptions"],"summary":"Cancel current subscription","operationId":"cancelSubscription","responses":{"204":{"description":"Subscription canceled successfully"},"404":{"description":"No active subscription found"},"401":{"description":"Unauthorized"}}}},"/api/v1/semantic/search":{"post":{"tags":["Semantic Search"],"summary":"Find feedback items semantically similar to a query","operationId":"search","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/SemanticSearchRequest"}}},"required":true},"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/SimilarFeedbackResult"}}}}}}}},"/api/v1/semantic/feedback/{feedbackId}/embed":{"post":{"tags":["Semantic Search"],"summary":"Manually trigger or refresh embedding for a feedback item","operationId":"embedFeedback","parameters":[{"name":"feedbackId","in":"path","required":true,"schema":{"type":"string","format":"uuid"}}],"responses":{"200":{"description":"OK"}}}},"/api/v1/rag/query":{"post":{"tags":["RAG — Retrieval-Augmented Generation"],"summary":"Ask a question about your customer feedback using RAG","operationId":"query","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/RagQueryRequest"}}},"required":true},"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/RagQueryResponse"}}}}}}},"/api/v1/feedback":{"get":{"tags":["Feedback Ingestion"],"summary":"List all feedbacks for the current organization","operationId":"list","responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/FeedbackResponse"}}}}}}},"post":{"tags":["Feedback Ingestion"],"summary":"Submit feedback manually","operationId":"submit","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/SubmitFeedbackRequest"}}},"required":true},"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/FeedbackResponse"}}}}}}},"/api/v1/feedback/{feedbackId}/analysis/reanalyze":{"post":{"tags":["Feedback Analysis"],"summary":"Manually trigger sentiment re-analysis for a feedback item","operationId":"reanalyze","parameters":[{"name":"feedbackId","in":"path","required":true,"schema":{"type":"string","format":"uuid"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/FeedbackAnalysisResponse"}}}}}}},"/api/v1/feedback/webhook":{"post":{"tags":["Feedback Ingestion"],"summary":"Receive feedback via webhook","operationId":"webhook","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/WebhookFeedbackRequest"}}},"required":true},"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/FeedbackResponse"}}}}}}},"/api/v1/feedback/csv":{"post":{"tags":["Feedback Ingestion"],"summary":"Upload feedback CSV file","operationId":"uploadCsv","requestBody":{"content":{"application/json":{"schema":{"type":"object","properties":{"file":{"type":"string","format":"binary"}},"required":["file"]}}}},"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/CsvUploadResponse"}}}}}}},"/api/v1/connectors":{"get":{"tags":["Source Connectors"],"summary":"List all connectors for this organization","operationId":"listAll","responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/ConnectorStatusResponse"}}}}}}},"post":{"tags":["Source Connectors"],"summary":"Register or update a source connector for this organization","operationId":"register","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/RegisterConnectorRequest"}}},"required":true},"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ConnectorStatusResponse"}}}}}}},"/api/v1/connectors/{connectorId}/pull":{"post":{"tags":["Source Connectors"],"summary":"Manually trigger a pull for a connector","operationId":"triggerPull","parameters":[{"name":"connectorId","in":"path","required":true,"schema":{"type":"string","format":"uuid"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"type":"object","additionalProperties":{"type":"integer","format":"int32"}}}}}}}},"/api/v1/churn-risk/assess":{"post":{"tags":["Churn Risk"],"summary":"Trigger or refresh churn risk assessment for a customer","operationId":"assess","parameters":[{"name":"authorIdentifier","in":"query","required":true,"schema":{"type":"string"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ChurnRiskAssessmentResponse"}}}}}}},"/api/v1/auth/register":{"post":{"tags":["Authentication"],"summary":"Register a new user","operationId":"register_1","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/RegisterRequest"}}},"required":true},"responses":{"201":{"description":"User registered successfully","content":{"*/*":{"schema":{"$ref":"#/components/schemas/UserResponse"}}}},"400":{"description":"Invalid request body","content":{"*/*":{"schema":{"$ref":"#/components/schemas/UserResponse"}}}},"409":{"description":"User already exists","content":{"*/*":{"schema":{"$ref":"#/components/schemas/UserResponse"}}}}}}},"/api/v1/auth/refresh":{"post":{"tags":["Authentication"],"summary":"Refresh access token","operationId":"refresh","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/RefreshTokenRequest"}}},"required":true},"responses":{"200":{"description":"Token refreshed successfully","content":{"*/*":{"schema":{"$ref":"#/components/schemas/AuthResponse"}}}},"401":{"description":"Invalid refresh token","content":{"*/*":{"schema":{"$ref":"#/components/schemas/AuthResponse"}}}}}}},"/api/v1/auth/refresh-jwt":{"post":{"tags":["Authentication"],"summary":"Refresh an expired JWT using a valid bearer token","operationId":"refreshJwt","parameters":[{"name":"Authorization","in":"header","required":true,"schema":{"type":"string"}}],"responses":{"200":{"description":"Token refreshed successfully","content":{"*/*":{"schema":{"$ref":"#/components/schemas/AuthResponse"}}}},"401":{"description":"Invalid token","content":{"*/*":{"schema":{"$ref":"#/components/schemas/AuthResponse"}}}}}}},"/api/v1/auth/login":{"post":{"tags":["Authentication"],"summary":"Login with email and password","operationId":"login","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/LoginRequest"}}},"required":true},"responses":{"200":{"description":"Login successful","content":{"*/*":{"schema":{"$ref":"#/components/schemas/AuthResponse"}}}},"401":{"description":"Invalid credentials","content":{"*/*":{"schema":{"$ref":"#/components/schemas/AuthResponse"}}}}}}},"/api/v1/admin/subscriptions/plans":{"post":{"tags":["Admin Subscriptions"],"summary":"Create subscription plan","operationId":"createPlan","requestBody":{"content":{"application/json":{"schema":{"$ref":"#/components/schemas/CreateSubscriptionPlanRequest"}}},"required":true},"responses":{"201":{"description":"Plan created successfully","content":{"*/*":{"schema":{"$ref":"#/components/schemas/SubscriptionPlanResponse"}}}},"400":{"description":"Invalid request","content":{"*/*":{"schema":{"$ref":"#/components/schemas/SubscriptionPlanResponse"}}}},"409":{"description":"Plan with code already exists","content":{"*/*":{"schema":{"$ref":"#/components/schemas/SubscriptionPlanResponse"}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"$ref":"#/components/schemas/SubscriptionPlanResponse"}}}}}}},"/api/v1/vector/health":{"get":{"tags":["Vector Search"],"summary":"Check which vector store provider is active","operationId":"health","responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"type":"object","additionalProperties":{"type":"string"}}}}}}}},"/api/v1/vector/complaints/similar":{"get":{"tags":["Vector Search"],"summary":"Find feedback items with complaints similar to the given description","operationId":"findSimilarComplaints","parameters":[{"name":"description","in":"query","required":true,"schema":{"type":"string"}},{"name":"limit","in":"query","required":false,"schema":{"type":"integer","format":"int32"}},{"name":"minSimilarity","in":"query","required":false,"schema":{"type":"number","format":"double"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/VectorSearchResponse"}}}}}}}},"/api/v1/usage/report":{"get":{"tags":["AI Usage & Cost Monitoring"],"summary":"Get full usage and cost report for a billing period","operationId":"getReport","parameters":[{"name":"billingPeriod","in":"query","required":false,"schema":{"type":"string"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/UsageReportResponse"}}}}}}},"/api/v1/usage/report/current":{"get":{"tags":["AI Usage & Cost Monitoring"],"summary":"Get usage and cost report for the current billing period","operationId":"getCurrentReport","responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/UsageReportResponse"}}}}}}},"/api/v1/usage/quota":{"get":{"tags":["AI Usage & Cost Monitoring"],"summary":"Get current quota status and budget utilization","operationId":"getQuotaStatus","responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/QuotaStatusResponse"}}}}}}},"/api/v1/trends/latest":{"get":{"tags":["Trend Monitoring"],"summary":"Get the latest trend snapshot for the organization","operationId":"getLatest","responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/TrendSnapshotResponse"}}}}}}},"/api/v1/tenant/usage":{"get":{"tags":["Tenant Usage"],"summary":"Get AI token usage summary for the current billing period","operationId":"getCurrentUsage","responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/TenantUsageSummaryResponse"}}}}}}},"/api/v1/tenant/usage/{billingPeriod}":{"get":{"tags":["Tenant Usage"],"summary":"Get AI token usage for a specific billing period (YYYY-MM)","operationId":"getUsageForPeriod","parameters":[{"name":"billingPeriod","in":"path","required":true,"schema":{"type":"string"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/TenantUsageSummaryResponse"}}}}}}},"/api/v1/subscriptions/plans":{"get":{"tags":["Organization Subscriptions"],"summary":"Get available subscription plans","operationId":"getPlans","responses":{"200":{"description":"Plans retrieved successfully","content":{"*/*":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/SubscriptionPlanResponse"}}}}}}}},"/api/v1/subscriptions/me":{"get":{"tags":["Organization Subscriptions"],"summary":"Get current organization subscription","operationId":"getCurrentSubscription","responses":{"200":{"description":"Subscription retrieved successfully","content":{"*/*":{"schema":{"$ref":"#/components/schemas/UserSubscriptionResponse"}}}},"404":{"description":"No active subscription found","content":{"*/*":{"schema":{"$ref":"#/components/schemas/UserSubscriptionResponse"}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"$ref":"#/components/schemas/UserSubscriptionResponse"}}}}}}},"/api/v1/subscriptions/invoices":{"get":{"tags":["Organization Subscriptions"],"summary":"Get organization invoices","operationId":"getInvoices","responses":{"200":{"description":"Invoices retrieved successfully","content":{"*/*":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/SubscriptionInvoiceResponse"}}}}},"401":{"description":"Unauthorized","content":{"*/*":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/SubscriptionInvoiceResponse"}}}}}}}},"/api/v1/rag/trends":{"get":{"tags":["RAG — Retrieval-Augmented Generation"],"summary":"What trends are emerging in feedback? (TREND_ANALYSIS)","operationId":"trends","parameters":[{"name":"question","in":"query","required":true,"schema":{"type":"string"}},{"name":"maxDocuments","in":"query","required":false,"schema":{"type":"integer","format":"int32"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/RagQueryResponse"}}}}}}},"/api/v1/rag/summary":{"get":{"tags":["RAG — Retrieval-Augmented Generation"],"summary":"Get an executive summary of recent feedback (EXECUTIVE_SUMMARY)","operationId":"summary","parameters":[{"name":"question","in":"query","required":false,"schema":{"type":"string","default":"Summarize the most important customer feedback"}},{"name":"maxDocuments","in":"query","required":false,"schema":{"type":"integer","format":"int32"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/RagQueryResponse"}}}}}}},"/api/v1/rag/problems":{"get":{"tags":["RAG — Retrieval-Augmented Generation"],"summary":"What are the biggest customer problems? (PROBLEM_ANALYSIS)","operationId":"problems","parameters":[{"name":"question","in":"query","required":true,"schema":{"type":"string"}},{"name":"maxDocuments","in":"query","required":false,"schema":{"type":"integer","format":"int32"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/RagQueryResponse"}}}}}}},"/api/v1/rag/explore":{"get":{"tags":["RAG — Retrieval-Augmented Generation"],"summary":"Deep dive into a specific topic in feedback (TOPIC_DEEP_DIVE)","operationId":"explore","parameters":[{"name":"question","in":"query","required":true,"schema":{"type":"string"}},{"name":"maxDocuments","in":"query","required":false,"schema":{"type":"integer","format":"int32"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/RagQueryResponse"}}}}}}},"/api/v1/metadata/info":{"get":{"tags":["Metadata"],"summary":"Get application metadata and configuration info","operationId":"getInfo","responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/MetadataInfoResponse"}}}}}}},"/api/v1/feedback/{feedbackId}/feature-requests":{"get":{"tags":["Feature Request Intelligence"],"summary":"Get all feature requests extracted from a specific feedback item","operationId":"getForFeedback","parameters":[{"name":"feedbackId","in":"path","required":true,"schema":{"type":"string","format":"uuid"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/FeatureRequestResponse"}}}}}}}},"/api/v1/feedback/{feedbackId}/complaints":{"get":{"tags":["Complaint Insights"],"summary":"Get all complaints extracted from a specific feedback item","operationId":"getComplaintsForFeedback","parameters":[{"name":"feedbackId","in":"path","required":true,"schema":{"type":"string","format":"uuid"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/FeedbackComplaintResponse"}}}}}}}},"/api/v1/feedback/{feedbackId}/analysis":{"get":{"tags":["Feedback Analysis"],"summary":"Get analysis results for a feedback item","operationId":"getAnalysis","parameters":[{"name":"feedbackId","in":"path","required":true,"schema":{"type":"string","format":"uuid"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/FeedbackAnalysisResponse"}}}}}}},"/api/v1/feature-requests/demand":{"get":{"tags":["Feature Request Intelligence"],"summary":"Get top feature requests ranked by demand","operationId":"getDemandRanking","parameters":[{"name":"days","in":"query","required":false,"schema":{"type":"integer","format":"int32"}},{"name":"limit","in":"query","required":false,"schema":{"type":"integer","format":"int32"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/FeatureDemandResponse"}}}}}}}},"/api/v1/feature-requests/clusters":{"get":{"tags":["Feature Request Intelligence"],"summary":"List all feature request clusters for the organization","operationId":"getClusters","responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"type":"array","items":{"type":"string"}}}}}}}},"/api/v1/dashboard/trends":{"get":{"tags":["Dashboard — Trends"],"summary":"Time-series data for feedback volume, sentiment, and complaints","operationId":"getTrends","parameters":[{"name":"window","in":"query","required":false,"schema":{"type":"string","default":"LAST_30_DAYS","enum":["LAST_7_DAYS","LAST_30_DAYS","LAST_90_DAYS"]}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/DashboardTrendsResponse"}}}}}}},"/api/v1/dashboard/kpis":{"get":{"tags":["Dashboard — KPIs"],"summary":"Headline KPI metrics with period-over-period change indicators","operationId":"getKpis","parameters":[{"name":"window","in":"query","required":false,"schema":{"type":"string","default":"LAST_30_DAYS","enum":["LAST_7_DAYS","LAST_30_DAYS","LAST_90_DAYS"]}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/DashboardKpiResponse"}}}}}}},"/api/v1/dashboard/analytics":{"get":{"tags":["Dashboard — Analytics"],"summary":"Full analytics breakdown for the given time window","operationId":"getAnalytics","parameters":[{"name":"window","in":"query","required":false,"schema":{"type":"string","default":"LAST_30_DAYS","enum":["LAST_7_DAYS","LAST_30_DAYS","LAST_90_DAYS"]}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/DashboardAnalyticsResponse"}}}}}}},"/api/v1/connectors/{connectorId}":{"get":{"tags":["Source Connectors"],"summary":"Get status of a single connector","operationId":"getOne","parameters":[{"name":"connectorId","in":"path","required":true,"schema":{"type":"string","format":"uuid"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ConnectorStatusResponse"}}}}}}},"/api/v1/complaints/recurring":{"get":{"tags":["Complaint Insights"],"summary":"Get top recurring complaints for the organization","operationId":"getRecurring","parameters":[{"name":"days","in":"query","required":false,"schema":{"type":"integer","format":"int32"}},{"name":"limit","in":"query","required":false,"schema":{"type":"integer","format":"int32"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/RecurringComplaintResponse"}}}}}}}},"/api/v1/complaints/categories":{"get":{"tags":["Complaint Insights"],"summary":"List all complaint categories for the organization","operationId":"getCategories","responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"type":"array","items":{"type":"string"}}}}}}}},"/api/v1/churn-risk/high-risk":{"get":{"tags":["Churn Risk"],"summary":"List top at-risk customers ranked by risk score","operationId":"getTopAtRisk","parameters":[{"name":"limit","in":"query","required":false,"schema":{"type":"integer","format":"int32"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/HighRiskCustomerResponse"}}}}}}}},"/api/v1/churn-risk/customer":{"get":{"tags":["Churn Risk"],"summary":"Get the latest churn risk assessment for a specific customer","operationId":"getForCustomer","parameters":[{"name":"authorIdentifier","in":"query","required":true,"schema":{"type":"string"}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"$ref":"#/components/schemas/ChurnRiskAssessmentResponse"}}}}}}},"/api/v1/churn-risk/by-level":{"get":{"tags":["Churn Risk"],"summary":"List customers at a specific risk level","operationId":"getByLevel","parameters":[{"name":"level","in":"query","required":true,"schema":{"type":"string","enum":["LOW","MEDIUM","HIGH","CRITICAL"]}}],"responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/HighRiskCustomerResponse"}}}}}}}},"/api/v1/admin/subscriptions":{"get":{"tags":["Admin Subscriptions"],"summary":"Get all subscriptions","operationId":"getAllSubscriptions","responses":{"200":{"description":"Subscriptions retrieved successfully","content":{"*/*":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/UserSubscriptionResponse"}}}}},"403":{"description":"Forbidden","content":{"*/*":{"schema":{"type":"array","items":{"$ref":"#/components/schemas/UserSubscriptionResponse"}}}}}}}},"/api/captcha/challenge":{"get":{"tags":["Captcha"],"operationId":"getChallenge","responses":{"200":{"description":"OK","content":{"*/*":{"schema":{"type":"object","additionalProperties":{"type":"string"}}}}}}}}},"components":{"schemas":{"TenantAIConfigRequest":{"type":"object","properties":{"providerType":{"type":"string","enum":["OPENAI","OLLAMA","ANTHROPIC","SYSTEM_DEFAULT"]},"apiKey":{"type":"string"},"model":{"type":"string"},"maxTokensPerRequest":{"type":"integer","format":"int32"},"monthlyTokenBudget":{"type":"integer","format":"int64"}},"required":["providerType"]},"TenantAIConfigResponse":{"type":"object","properties":{"id":{"type":"string","format":"uuid"},"organizationId":{"type":"string","format":"uuid"},"providerType":{"type":"string","enum":["OPENAI","OLLAMA","ANTHROPIC","SYSTEM_DEFAULT"]},"model":{"type":"string"},"maxTokensPerRequest":{"type":"integer","format":"int32"},"monthlyTokenBudget":{"type":"integer","format":"int64"},"active":{"type":"boolean"},"hasCustomApiKey":{"type":"boolean"},"updatedAt":{"type":"string","format":"date-time"}}},"UpdateSubscriptionPlanRequest":{"type":"object","properties":{"name":{"type":"string"},"description":{"type":"string"},"monthlyPrice":{"type":"number","minimum":0.0},"yearlyPrice":{"type":"number","minimum":0.0},"messageLimit":{"type":"integer","format":"int64","minimum":1},"aiRecommendationsEnabled":{"type":"boolean"},"trendAnalysisEnabled":{"type":"boolean"},"churnDetectionEnabled":{"type":"boolean"},"active":{"type":"boolean"}}},"SubscriptionPlanResponse":{"type":"object","properties":{"id":{"type":"string","format":"uuid"},"name":{"type":"string"},"code":{"type":"string"},"description":{"type":"string"},"monthlyPrice":{"type":"number"},"yearlyPrice":{"type":"number"},"messageLimit":{"type":"integer","format":"int64"},"aiRecommendationsEnabled":{"type":"boolean"},"trendAnalysisEnabled":{"type":"boolean"},"churnDetectionEnabled":{"type":"boolean"},"active":{"type":"boolean"},"createdAt":{"type":"string","format":"date-time"},"updatedAt":{"type":"string","format":"date-time"}}},"DashboardSearchRequest":{"type":"object","properties":{"query":{"type":"string","maxLength":500,"minLength":0},"limit":{"type":"integer","format":"int32","maximum":50,"minimum":1},"minSimilarity":{"type":"number","format":"double"}}},"VectorSearchResponse":{"type":"object","properties":{"feedbackId":{"type":"string","format":"uuid"},"similarity":{"type":"number","format":"double"},"source":{"type":"string","enum":["MANUAL","CSV","INSTAGRAM","WHATSAPP","ZENDESK","TYPEFORM","WEBHOOK","EMAIL","SURVEY","SUPPORT_TICKET","TRUSTPILOT","LIVE_CHAT","OTHER"]},"content":{"type":"string"},"summaryText":{"type":"string"},"sentiment":{"type":"string","enum":["POSITIVE","NEGATIVE","NEUTRAL","MIXED"]},"complaintCategories":{"type":"array","items":{"type":"string"}},"createdAt":{"type":"string","format":"date-time"}}},"TrendEntryResponse":{"type":"object","properties":{"type":{"type":"string","enum":["COMPLAINT_SPIKE","EMERGING_TOPIC","SENTIMENT_SHIFT"]},"severity":{"type":"string","enum":["LOW","MEDIUM","HIGH","CRITICAL"]},"subject":{"type":"string"},"currentCount":{"type":"integer","format":"int32"},"previousCount":{"type":"integer","format":"int32"},"changeRatio":{"type":"number","format":"double"},"explanation":{"type":"string"}}},"TrendSnapshotResponse":{"type":"object","properties":{"id":{"type":"string","format":"uuid"},"organizationId":{"type":"string","format":"uuid"},"windowStart":{"type":"string","format":"date-time"},"windowEnd":{"type":"string","format":"date-time"},"windowDays":{"type":"integer","format":"int32"},"totalFeedbackInWindow":{"type":"integer","format":"int32"},"entries":{"type":"array","items":{"$ref":"#/components/schemas/TrendEntryResponse"}},"detectedAt":{"type":"string","format":"date-time"}}},"TenantProvisionRequest":{"type":"object","properties":{"organizationName":{"type":"string","maxLength":200,"minLength":0},"adminEmail":{"type":"string","minLength":1},"adminPassword":{"type":"string","maxLength":100,"minLength":8},"planId":{"type":"string"}}},"TenantProvisionResponse":{"type":"object","properties":{"organizationId":{"type":"string","format":"uuid"},"organizationName":{"type":"string"},"adminUserId":{"type":"string","format":"uuid"},"message":{"type":"string"}}},"UpgradeSubscriptionRequest":{"type":"object","properties":{"planCode":{"type":"string","minLength":1}}},"SubscriptionPaymentResponse":{"type":"object","properties":{"subscription":{"$ref":"#/components/schemas/UserSubscriptionResponse"},"checkoutUrl":{"type":"string"}}},"UserSubscriptionResponse":{"type":"object","properties":{"id":{"type":"string","format":"uuid"},"organizationId":{"type":"string","format":"uuid"},"subscriptionPlanId":{"type":"string","format":"uuid"},"billingCycle":{"type":"string","enum":["MONTHLY","YEARLY"]},"status":{"type":"string","enum":["ACTIVE","EXPIRED","CANCELED","PENDING","TRIAL","SCHEDULED"]},"startDate":{"type":"string","format":"date-time"},"endDate":{"type":"string","format":"date-time"},"autoRenew":{"type":"boolean"},"canceledAt":{"type":"string","format":"date-time"},"trial":{"type":"boolean"},"seats":{"type":"integer","format":"int32"},"createdAt":{"type":"string","format":"date-time"},"updatedAt":{"type":"string","format":"date-time"}}},"SubscribeRequest":{"type":"object","properties":{"planCode":{"type":"string","minLength":1},"billingCycle":{"type":"string","enum":["MONTHLY","YEARLY"]},"seats":{"type":"integer","format":"int32"}},"required":["billingCycle"]},"SemanticSearchRequest":{"type":"object","properties":{"query":{"type":"string","maxLength":2000,"minLength":0},"limit":{"type":"integer","format":"int32","maximum":50,"minimum":1},"minSimilarity":{"type":"number","format":"double"}}},"SimilarFeedbackResult":{"type":"object","properties":{"feedbackId":{"type":"string","format":"uuid"},"similarity":{"type":"number","format":"double"},"content":{"type":"string"},"summaryText":{"type":"string"},"source":{"type":"string"}}},"RagQueryRequest":{"type":"object","properties":{"question":{"type":"string","maxLength":500,"minLength":0},"intent":{"type":"string","enum":["PROBLEM_ANALYSIS","TREND_ANALYSIS","TOPIC_DEEP_DIVE","EXECUTIVE_SUMMARY"]},"maxDocuments":{"type":"integer","format":"int32","maximum":50,"minimum":1},"minSimilarity":{"type":"number","format":"double"}},"required":["intent"]},"RagQueryResponse":{"type":"object","properties":{"answer":{"type":"string"},"intent":{"type":"string","enum":["PROBLEM_ANALYSIS","TREND_ANALYSIS","TOPIC_DEEP_DIVE","EXECUTIVE_SUMMARY"]},"sourceFeedbackIds":{"type":"array","items":{"type":"string","format":"uuid"}},"documentsUsed":{"type":"integer","format":"int32"},"modelUsed":{"type":"string"},"fallback":{"type":"boolean"}}},"SubmitFeedbackRequest":{"type":"object","properties":{"source":{"type":"string","enum":["MANUAL","CSV","INSTAGRAM","WHATSAPP","ZENDESK","TYPEFORM","WEBHOOK","EMAIL","SURVEY","SUPPORT_TICKET","TRUSTPILOT","LIVE_CHAT","OTHER"]},"content":{"type":"string","maxLength":5000,"minLength":0},"externalId":{"type":"string"},"customerName":{"type":"string"},"customerEmail":{"type":"string"},"customerIdentifier":{"type":"string"},"language":{"type":"string"}},"required":["source"]},"FeedbackResponse":{"type":"object","properties":{"id":{"type":"string","format":"uuid"},"source":{"type":"string","enum":["MANUAL","CSV","INSTAGRAM","WHATSAPP","ZENDESK","TYPEFORM","WEBHOOK","EMAIL","SURVEY","SUPPORT_TICKET","TRUSTPILOT","LIVE_CHAT","OTHER"]},"content":{"type":"string"},"customerIdentifier":{"type":"string"},"status":{"type":"string","enum":["PENDING","PROCESSING","PROCESSED","FAILED"]},"createdAt":{"type":"string","format":"date-time"}}},"FeedbackAnalysisResponse":{"type":"object","properties":{"id":{"type":"string","format":"uuid"},"feedbackId":{"type":"string","format":"uuid"},"sentiment":{"type":"string","enum":["POSITIVE","NEGATIVE","NEUTRAL","MIXED"]},"sentimentConfidence":{"type":"number","format":"double"},"sentimentReasoning":{"type":"string"},"sentimentAnalyzedAt":{"type":"string","format":"date-time"},"summaryText":{"type":"string"},"summarizedAt":{"type":"string","format":"date-time"},"summaryModel":{"type":"string"},"createdAt":{"type":"string","format":"date-time"}}},"WebhookFeedbackRequest":{"type":"object","properties":{"source":{"type":"string","enum":["MANUAL","CSV","INSTAGRAM","WHATSAPP","ZENDESK","TYPEFORM","WEBHOOK","EMAIL","SURVEY","SUPPORT_TICKET","TRUSTPILOT","LIVE_CHAT","OTHER"]},"payload":{"type":"string","minLength":1},"apiKey":{"type":"string","minLength":1}},"required":["source"]},"CsvUploadResponse":{"type":"object","properties":{"totalRows":{"type":"integer","format":"int32"},"successCount":{"type":"integer","format":"int32"},"failureCount":{"type":"integer","format":"int32"},"errors":{"type":"array","items":{"type":"string"}},"feedbackIds":{"type":"array","items":{"type":"string","format":"uuid"}}}},"RegisterConnectorRequest":{"type":"object","properties":{"source":{"type":"string","enum":["MANUAL","CSV","INSTAGRAM","WHATSAPP","ZENDESK","TYPEFORM","WEBHOOK","EMAIL","SURVEY","SUPPORT_TICKET","TRUSTPILOT","LIVE_CHAT","OTHER"]},"credentials":{"type":"object","additionalProperties":{"type":"string"}}},"required":["source"]},"ConnectorStatusResponse":{"type":"object","properties":{"id":{"type":"string","format":"uuid"},"source":{"type":"string","enum":["MANUAL","CSV","INSTAGRAM","WHATSAPP","ZENDESK","TYPEFORM","WEBHOOK","EMAIL","SURVEY","SUPPORT_TICKET","TRUSTPILOT","LIVE_CHAT","OTHER"]},"status":{"type":"string","enum":["ACTIVE","INACTIVE","ERROR"]},"isMock":{"type":"boolean"},"lastPulledAt":{"type":"string","format":"date-time"},"createdAt":{"type":"string","format":"date-time"}}},"ChurnRiskAssessmentResponse":{"type":"object","properties":{"id":{"type":"string","format":"uuid"},"organizationId":{"type":"string","format":"uuid"},"authorIdentifier":{"type":"string"},"riskLevel":{"type":"string","enum":["LOW","MEDIUM","HIGH","CRITICAL"]},"riskScore":{"type":"number","format":"double"},"assessedFeedbackCount":{"type":"integer","format":"int32"},"signals":{"type":"array","items":{"type":"string"}},"recommendation":{"type":"string"},"assessedAt":{"type":"string","format":"date-time"},"createdAt":{"type":"string","format":"date-time"}}},"RegisterRequest":{"type":"object","properties":{"email":{"type":"string","minLength":1},"password":{"type":"string","maxLength":2147483647,"minLength":8,"pattern":"^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$"},"firstName":{"type":"string","minLength":1},"lastName":{"type":"string","minLength":1},"organizationName":{"type":"string"},"organizationId":{"type":"string"},"captchaChallenge":{"type":"string"},"captchaSolution":{"type":"string"}}},"UserResponse":{"type":"object","properties":{"id":{"type":"string","format":"uuid"},"email":{"type":"string"},"firstName":{"type":"string"},"lastName":{"type":"string"},"organizationId":{"type":"string","format":"uuid"},"organizationName":{"type":"string"},"roles":{"type":"array","items":{"type":"string"}}}},"RefreshTokenRequest":{"type":"object","properties":{"refreshToken":{"type":"string","minLength":1}}},"AuthResponse":{"type":"object","properties":{"accessToken":{"type":"string"},"refreshToken":{"type":"string"},"tokenType":{"type":"string"},"expiresIn":{"type":"integer","format":"int64"},"userId":{"type":"string","format":"uuid"},"email":{"type":"string"},"fullName":{"type":"string"},"organizationId":{"type":"string","format":"uuid"},"roles":{"type":"array","items":{"type":"string"}}}},"LoginRequest":{"type":"object","properties":{"email":{"type":"string","minLength":1},"password":{"type":"string","minLength":1}}},"CreateSubscriptionPlanRequest":{"type":"object","properties":{"name":{"type":"string","minLength":1},"code":{"type":"string","minLength":1},"description":{"type":"string"},"monthlyPrice":{"type":"number","minimum":0.0},"yearlyPrice":{"type":"number","minimum":0.0},"messageLimit":{"type":"integer","format":"int64","minimum":1},"aiRecommendationsEnabled":{"type":"boolean"},"trendAnalysisEnabled":{"type":"boolean"},"churnDetectionEnabled":{"type":"boolean"}},"required":["messageLimit","monthlyPrice","yearlyPrice"]},"DailyUsageDataPoint":{"type":"object","properties":{"date":{"type":"string"},"tokens":{"type":"integer","format":"int64"},"estimatedCostUsd":{"type":"number"}}},"UsageReportResponse":{"type":"object","properties":{"organizationId":{"type":"string","format":"uuid"},"billingPeriod":{"type":"string"},"totalTokens":{"type":"integer","format":"int64"},"totalEstimatedCostUsd":{"type":"number"},"monthlyTokenBudget":{"type":"integer","format":"int64"},"budgetUtilizationPercent":{"type":"number","format":"double"},"budgetExceeded":{"type":"boolean"},"tokensByEventType":{"type":"object","additionalProperties":{"type":"integer","format":"int64"}},"costByEventType":{"type":"object","additionalProperties":{"type":"number"}},"tokensByModel":{"type":"object","additionalProperties":{"type":"integer","format":"int64"}},"costByModel":{"type":"object","additionalProperties":{"type":"number"}},"dailySeries":{"type":"array","items":{"$ref":"#/components/schemas/DailyUsageDataPoint"}}}},"QuotaStatusResponse":{"type":"object","properties":{"billingPeriod":{"type":"string"},"consumedTokens":{"type":"integer","format":"int64"},"budgetTokens":{"type":"integer","format":"int64"},"utilizationPercent":{"type":"number","format":"double"},"budgetExceeded":{"type":"boolean"},"status":{"type":"string"}}},"TenantUsageSummaryResponse":{"type":"object","properties":{"billingPeriod":{"type":"string"},"totalTokensUsed":{"type":"integer","format":"int64"},"monthlyTokenBudget":{"type":"integer","format":"int64"},"budgetUtilizationPercent":{"type":"number","format":"double"},"tokensByEventType":{"type":"object","additionalProperties":{"type":"integer","format":"int64"}}}},"SubscriptionInvoiceResponse":{"type":"object","properties":{"id":{"type":"string","format":"uuid"},"userSubscriptionId":{"type":"string","format":"uuid"},"invoiceNumber":{"type":"string"},"companyName":{"type":"string"},"billingAddress":{"type":"string"},"subtotal":{"type":"number"},"taxAmount":{"type":"number"},"discountAmount":{"type":"number"},"amount":{"type":"number"},"currency":{"type":"string"},"paymentProvider":{"type":"string"},"paymentProviderReference":{"type":"string"},"invoiceStatus":{"type":"string","enum":["PENDING","PAID","FAILED","REFUNDED"]},"createdAt":{"type":"string","format":"date-time"},"paidAt":{"type":"string","format":"date-time"},"dueDate":{"type":"string","format":"date-time"},"pdfUrl":{"type":"string"}}},"EnumValue":{"type":"object","properties":{"key":{"type":"string"},"label":{"type":"string"}}},"MetadataInfoResponse":{"type":"object","properties":{"feedbackSources":{"type":"array","items":{"$ref":"#/components/schemas/EnumValue"}}}},"FeatureRequestResponse":{"type":"object","properties":{"id":{"type":"string","format":"uuid"},"feedbackId":{"type":"string","format":"uuid"},"clusterId":{"type":"string","format":"uuid"},"clusterName":{"type":"string"},"title":{"type":"string"},"description":{"type":"string"},"priority":{"type":"string","enum":["LOW","MEDIUM","HIGH"]},"createdAt":{"type":"string","format":"date-time"}}},"FeedbackComplaintResponse":{"type":"object","properties":{"id":{"type":"string","format":"uuid"},"feedbackId":{"type":"string","format":"uuid"},"complaintCategoryId":{"type":"string","format":"uuid"},"categoryName":{"type":"string"},"description":{"type":"string"},"severity":{"type":"string","enum":["LOW","MEDIUM","HIGH","CRITICAL"]},"createdAt":{"type":"string","format":"date-time"}}},"FeatureDemandResponse":{"type":"object","properties":{"clusterId":{"type":"string","format":"uuid"},"clusterName":{"type":"string"},"occurrenceCount":{"type":"integer","format":"int32"},"demandRate":{"type":"number","format":"double"}}},"ComplaintTrendSeriesDto":{"type":"object","properties":{"labels":{"type":"array","items":{"type":"string"}},"seriesByCategory":{"type":"object","additionalProperties":{"type":"array","items":{"type":"integer","format":"int32"}}}}},"DashboardTrendsResponse":{"type":"object","properties":{"window":{"type":"string","enum":["LAST_7_DAYS","LAST_30_DAYS","LAST_90_DAYS"]},"windowStart":{"type":"string","format":"date-time"},"windowEnd":{"type":"string","format":"date-time"},"feedbackVolume":{"$ref":"#/components/schemas/VolumeTimeSeriesDto"},"sentimentTrend":{"$ref":"#/components/schemas/SentimentTimeSeriesDto"},"complaintTrend":{"$ref":"#/components/schemas/ComplaintTrendSeriesDto"}}},"SentimentTimeSeriesDto":{"type":"object","properties":{"labels":{"type":"array","items":{"type":"string"}},"positiveValues":{"type":"array","items":{"type":"integer","format":"int32"}},"negativeValues":{"type":"array","items":{"type":"integer","format":"int32"}},"neutralValues":{"type":"array","items":{"type":"integer","format":"int32"}},"netSentimentScores":{"type":"array","items":{"type":"number","format":"double"}}}},"VolumeTimeSeriesDto":{"type":"object","properties":{"labels":{"type":"array","items":{"type":"string"}},"values":{"type":"array","items":{"type":"integer","format":"int32"}}}},"DashboardKpiResponse":{"type":"object","properties":{"window":{"type":"string","enum":["LAST_7_DAYS","LAST_30_DAYS","LAST_90_DAYS"]},"metrics":{"type":"array","items":{"$ref":"#/components/schemas/KpiMetricDto"}}}},"KpiMetricDto":{"type":"object","properties":{"key":{"type":"string"},"label":{"type":"string"},"value":{"type":"string"},"unit":{"type":"string"},"changePercent":{"type":"number","format":"double"},"trend":{"type":"string"}}},"ChurnRiskBreakdownDto":{"type":"object","properties":{"lowCount":{"type":"integer","format":"int32"},"mediumCount":{"type":"integer","format":"int32"},"highCount":{"type":"integer","format":"int32"},"criticalCount":{"type":"integer","format":"int32"},"totalCustomersAssessed":{"type":"integer","format":"int32"},"highAndCriticalPercent":{"type":"number","format":"double"}}},"DashboardAnalyticsResponse":{"type":"object","properties":{"window":{"type":"string","enum":["LAST_7_DAYS","LAST_30_DAYS","LAST_90_DAYS"]},"windowStart":{"type":"string","format":"date-time"},"windowEnd":{"type":"string","format":"date-time"},"totalFeedback":{"type":"integer","format":"int32"},"analyzedFeedback":{"type":"integer","format":"int32"},"analysisCoveragePercent":{"type":"number","format":"double"},"sentimentBreakdown":{"$ref":"#/components/schemas/SentimentBreakdownDto"},"feedbackBySource":{"type":"array","items":{"$ref":"#/components/schemas/FeedbackSourceBreakdownDto"}},"topComplaints":{"type":"array","items":{"$ref":"#/components/schemas/TopComplaintDto"}},"topFeatures":{"type":"array","items":{"$ref":"#/components/schemas/TopFeatureDto"}},"churnRiskBreakdown":{"$ref":"#/components/schemas/ChurnRiskBreakdownDto"}}},"FeedbackSourceBreakdownDto":{"type":"object","properties":{"source":{"type":"string"},"count":{"type":"integer","format":"int32"},"percent":{"type":"number","format":"double"}}},"SentimentBreakdownDto":{"type":"object","properties":{"positiveCount":{"type":"integer","format":"int32"},"negativeCount":{"type":"integer","format":"int32"},"neutralCount":{"type":"integer","format":"int32"},"totalAnalyzed":{"type":"integer","format":"int32"},"positivePercent":{"type":"number","format":"double"},"negativePercent":{"type":"number","format":"double"},"neutralPercent":{"type":"number","format":"double"},"netSentimentScore":{"type":"number","format":"double"}}},"TopComplaintDto":{"type":"object","properties":{"categoryId":{"type":"string","format":"uuid"},"categoryName":{"type":"string"},"count":{"type":"integer","format":"int32"},"percentOfFeedback":{"type":"number","format":"double"}}},"TopFeatureDto":{"type":"object","properties":{"clusterId":{"type":"string","format":"uuid"},"clusterName":{"type":"string"},"count":{"type":"integer","format":"int32"},"percentOfFeedback":{"type":"number","format":"double"}}},"RecurringComplaintResponse":{"type":"object","properties":{"categoryId":{"type":"string","format":"uuid"},"categoryName":{"type":"string"},"occurrenceCount":{"type":"integer","format":"int32"},"occurrenceRate":{"type":"number","format":"double"}}},"HighRiskCustomerResponse":{"type":"object","properties":{"assessmentId":{"type":"string","format":"uuid"},"authorIdentifier":{"type":"string"},"riskLevel":{"type":"string","enum":["LOW","MEDIUM","HIGH","CRITICAL"]},"riskScore":{"type":"number","format":"double"},"recommendation":{"type":"string"},"assessedAt":{"type":"string","format":"date-time"}}}}}}
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8081",
+      "description": "Generated server url"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Authentication",
+      "description": "Authentication API endpoints"
+    },
+    {
+      "name": "Admin Audit Logs",
+      "description": "Admin audit log APIs"
+    },
+    {
+      "name": "Admin Subscriptions",
+      "description": "Admin subscription management APIs"
+    },
+    {
+      "name": "Admin Users",
+      "description": "Admin user management APIs"
+    },
+    {
+      "name": "Admin Settings",
+      "description": "Admin global settings APIs"
+    },
+    {
+      "name": "Admin System Health",
+      "description": "Admin system health APIs"
+    },
+    {
+      "name": "Organization Subscriptions",
+      "description": "Organization subscription management APIs"
+    },
+    {
+      "name": "Admin Overview",
+      "description": "Admin platform overview APIs"
+    },
+    {
+      "name": "Admin AI Usage",
+      "description": "Admin AI usage APIs"
+    },
+    {
+      "name": "Captcha",
+      "description": "Endpoints for generating CAPTCHA challenges"
+    },
+    {
+      "name": "Admin Organizations",
+      "description": "Admin organization management APIs"
+    }
+  ],
+  "paths": {
+    "/api/v1/tenant/ai-config": {
+      "get": {
+        "tags": [
+          "Tenant Management"
+        ],
+        "summary": "Get current AI configuration for this organization",
+        "operationId": "getAIConfig",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantAIConfigResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Tenant Management"
+        ],
+        "summary": "Update AI configuration for this organization",
+        "operationId": "updateAIConfig",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TenantAIConfigRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantAIConfigResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/subscriptions/plans/{id}": {
+      "put": {
+        "tags": [
+          "Admin Subscriptions"
+        ],
+        "summary": "Update subscription plan",
+        "operationId": "updatePlan",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSubscriptionPlanRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Plan updated successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPlanResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Plan not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPlanResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPlanResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/settings": {
+      "get": {
+        "tags": [
+          "Admin Settings"
+        ],
+        "summary": "Get global settings",
+        "operationId": "getSettings",
+        "responses": {
+          "200": {
+            "description": "Settings retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminSettingsResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminSettingsResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Admin Settings"
+        ],
+        "summary": "Update global settings",
+        "operationId": "updateSettings",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAdminSettingsRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Settings updated successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminSettingsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminSettingsResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminSettingsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vector/search": {
+      "post": {
+        "tags": [
+          "Vector Search"
+        ],
+        "summary": "AI-powered dashboard search — find feedback by natural language query",
+        "operationId": "dashboardSearch",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DashboardSearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VectorSearchResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/trends/detect": {
+      "post": {
+        "tags": [
+          "Trend Monitoring"
+        ],
+        "summary": "Trigger an on-demand trend detection run",
+        "operationId": "detect",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrendSnapshotResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tenant/provision": {
+      "post": {
+        "tags": [
+          "Tenant Management"
+        ],
+        "summary": "Provision a new tenant organization (super-admin only)",
+        "operationId": "provision",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TenantProvisionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantProvisionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/upgrade": {
+      "post": {
+        "tags": [
+          "Organization Subscriptions"
+        ],
+        "summary": "Upgrade or downgrade current subscription",
+        "operationId": "upgradeSubscription",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpgradeSubscriptionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Subscription upgraded successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPaymentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPaymentResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No active subscription found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPaymentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPaymentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/subscribe": {
+      "post": {
+        "tags": [
+          "Organization Subscriptions"
+        ],
+        "summary": "Subscribe to a plan",
+        "operationId": "subscribe",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubscribeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Subscription created successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPaymentResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPaymentResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Organization already has active subscription",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPaymentResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPaymentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/cancel": {
+      "post": {
+        "tags": [
+          "Organization Subscriptions"
+        ],
+        "summary": "Cancel current subscription",
+        "operationId": "cancelSubscription",
+        "responses": {
+          "204": {
+            "description": "Subscription canceled successfully"
+          },
+          "404": {
+            "description": "No active subscription found"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/api/v1/semantic/search": {
+      "post": {
+        "tags": [
+          "Semantic Search"
+        ],
+        "summary": "Find feedback items semantically similar to a query",
+        "operationId": "search",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SemanticSearchRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SimilarFeedbackResult"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/semantic/feedback/{feedbackId}/embed": {
+      "post": {
+        "tags": [
+          "Semantic Search"
+        ],
+        "summary": "Manually trigger or refresh embedding for a feedback item",
+        "operationId": "embedFeedback",
+        "parameters": [
+          {
+            "name": "feedbackId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/rag/query": {
+      "post": {
+        "tags": [
+          "RAG — Retrieval-Augmented Generation"
+        ],
+        "summary": "Ask a question about your customer feedback using RAG",
+        "operationId": "query",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RagQueryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RagQueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/feedback": {
+      "get": {
+        "tags": [
+          "Feedback Query"
+        ],
+        "summary": "List all feedbacks for the current organization",
+        "operationId": "list",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FeedbackResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Feedback Ingestion"
+        ],
+        "summary": "Submit feedback manually",
+        "operationId": "submit",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SubmitFeedbackRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedbackResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/feedback/{feedbackId}/analysis/reanalyze": {
+      "post": {
+        "tags": [
+          "Feedback Analysis"
+        ],
+        "summary": "Manually trigger sentiment re-analysis for a feedback item",
+        "operationId": "reanalyze",
+        "parameters": [
+          {
+            "name": "feedbackId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedbackAnalysisResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/feedback/webhook": {
+      "post": {
+        "tags": [
+          "Feedback Ingestion"
+        ],
+        "summary": "Receive feedback via webhook",
+        "operationId": "webhook",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WebhookFeedbackRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedbackResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/feedback/csv": {
+      "post": {
+        "tags": [
+          "Feedback Ingestion"
+        ],
+        "summary": "Upload feedback CSV file",
+        "operationId": "uploadCsv",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                },
+                "required": [
+                  "file"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CsvUploadResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/connectors": {
+      "get": {
+        "tags": [
+          "Source Connectors"
+        ],
+        "summary": "List all connectors for this organization",
+        "operationId": "listAll",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ConnectorStatusResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "Source Connectors"
+        ],
+        "summary": "Register or update a source connector for this organization",
+        "operationId": "register",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterConnectorRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectorStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/connectors/{connectorId}/pull": {
+      "post": {
+        "tags": [
+          "Source Connectors"
+        ],
+        "summary": "Manually trigger a pull for a connector",
+        "operationId": "triggerPull",
+        "parameters": [
+          {
+            "name": "connectorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "integer",
+                    "format": "int32"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/churn-risk/assess": {
+      "post": {
+        "tags": [
+          "Churn Risk"
+        ],
+        "summary": "Trigger or refresh churn risk assessment for a customer",
+        "operationId": "assess",
+        "parameters": [
+          {
+            "name": "authorIdentifier",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChurnRiskAssessmentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/register": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Register a new user",
+        "operationId": "register_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "User registered successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "User already exists",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/refresh": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Refresh access token",
+        "operationId": "refresh",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefreshTokenRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Token refreshed successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid refresh token",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/refresh-jwt": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Refresh an expired JWT using a valid bearer token",
+        "operationId": "refreshJwt",
+        "parameters": [
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Token refreshed successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid token",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/auth/login": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Login with email and password",
+        "operationId": "login",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Login successful",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Invalid credentials",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/{id}/enable": {
+      "post": {
+        "tags": [
+          "Admin Users"
+        ],
+        "summary": "Enable a user",
+        "operationId": "enableUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User enabled successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUserResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUserResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users/{id}/disable": {
+      "post": {
+        "tags": [
+          "Admin Users"
+        ],
+        "summary": "Disable a user",
+        "operationId": "disableUser",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User disabled successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUserResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUserResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/subscriptions/plans": {
+      "post": {
+        "tags": [
+          "Admin Subscriptions"
+        ],
+        "summary": "Create subscription plan",
+        "operationId": "createPlan",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSubscriptionPlanRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Plan created successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPlanResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPlanResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Plan with code already exists",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPlanResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/SubscriptionPlanResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/organizations/{id}/suspend": {
+      "post": {
+        "tags": [
+          "Admin Organizations"
+        ],
+        "summary": "Suspend an organization",
+        "operationId": "suspendOrganization",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Organization suspended successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminOrganizationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organization not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminOrganizationResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminOrganizationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/organizations/{id}/activate": {
+      "post": {
+        "tags": [
+          "Admin Organizations"
+        ],
+        "summary": "Activate an organization",
+        "operationId": "activateOrganization",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Organization activated successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminOrganizationResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organization not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminOrganizationResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminOrganizationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vector/health": {
+      "get": {
+        "tags": [
+          "Vector Search"
+        ],
+        "summary": "Check which vector store provider is active",
+        "operationId": "health",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/vector/complaints/similar": {
+      "get": {
+        "tags": [
+          "Vector Search"
+        ],
+        "summary": "Find feedback items with complaints similar to the given description",
+        "operationId": "findSimilarComplaints",
+        "parameters": [
+          {
+            "name": "description",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "minSimilarity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/VectorSearchResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/usage/report": {
+      "get": {
+        "tags": [
+          "AI Usage & Cost Monitoring"
+        ],
+        "summary": "Get full usage and cost report for a billing period",
+        "operationId": "getReport",
+        "parameters": [
+          {
+            "name": "billingPeriod",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageReportResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/usage/report/current": {
+      "get": {
+        "tags": [
+          "AI Usage & Cost Monitoring"
+        ],
+        "summary": "Get usage and cost report for the current billing period",
+        "operationId": "getCurrentReport",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsageReportResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/usage/quota": {
+      "get": {
+        "tags": [
+          "AI Usage & Cost Monitoring"
+        ],
+        "summary": "Get current quota status and budget utilization",
+        "operationId": "getQuotaStatus",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/QuotaStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/trends/latest": {
+      "get": {
+        "tags": [
+          "Trend Monitoring"
+        ],
+        "summary": "Get the latest trend snapshot for the organization",
+        "operationId": "getLatest",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrendSnapshotResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tenant/usage": {
+      "get": {
+        "tags": [
+          "Tenant Usage"
+        ],
+        "summary": "Get AI token usage summary for the current billing period",
+        "operationId": "getCurrentUsage",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantUsageSummaryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/tenant/usage/{billingPeriod}": {
+      "get": {
+        "tags": [
+          "Tenant Usage"
+        ],
+        "summary": "Get AI token usage for a specific billing period (YYYY-MM)",
+        "operationId": "getUsageForPeriod",
+        "parameters": [
+          {
+            "name": "billingPeriod",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TenantUsageSummaryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/plans": {
+      "get": {
+        "tags": [
+          "Organization Subscriptions"
+        ],
+        "summary": "Get available subscription plans",
+        "operationId": "getPlans",
+        "responses": {
+          "200": {
+            "description": "Plans retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubscriptionPlanResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/me": {
+      "get": {
+        "tags": [
+          "Organization Subscriptions"
+        ],
+        "summary": "Get current organization subscription",
+        "operationId": "getCurrentSubscription",
+        "responses": {
+          "200": {
+            "description": "Subscription retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSubscriptionResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No active subscription found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSubscriptionResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UserSubscriptionResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/subscriptions/invoices": {
+      "get": {
+        "tags": [
+          "Organization Subscriptions"
+        ],
+        "summary": "Get organization invoices",
+        "operationId": "getInvoices",
+        "responses": {
+          "200": {
+            "description": "Invoices retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubscriptionInvoiceResponse"
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/SubscriptionInvoiceResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rag/trends": {
+      "get": {
+        "tags": [
+          "RAG — Retrieval-Augmented Generation"
+        ],
+        "summary": "What trends are emerging in feedback? (TREND_ANALYSIS)",
+        "operationId": "trends",
+        "parameters": [
+          {
+            "name": "question",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxDocuments",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RagQueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rag/summary": {
+      "get": {
+        "tags": [
+          "RAG — Retrieval-Augmented Generation"
+        ],
+        "summary": "Get an executive summary of recent feedback (EXECUTIVE_SUMMARY)",
+        "operationId": "summary",
+        "parameters": [
+          {
+            "name": "question",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "Summarize the most important customer feedback"
+            }
+          },
+          {
+            "name": "maxDocuments",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RagQueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rag/problems": {
+      "get": {
+        "tags": [
+          "RAG — Retrieval-Augmented Generation"
+        ],
+        "summary": "What are the biggest customer problems? (PROBLEM_ANALYSIS)",
+        "operationId": "problems",
+        "parameters": [
+          {
+            "name": "question",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxDocuments",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RagQueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/rag/explore": {
+      "get": {
+        "tags": [
+          "RAG — Retrieval-Augmented Generation"
+        ],
+        "summary": "Deep dive into a specific topic in feedback (TOPIC_DEEP_DIVE)",
+        "operationId": "explore",
+        "parameters": [
+          {
+            "name": "question",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "maxDocuments",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RagQueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/metadata/info": {
+      "get": {
+        "tags": [
+          "Metadata"
+        ],
+        "summary": "Get application metadata and configuration info",
+        "operationId": "getInfo",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/MetadataInfoResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/feedback/{id}": {
+      "get": {
+        "tags": [
+          "Feedback Query"
+        ],
+        "summary": "Get a feedback by id for the current organization",
+        "operationId": "getById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedbackResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/feedback/{feedbackId}/feature-requests": {
+      "get": {
+        "tags": [
+          "Feature Request Intelligence"
+        ],
+        "summary": "Get all feature requests extracted from a specific feedback item",
+        "operationId": "getForFeedback",
+        "parameters": [
+          {
+            "name": "feedbackId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FeatureRequestResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/feedback/{feedbackId}/complaints": {
+      "get": {
+        "tags": [
+          "Complaint Insights"
+        ],
+        "summary": "Get all complaints extracted from a specific feedback item",
+        "operationId": "getComplaintsForFeedback",
+        "parameters": [
+          {
+            "name": "feedbackId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FeedbackComplaintResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/feedback/{feedbackId}/analysis": {
+      "get": {
+        "tags": [
+          "Feedback Analysis"
+        ],
+        "summary": "Get analysis results for a feedback item",
+        "operationId": "getAnalysis",
+        "parameters": [
+          {
+            "name": "feedbackId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedbackAnalysisResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/feature-requests/demand": {
+      "get": {
+        "tags": [
+          "Feature Request Intelligence"
+        ],
+        "summary": "Get top feature requests ranked by demand",
+        "operationId": "getDemandRanking",
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/FeatureDemandResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/feature-requests/clusters": {
+      "get": {
+        "tags": [
+          "Feature Request Intelligence"
+        ],
+        "summary": "List all feature request clusters for the organization",
+        "operationId": "getClusters",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dashboard/trends": {
+      "get": {
+        "tags": [
+          "Dashboard — Trends"
+        ],
+        "summary": "Time-series data for feedback volume, sentiment, and complaints",
+        "operationId": "getTrends",
+        "parameters": [
+          {
+            "name": "window",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "LAST_30_DAYS",
+              "enum": [
+                "LAST_7_DAYS",
+                "LAST_30_DAYS",
+                "LAST_90_DAYS"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardTrendsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dashboard/kpis": {
+      "get": {
+        "tags": [
+          "Dashboard — KPIs"
+        ],
+        "summary": "Headline KPI metrics with period-over-period change indicators",
+        "operationId": "getKpis",
+        "parameters": [
+          {
+            "name": "window",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "LAST_30_DAYS",
+              "enum": [
+                "LAST_7_DAYS",
+                "LAST_30_DAYS",
+                "LAST_90_DAYS"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardKpiResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/dashboard/analytics": {
+      "get": {
+        "tags": [
+          "Dashboard — Analytics"
+        ],
+        "summary": "Full analytics breakdown for the given time window",
+        "operationId": "getAnalytics",
+        "parameters": [
+          {
+            "name": "window",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "LAST_30_DAYS",
+              "enum": [
+                "LAST_7_DAYS",
+                "LAST_30_DAYS",
+                "LAST_90_DAYS"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardAnalyticsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/connectors/{connectorId}": {
+      "get": {
+        "tags": [
+          "Source Connectors"
+        ],
+        "summary": "Get status of a single connector",
+        "operationId": "getOne",
+        "parameters": [
+          {
+            "name": "connectorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectorStatusResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/complaints/recurring": {
+      "get": {
+        "tags": [
+          "Complaint Insights"
+        ],
+        "summary": "Get top recurring complaints for the organization",
+        "operationId": "getRecurring",
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/RecurringComplaintResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/complaints/categories": {
+      "get": {
+        "tags": [
+          "Complaint Insights"
+        ],
+        "summary": "List all complaint categories for the organization",
+        "operationId": "getCategories",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/churn-risk/high-risk": {
+      "get": {
+        "tags": [
+          "Churn Risk"
+        ],
+        "summary": "List top at-risk customers ranked by risk score",
+        "operationId": "getTopAtRisk",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HighRiskCustomerResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/churn-risk/customer": {
+      "get": {
+        "tags": [
+          "Churn Risk"
+        ],
+        "summary": "Get the latest churn risk assessment for a specific customer",
+        "operationId": "getForCustomer",
+        "parameters": [
+          {
+            "name": "authorIdentifier",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ChurnRiskAssessmentResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/churn-risk/by-level": {
+      "get": {
+        "tags": [
+          "Churn Risk"
+        ],
+        "summary": "List customers at a specific risk level",
+        "operationId": "getByLevel",
+        "parameters": [
+          {
+            "name": "level",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "LOW",
+                "MEDIUM",
+                "HIGH",
+                "CRITICAL"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/HighRiskCustomerResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/users": {
+      "get": {
+        "tags": [
+          "Admin Users"
+        ],
+        "summary": "Get all users",
+        "operationId": "getUsers",
+        "parameters": [
+          {
+            "name": "search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseAdminUserResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseAdminUserResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/system-health": {
+      "get": {
+        "tags": [
+          "Admin System Health"
+        ],
+        "summary": "Get system health status",
+        "operationId": "getSystemHealth",
+        "responses": {
+          "200": {
+            "description": "System health retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminSystemHealthResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminSystemHealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/subscriptions": {
+      "get": {
+        "tags": [
+          "Admin Subscriptions"
+        ],
+        "summary": "Get all subscriptions",
+        "operationId": "getAllSubscriptions",
+        "responses": {
+          "200": {
+            "description": "Subscriptions retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserSubscriptionResponse"
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserSubscriptionResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/overview": {
+      "get": {
+        "tags": [
+          "Admin Overview"
+        ],
+        "summary": "Get platform overview metrics",
+        "operationId": "getOverview",
+        "responses": {
+          "200": {
+            "description": "Overview retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminOverviewResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminOverviewResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/organizations": {
+      "get": {
+        "tags": [
+          "Admin Organizations"
+        ],
+        "summary": "Get all organizations",
+        "operationId": "getOrganizations",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Organizations retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseAdminOrganizationResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseAdminOrganizationResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/organizations/{id}": {
+      "get": {
+        "tags": [
+          "Admin Organizations"
+        ],
+        "summary": "Get organization by ID",
+        "operationId": "getOrganization",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Organization retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminOrganizationDetailResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Organization not found",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminOrganizationDetailResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminOrganizationDetailResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/audit-logs": {
+      "get": {
+        "tags": [
+          "Admin Audit Logs"
+        ],
+        "summary": "Get audit logs",
+        "operationId": "getAuditLogs",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Audit logs retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseAdminAuditLogResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PageResponseAdminAuditLogResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/admin/ai-usage": {
+      "get": {
+        "tags": [
+          "Admin AI Usage"
+        ],
+        "summary": "Get AI usage statistics",
+        "operationId": "getAiUsage",
+        "responses": {
+          "200": {
+            "description": "AI usage retrieved successfully",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminAiUsageResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/AdminAiUsageResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/captcha/challenge": {
+      "get": {
+        "tags": [
+          "Captcha"
+        ],
+        "operationId": "getChallenge",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "TenantAIConfigRequest": {
+        "type": "object",
+        "properties": {
+          "providerType": {
+            "type": "string",
+            "enum": [
+              "OPENAI",
+              "OLLAMA",
+              "ANTHROPIC",
+              "SYSTEM_DEFAULT"
+            ]
+          },
+          "apiKey": {
+            "type": "string"
+          },
+          "model": {
+            "type": "string"
+          },
+          "maxTokensPerRequest": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "monthlyTokenBudget": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "required": [
+          "providerType"
+        ]
+      },
+      "TenantAIConfigResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "providerType": {
+            "type": "string",
+            "enum": [
+              "OPENAI",
+              "OLLAMA",
+              "ANTHROPIC",
+              "SYSTEM_DEFAULT"
+            ]
+          },
+          "model": {
+            "type": "string"
+          },
+          "maxTokensPerRequest": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "monthlyTokenBudget": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "hasCustomApiKey": {
+            "type": "boolean"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UpdateSubscriptionPlanRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "monthlyPrice": {
+            "type": "number",
+            "minimum": 0.0
+          },
+          "yearlyPrice": {
+            "type": "number",
+            "minimum": 0.0
+          },
+          "messageLimit": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "aiRecommendationsEnabled": {
+            "type": "boolean"
+          },
+          "trendAnalysisEnabled": {
+            "type": "boolean"
+          },
+          "churnDetectionEnabled": {
+            "type": "boolean"
+          },
+          "active": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SubscriptionPlanResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "code": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "monthlyPrice": {
+            "type": "number"
+          },
+          "yearlyPrice": {
+            "type": "number"
+          },
+          "messageLimit": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "aiRecommendationsEnabled": {
+            "type": "boolean"
+          },
+          "trendAnalysisEnabled": {
+            "type": "boolean"
+          },
+          "churnDetectionEnabled": {
+            "type": "boolean"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "UpdateAdminSettingsRequest": {
+        "type": "object",
+        "properties": {
+          "registrationEnabled": {
+            "type": "boolean"
+          },
+          "maintenanceMode": {
+            "type": "boolean"
+          },
+          "defaultPlan": {
+            "type": "string"
+          },
+          "defaultAiProvider": {
+            "type": "string"
+          },
+          "defaultAiModel": {
+            "type": "string"
+          },
+          "maxOrganizations": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "maxUsersPerOrganization": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "AdminSettingsResponse": {
+        "type": "object",
+        "properties": {
+          "registrationEnabled": {
+            "type": "boolean"
+          },
+          "maintenanceMode": {
+            "type": "boolean"
+          },
+          "defaultPlan": {
+            "type": "string"
+          },
+          "defaultAiProvider": {
+            "type": "string"
+          },
+          "defaultAiModel": {
+            "type": "string"
+          },
+          "maxOrganizations": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "maxUsersPerOrganization": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "DashboardSearchRequest": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32",
+            "maximum": 50,
+            "minimum": 1
+          },
+          "minSimilarity": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "VectorSearchResponse": {
+        "type": "object",
+        "properties": {
+          "feedbackId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "similarity": {
+            "type": "number",
+            "format": "double"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "MANUAL",
+              "CSV",
+              "INSTAGRAM",
+              "WHATSAPP",
+              "ZENDESK",
+              "TYPEFORM",
+              "WEBHOOK",
+              "EMAIL",
+              "SURVEY",
+              "SUPPORT_TICKET",
+              "TRUSTPILOT",
+              "LIVE_CHAT",
+              "OTHER"
+            ]
+          },
+          "content": {
+            "type": "string"
+          },
+          "summaryText": {
+            "type": "string"
+          },
+          "sentiment": {
+            "type": "string",
+            "enum": [
+              "POSITIVE",
+              "NEGATIVE",
+              "NEUTRAL",
+              "MIXED"
+            ]
+          },
+          "complaintCategories": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TrendEntryResponse": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "COMPLAINT_SPIKE",
+              "EMERGING_TOPIC",
+              "SENTIMENT_SHIFT"
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "subject": {
+            "type": "string"
+          },
+          "currentCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "previousCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "changeRatio": {
+            "type": "number",
+            "format": "double"
+          },
+          "explanation": {
+            "type": "string"
+          }
+        }
+      },
+      "TrendSnapshotResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "windowStart": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "windowEnd": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "windowDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalFeedbackInWindow": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendEntryResponse"
+            }
+          },
+          "detectedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TenantProvisionRequest": {
+        "type": "object",
+        "properties": {
+          "organizationName": {
+            "type": "string",
+            "maxLength": 200,
+            "minLength": 0
+          },
+          "adminEmail": {
+            "type": "string",
+            "minLength": 1
+          },
+          "adminPassword": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 8
+          },
+          "planId": {
+            "type": "string"
+          }
+        }
+      },
+      "TenantProvisionResponse": {
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationName": {
+            "type": "string"
+          },
+          "adminUserId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "UpgradeSubscriptionRequest": {
+        "type": "object",
+        "properties": {
+          "planCode": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "SubscriptionPaymentResponse": {
+        "type": "object",
+        "properties": {
+          "subscription": {
+            "$ref": "#/components/schemas/UserSubscriptionResponse"
+          },
+          "checkoutUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "UserSubscriptionResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "subscriptionPlanId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "billingCycle": {
+            "type": "string",
+            "enum": [
+              "MONTHLY",
+              "YEARLY"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "EXPIRED",
+              "CANCELED",
+              "PENDING",
+              "TRIAL",
+              "SCHEDULED"
+            ]
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "autoRenew": {
+            "type": "boolean"
+          },
+          "canceledAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "trial": {
+            "type": "boolean"
+          },
+          "seats": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SubscribeRequest": {
+        "type": "object",
+        "properties": {
+          "planCode": {
+            "type": "string",
+            "minLength": 1
+          },
+          "billingCycle": {
+            "type": "string",
+            "enum": [
+              "MONTHLY",
+              "YEARLY"
+            ]
+          },
+          "seats": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "required": [
+          "billingCycle"
+        ]
+      },
+      "SemanticSearchRequest": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "maxLength": 2000,
+            "minLength": 0
+          },
+          "limit": {
+            "type": "integer",
+            "format": "int32",
+            "maximum": 50,
+            "minimum": 1
+          },
+          "minSimilarity": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "SimilarFeedbackResult": {
+        "type": "object",
+        "properties": {
+          "feedbackId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "similarity": {
+            "type": "number",
+            "format": "double"
+          },
+          "content": {
+            "type": "string"
+          },
+          "summaryText": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string"
+          }
+        }
+      },
+      "RagQueryRequest": {
+        "type": "object",
+        "properties": {
+          "question": {
+            "type": "string",
+            "maxLength": 500,
+            "minLength": 0
+          },
+          "intent": {
+            "type": "string",
+            "enum": [
+              "PROBLEM_ANALYSIS",
+              "TREND_ANALYSIS",
+              "TOPIC_DEEP_DIVE",
+              "EXECUTIVE_SUMMARY"
+            ]
+          },
+          "maxDocuments": {
+            "type": "integer",
+            "format": "int32",
+            "maximum": 50,
+            "minimum": 1
+          },
+          "minSimilarity": {
+            "type": "number",
+            "format": "double"
+          }
+        },
+        "required": [
+          "intent"
+        ]
+      },
+      "RagQueryResponse": {
+        "type": "object",
+        "properties": {
+          "answer": {
+            "type": "string"
+          },
+          "intent": {
+            "type": "string",
+            "enum": [
+              "PROBLEM_ANALYSIS",
+              "TREND_ANALYSIS",
+              "TOPIC_DEEP_DIVE",
+              "EXECUTIVE_SUMMARY"
+            ]
+          },
+          "sourceFeedbackIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "documentsUsed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "modelUsed": {
+            "type": "string"
+          },
+          "fallback": {
+            "type": "boolean"
+          }
+        }
+      },
+      "SubmitFeedbackRequest": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": [
+              "MANUAL",
+              "CSV",
+              "INSTAGRAM",
+              "WHATSAPP",
+              "ZENDESK",
+              "TYPEFORM",
+              "WEBHOOK",
+              "EMAIL",
+              "SURVEY",
+              "SUPPORT_TICKET",
+              "TRUSTPILOT",
+              "LIVE_CHAT",
+              "OTHER"
+            ]
+          },
+          "content": {
+            "type": "string",
+            "maxLength": 5000,
+            "minLength": 0
+          },
+          "externalId": {
+            "type": "string"
+          },
+          "customerName": {
+            "type": "string"
+          },
+          "customerEmail": {
+            "type": "string"
+          },
+          "customerIdentifier": {
+            "type": "string"
+          },
+          "language": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "source"
+        ]
+      },
+      "FeedbackResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "MANUAL",
+              "CSV",
+              "INSTAGRAM",
+              "WHATSAPP",
+              "ZENDESK",
+              "TYPEFORM",
+              "WEBHOOK",
+              "EMAIL",
+              "SURVEY",
+              "SUPPORT_TICKET",
+              "TRUSTPILOT",
+              "LIVE_CHAT",
+              "OTHER"
+            ]
+          },
+          "content": {
+            "type": "string"
+          },
+          "customerIdentifier": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "PROCESSING",
+              "PROCESSED",
+              "FAILED"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FeedbackAnalysisResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "feedbackId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sentiment": {
+            "type": "string",
+            "enum": [
+              "POSITIVE",
+              "NEGATIVE",
+              "NEUTRAL",
+              "MIXED"
+            ]
+          },
+          "sentimentConfidence": {
+            "type": "number",
+            "format": "double"
+          },
+          "sentimentReasoning": {
+            "type": "string"
+          },
+          "sentimentAnalyzedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "summaryText": {
+            "type": "string"
+          },
+          "summarizedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "summaryModel": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "WebhookFeedbackRequest": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": [
+              "MANUAL",
+              "CSV",
+              "INSTAGRAM",
+              "WHATSAPP",
+              "ZENDESK",
+              "TYPEFORM",
+              "WEBHOOK",
+              "EMAIL",
+              "SURVEY",
+              "SUPPORT_TICKET",
+              "TRUSTPILOT",
+              "LIVE_CHAT",
+              "OTHER"
+            ]
+          },
+          "payload": {
+            "type": "string",
+            "minLength": 1
+          },
+          "apiKey": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "source"
+        ]
+      },
+      "CsvUploadResponse": {
+        "type": "object",
+        "properties": {
+          "totalRows": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "successCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "failureCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "feedbackIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        }
+      },
+      "RegisterConnectorRequest": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": [
+              "MANUAL",
+              "CSV",
+              "INSTAGRAM",
+              "WHATSAPP",
+              "ZENDESK",
+              "TYPEFORM",
+              "WEBHOOK",
+              "EMAIL",
+              "SURVEY",
+              "SUPPORT_TICKET",
+              "TRUSTPILOT",
+              "LIVE_CHAT",
+              "OTHER"
+            ]
+          },
+          "credentials": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "source"
+        ]
+      },
+      "ConnectorStatusResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "MANUAL",
+              "CSV",
+              "INSTAGRAM",
+              "WHATSAPP",
+              "ZENDESK",
+              "TYPEFORM",
+              "WEBHOOK",
+              "EMAIL",
+              "SURVEY",
+              "SUPPORT_TICKET",
+              "TRUSTPILOT",
+              "LIVE_CHAT",
+              "OTHER"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "INACTIVE",
+              "ERROR"
+            ]
+          },
+          "isMock": {
+            "type": "boolean"
+          },
+          "lastPulledAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ChurnRiskAssessmentResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "authorIdentifier": {
+            "type": "string"
+          },
+          "riskLevel": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "riskScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "assessedFeedbackCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "signals": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "recommendation": {
+            "type": "string"
+          },
+          "assessedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "RegisterRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 2147483647,
+            "minLength": 8,
+            "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$"
+          },
+          "firstName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "organizationName": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "captchaChallenge": {
+            "type": "string"
+          },
+          "captchaSolution": {
+            "type": "string"
+          }
+        }
+      },
+      "UserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationName": {
+            "type": "string"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "RefreshTokenRequest": {
+        "type": "object",
+        "properties": {
+          "refreshToken": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "AuthResponse": {
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string"
+          },
+          "refreshToken": {
+            "type": "string"
+          },
+          "tokenType": {
+            "type": "string"
+          },
+          "expiresIn": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "email": {
+            "type": "string"
+          },
+          "fullName": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "roles": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "LoginRequest": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "AdminUserResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "organizationName": {
+            "type": "string"
+          },
+          "role": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "lastLoginAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CreateSubscriptionPlanRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "code": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string"
+          },
+          "monthlyPrice": {
+            "type": "number",
+            "minimum": 0.0
+          },
+          "yearlyPrice": {
+            "type": "number",
+            "minimum": 0.0
+          },
+          "messageLimit": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "aiRecommendationsEnabled": {
+            "type": "boolean"
+          },
+          "trendAnalysisEnabled": {
+            "type": "boolean"
+          },
+          "churnDetectionEnabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "messageLimit",
+          "monthlyPrice",
+          "yearlyPrice"
+        ]
+      },
+      "AdminOrganizationResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "plan": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "userCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "feedbackCount": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "DailyUsageDataPoint": {
+        "type": "object",
+        "properties": {
+          "date": {
+            "type": "string"
+          },
+          "tokens": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "estimatedCostUsd": {
+            "type": "number"
+          }
+        }
+      },
+      "UsageReportResponse": {
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "billingPeriod": {
+            "type": "string"
+          },
+          "totalTokens": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalEstimatedCostUsd": {
+            "type": "number"
+          },
+          "monthlyTokenBudget": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "budgetUtilizationPercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "budgetExceeded": {
+            "type": "boolean"
+          },
+          "tokensByEventType": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "costByEventType": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            }
+          },
+          "tokensByModel": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "costByModel": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            }
+          },
+          "dailySeries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DailyUsageDataPoint"
+            }
+          }
+        }
+      },
+      "QuotaStatusResponse": {
+        "type": "object",
+        "properties": {
+          "billingPeriod": {
+            "type": "string"
+          },
+          "consumedTokens": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "budgetTokens": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "utilizationPercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "budgetExceeded": {
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "TenantUsageSummaryResponse": {
+        "type": "object",
+        "properties": {
+          "billingPeriod": {
+            "type": "string"
+          },
+          "totalTokensUsed": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "monthlyTokenBudget": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "budgetUtilizationPercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "tokensByEventType": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "SubscriptionInvoiceResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "userSubscriptionId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "invoiceNumber": {
+            "type": "string"
+          },
+          "companyName": {
+            "type": "string"
+          },
+          "billingAddress": {
+            "type": "string"
+          },
+          "subtotal": {
+            "type": "number"
+          },
+          "taxAmount": {
+            "type": "number"
+          },
+          "discountAmount": {
+            "type": "number"
+          },
+          "amount": {
+            "type": "number"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "paymentProvider": {
+            "type": "string"
+          },
+          "paymentProviderReference": {
+            "type": "string"
+          },
+          "invoiceStatus": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "PAID",
+              "FAILED",
+              "REFUNDED"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "paidAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "dueDate": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "pdfUrl": {
+            "type": "string"
+          }
+        }
+      },
+      "EnumValue": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "MetadataInfoResponse": {
+        "type": "object",
+        "properties": {
+          "feedbackSources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EnumValue"
+            }
+          }
+        }
+      },
+      "FeatureRequestResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "feedbackId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clusterName": {
+            "type": "string"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "priority": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FeedbackComplaintResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "feedbackId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "complaintCategoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "categoryName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "FeatureDemandResponse": {
+        "type": "object",
+        "properties": {
+          "clusterId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clusterName": {
+            "type": "string"
+          },
+          "occurrenceCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "demandRate": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "ComplaintTrendSeriesDto": {
+        "type": "object",
+        "properties": {
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "seriesByCategory": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
+          }
+        }
+      },
+      "DashboardTrendsResponse": {
+        "type": "object",
+        "properties": {
+          "window": {
+            "type": "string",
+            "enum": [
+              "LAST_7_DAYS",
+              "LAST_30_DAYS",
+              "LAST_90_DAYS"
+            ]
+          },
+          "windowStart": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "windowEnd": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "feedbackVolume": {
+            "$ref": "#/components/schemas/VolumeTimeSeriesDto"
+          },
+          "sentimentTrend": {
+            "$ref": "#/components/schemas/SentimentTimeSeriesDto"
+          },
+          "complaintTrend": {
+            "$ref": "#/components/schemas/ComplaintTrendSeriesDto"
+          }
+        }
+      },
+      "SentimentTimeSeriesDto": {
+        "type": "object",
+        "properties": {
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "positiveValues": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "negativeValues": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "neutralValues": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          },
+          "netSentimentScores": {
+            "type": "array",
+            "items": {
+              "type": "number",
+              "format": "double"
+            }
+          }
+        }
+      },
+      "VolumeTimeSeriesDto": {
+        "type": "object",
+        "properties": {
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "values": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int32"
+            }
+          }
+        }
+      },
+      "DashboardKpiResponse": {
+        "type": "object",
+        "properties": {
+          "window": {
+            "type": "string",
+            "enum": [
+              "LAST_7_DAYS",
+              "LAST_30_DAYS",
+              "LAST_90_DAYS"
+            ]
+          },
+          "metrics": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/KpiMetricDto"
+            }
+          }
+        }
+      },
+      "KpiMetricDto": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "value": {
+            "type": "string"
+          },
+          "unit": {
+            "type": "string"
+          },
+          "changePercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "trend": {
+            "type": "string"
+          }
+        }
+      },
+      "ChurnRiskBreakdownDto": {
+        "type": "object",
+        "properties": {
+          "lowCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mediumCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "highCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "criticalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalCustomersAssessed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "highAndCriticalPercent": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "DashboardAnalyticsResponse": {
+        "type": "object",
+        "properties": {
+          "window": {
+            "type": "string",
+            "enum": [
+              "LAST_7_DAYS",
+              "LAST_30_DAYS",
+              "LAST_90_DAYS"
+            ]
+          },
+          "windowStart": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "windowEnd": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "totalFeedback": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "analyzedFeedback": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "analysisCoveragePercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "sentimentBreakdown": {
+            "$ref": "#/components/schemas/SentimentBreakdownDto"
+          },
+          "feedbackBySource": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FeedbackSourceBreakdownDto"
+            }
+          },
+          "topComplaints": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TopComplaintDto"
+            }
+          },
+          "topFeatures": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TopFeatureDto"
+            }
+          },
+          "churnRiskBreakdown": {
+            "$ref": "#/components/schemas/ChurnRiskBreakdownDto"
+          }
+        }
+      },
+      "FeedbackSourceBreakdownDto": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "percent": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "SentimentBreakdownDto": {
+        "type": "object",
+        "properties": {
+          "positiveCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "negativeCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "neutralCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalAnalyzed": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "positivePercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "negativePercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "neutralPercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "netSentimentScore": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "TopComplaintDto": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "categoryName": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "percentOfFeedback": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "TopFeatureDto": {
+        "type": "object",
+        "properties": {
+          "clusterId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clusterName": {
+            "type": "string"
+          },
+          "count": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "percentOfFeedback": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "RecurringComplaintResponse": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "categoryName": {
+            "type": "string"
+          },
+          "occurrenceCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "occurrenceRate": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "HighRiskCustomerResponse": {
+        "type": "object",
+        "properties": {
+          "assessmentId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "authorIdentifier": {
+            "type": "string"
+          },
+          "riskLevel": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "riskScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "recommendation": {
+            "type": "string"
+          },
+          "assessedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "PageResponseAdminUserResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminUserResponse"
+            }
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "AdminSystemHealthResponse": {
+        "type": "object",
+        "properties": {
+          "services": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ServiceStatus"
+            }
+          },
+          "metrics": {
+            "$ref": "#/components/schemas/PlatformMetrics"
+          }
+        }
+      },
+      "PlatformMetrics": {
+        "type": "object",
+        "properties": {
+          "requestsPerMinute": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "avgResponseTimeMs": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "errorRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "activeSessions": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ServiceStatus": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "message": {
+            "type": "string"
+          },
+          "lastChecked": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AdminOverviewResponse": {
+        "type": "object",
+        "properties": {
+          "totalOrganizations": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "activeOrganizations": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "suspendedOrganizations": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalUsers": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "monthlyActiveUsers": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalFeedback": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalAiRequests": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "monthlyRevenue": {
+            "type": "number"
+          }
+        }
+      },
+      "PageResponseAdminOrganizationResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminOrganizationResponse"
+            }
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "ActivityEntry": {
+        "type": "object",
+        "properties": {
+          "description": {
+            "type": "string"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AdminOrganizationDetailResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "plan": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "domain": {
+            "type": "string"
+          },
+          "userCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "feedbackCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "aiRequestCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "connectorCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "subscription": {
+            "$ref": "#/components/schemas/SubscriptionDetail"
+          },
+          "recentActivity": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ActivityEntry"
+            }
+          }
+        }
+      },
+      "SubscriptionDetail": {
+        "type": "object",
+        "properties": {
+          "planName": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "renewalDate": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "AdminAuditLogResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "timestamp": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "user": {
+            "type": "string"
+          },
+          "organization": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          },
+          "result": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "string"
+          }
+        }
+      },
+      "PageResponseAdminAuditLogResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AdminAuditLogResponse"
+            }
+          },
+          "totalElements": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalPages": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "AdminAiUsageResponse": {
+        "type": "object",
+        "properties": {
+          "totalCost": {
+            "type": "number"
+          },
+          "totalRequests": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalTokens": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "activeProviders": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "byProvider": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ProviderCost"
+            }
+          },
+          "byModel": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ModelCost"
+            }
+          },
+          "byOrganization": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OrganizationCost"
+            }
+          }
+        }
+      },
+      "ModelCost": {
+        "type": "object",
+        "properties": {
+          "model": {
+            "type": "string"
+          },
+          "cost": {
+            "type": "number"
+          }
+        }
+      },
+      "OrganizationCost": {
+        "type": "object",
+        "properties": {
+          "organizationName": {
+            "type": "string"
+          },
+          "cost": {
+            "type": "number"
+          }
+        }
+      },
+      "ProviderCost": {
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": "string"
+          },
+          "cost": {
+            "type": "number"
+          }
+        }
+      }
+    }
+  }
+}

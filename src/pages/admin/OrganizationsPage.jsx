@@ -5,31 +5,44 @@ import PageHeader from '../../components/ui/PageHeader';
 import OrganizationStatusBadge from '../../components/admin/OrganizationStatusBadge';
 import EmptyState from '../../components/ui/EmptyState';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
+import Pagination from '../../components/ui/Pagination';
 import { getOrganizations, suspendOrganization, activateOrganization } from '../../services/adminService';
 
 export default function OrganizationsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [organizations, setOrganizations] = useState([]);
+  const [page, setPage] = useState(0);
+  const [size] = useState(20);
+  const [totalPages, setTotalPages] = useState(0);
+  const [totalElements, setTotalElements] = useState(0);
   const [search, setSearch] = useState('');
   const [actionInProgress, setActionInProgress] = useState(null);
 
-  const loadData = useCallback(async () => {
+  const loadData = useCallback(async (pageNum = page) => {
     setLoading(true);
     setError('');
     try {
-      const data = await getOrganizations();
-      setOrganizations(data || []);
+      const data = await getOrganizations({ page: pageNum, size });
+      setOrganizations(data.content || []);
+      setTotalPages(data.totalPages || 0);
+      setTotalElements(data.totalElements || 0);
+      setPage(data.page || 0);
     } catch (err) {
       setError(err.message || 'Failed to load organizations.');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page, size]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
+
+  const handlePageChange = (newPage) => {
+    setPage(newPage);
+    loadData(newPage);
+  };
 
   const handleSuspend = async (id) => {
     setActionInProgress(id);
@@ -66,7 +79,7 @@ export default function OrganizationsPage() {
         description="Manage all organizations on the platform"
       >
         <button
-          onClick={loadData}
+          onClick={() => loadData()}
           disabled={loading}
           className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
         >
@@ -158,6 +171,13 @@ export default function OrganizationsPage() {
               ))}
             </tbody>
           </table>
+          <Pagination
+            page={page}
+            totalPages={totalPages}
+            totalElements={totalElements}
+            size={size}
+            onPageChange={handlePageChange}
+          />
         </div>
       )}
     </AdminLayout>

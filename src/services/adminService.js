@@ -30,8 +30,10 @@ export async function getPlatformOverview() {
 }
 
 // Organizations
-export async function getOrganizations() {
-  const response = await apiClient.get(`${ADMIN_BASE}/organizations`);
+export async function getOrganizations({ page = 0, size = 20 } = {}) {
+  const response = await apiClient.get(`${ADMIN_BASE}/organizations`, {
+    params: { page, size },
+  });
   return response.data;
 }
 
@@ -51,8 +53,10 @@ export async function activateOrganization(organizationId) {
 }
 
 // Users
-export async function getAllUsers() {
-  const response = await apiClient.get(`${ADMIN_BASE}/users`);
+export async function getAllUsers({ page = 0, size = 20, search = '' } = {}) {
+  const response = await apiClient.get(`${ADMIN_BASE}/users`, {
+    params: { page, size, search },
+  });
   return response.data;
 }
 
@@ -79,8 +83,10 @@ export async function getSystemHealth() {
 }
 
 // Audit Logs
-export async function getAuditLogs() {
-  const response = await apiClient.get(`${ADMIN_BASE}/audit-logs`);
+export async function getAuditLogs({ page = 0, size = 20 } = {}) {
+  const response = await apiClient.get(`${ADMIN_BASE}/audit-logs`, {
+    params: { page, size },
+  });
   return response.data;
 }
 
