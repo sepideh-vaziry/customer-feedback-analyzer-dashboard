@@ -27,8 +27,9 @@ import {
   Shield,
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
+import { useAuth } from '../../contexts/AuthContext';
 
-const navItems = [
+const baseNavItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   {
     label: 'Feedback',
@@ -107,7 +108,6 @@ const navItems = [
   { to: '/analytics', label: 'Analytics', icon: BarChart3 },
   { to: '/insights', label: 'AI Insights', icon: Sparkles },
   { to: '/settings', label: 'Settings', icon: Settings },
-  { to: '/admin', label: 'Admin Portal', icon: Shield },
 ];
 
 function isChildActive(children, pathname) {
@@ -182,6 +182,18 @@ function SidebarItem({ item, collapsed }) {
 
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(false);
+  const { auth } = useAuth();
+
+  const roles = auth?.roles || [];
+  const isSuperAdmin = roles.includes('ROLE_SUPER_ADMIN');
+
+  const navItems = useMemo(() => {
+    const items = [...baseNavItems];
+    if (isSuperAdmin) {
+      items.push({ to: '/admin', label: 'Admin Portal', icon: Shield });
+    }
+    return items;
+  }, [isSuperAdmin]);
 
   return (
     <aside

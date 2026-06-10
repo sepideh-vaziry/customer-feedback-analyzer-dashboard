@@ -2,7 +2,7 @@ import { Navigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
 
 export default function AdminRoute({ children }) {
-  const { user, loading } = useAuth();
+  const { auth, loading } = useAuth();
 
   if (loading) {
     return (
@@ -12,11 +12,15 @@ export default function AdminRoute({ children }) {
     );
   }
 
-  // TODO: Replace with actual role check when backend provides roles
-  // For now, allow all authenticated users to access admin portal
-  // In production, check: user?.role === 'ROLE_SUPER_ADMIN'
-  if (!user) {
+  if (!auth?.accessToken) {
     return <Navigate to="/login" replace />;
+  }
+
+  const roles = auth?.roles || [];
+  const isSuperAdmin = roles.includes('ROLE_SUPER_ADMIN');
+
+  if (!isSuperAdmin) {
+    return <Navigate to="/dashboard" replace />;
   }
 
   return children;
