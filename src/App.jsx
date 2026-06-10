@@ -27,6 +27,11 @@ import TrendExplorerPage from './pages/trends/TrendExplorerPage';
 import ComplaintTrendsPage from './pages/trends/ComplaintTrendsPage';
 import FeatureTrendsPage from './pages/trends/FeatureTrendsPage';
 import TrendHistoryPage from './pages/trends/TrendHistoryPage';
+import SemanticSearchPage from './pages/ai-discovery/SemanticSearchPage';
+import SimilarFeedbackPage from './pages/ai-discovery/SimilarFeedbackPage';
+import SimilarComplaintsPage from './pages/ai-discovery/SimilarComplaintsPage';
+import SimilarFeatureRequestsPage from './pages/ai-discovery/SimilarFeatureRequestsPage';
+import SearchHistoryPage from './pages/ai-discovery/SearchHistoryPage';
 import AnalyticsPage from './pages/analytics/AnalyticsPage';
 import InsightsPage from './pages/insights/InsightsPage';
 import SettingsPage from './pages/settings/SettingsPage';
@@ -242,6 +247,46 @@ export default function App() {
           element={
             <ProtectedRoute>
               <TrendHistoryPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/ai-discovery"
+          element={
+            <ProtectedRoute>
+              <SemanticSearchPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/ai-discovery/similar-feedback"
+          element={
+            <ProtectedRoute>
+              <SimilarFeedbackPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/ai-discovery/similar-complaints"
+          element={
+            <ProtectedRoute>
+              <SimilarComplaintsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/ai-discovery/similar-features"
+          element={
+            <ProtectedRoute>
+              <SimilarFeatureRequestsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/ai-discovery/history"
+          element={
+            <ProtectedRoute>
+              <SearchHistoryPage />
             </ProtectedRoute>
           }
         />

@@ -19,6 +19,8 @@ import {
   UserSearch,
   Zap,
   History,
+  BrainCircuit,
+  GitCompare,
 } from 'lucide-react';
 import { useState } from 'react';
 
@@ -74,6 +76,17 @@ const navItems = [
       { to: '/trends/complaints', label: 'Complaint Trends', icon: AlertTriangle },
       { to: '/trends/features', label: 'Feature Trends', icon: TrendingUp },
       { to: '/trends/history', label: 'Trend History', icon: History },
+    ],
+  },
+  {
+    label: 'AI Discovery',
+    icon: BrainCircuit,
+    children: [
+      { to: '/ai-discovery', label: 'Semantic Search', icon: Search },
+      { to: '/ai-discovery/similar-feedback', label: 'Similar Feedback', icon: MessageSquare },
+      { to: '/ai-discovery/similar-complaints', label: 'Similar Complaints', icon: AlertTriangle },
+      { to: '/ai-discovery/similar-features', label: 'Similar Features', icon: GitCompare },
+      { to: '/ai-discovery/history', label: 'Search History', icon: History },
     ],
   },
   { to: '/analytics', label: 'Analytics', icon: BarChart3 },
