@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { RefreshCw, AlertTriangle, Search, CreditCard, Eye, Ban, CheckCircle } from 'lucide-react';
+import { RefreshCw, AlertTriangle, Search, CreditCard, Eye, Ban, CheckCircle, X } from 'lucide-react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import PageHeader from '../../components/ui/PageHeader';
 import EmptyState from '../../components/ui/EmptyState';
@@ -11,6 +11,7 @@ export default function SubscriptionsPage() {
   const [error, setError] = useState('');
   const [subscriptions, setSubscriptions] = useState([]);
   const [search, setSearch] = useState('');
+  const [selected, setSelected] = useState(null);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -133,7 +134,11 @@ export default function SubscriptionsPage() {
                     )}
                   </td>
                   <td className="px-4 py-3 text-right">
-                    <button className="p-1.5 rounded-lg hover:bg-border-light text-text-muted hover:text-text-primary transition-colors" title="View">
+                    <button
+                      onClick={() => setSelected(s)}
+                      className="p-1.5 rounded-lg hover:bg-border-light text-text-muted hover:text-text-primary transition-colors"
+                      title="View"
+                    >
                       <Eye size={14} />
                     </button>
                   </td>
@@ -141,6 +146,89 @@ export default function SubscriptionsPage() {
               ))}
             </tbody>
           </table>
+        </div>
+      )}
+
+      {selected && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setSelected(null)} />
+          <div className="relative w-full max-w-md h-full bg-bg-card border-l border-border shadow-xl overflow-y-auto">
+            <div className="flex items-center justify-between p-4 border-b border-border">
+              <h2 className="text-base font-semibold text-text-primary">Subscription Details</h2>
+              <button
+                onClick={() => setSelected(null)}
+                className="p-1.5 rounded-lg hover:bg-border-light text-text-muted hover:text-text-primary transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className="p-4 space-y-4">
+              <div>
+                <label className="text-xs font-medium text-text-muted uppercase tracking-wide">ID</label>
+                <p className="text-sm text-text-primary mt-1 font-mono">{selected.id}</p>
+              </div>
+              <div>
+                <label className="text-xs font-medium text-text-muted uppercase tracking-wide">Organization ID</label>
+                <p className="text-sm text-text-primary mt-1 font-mono">{selected.organizationId}</p>
+              </div>
+              <div>
+                <label className="text-xs font-medium text-text-muted uppercase tracking-wide">Plan ID</label>
+                <p className="text-sm text-text-primary mt-1 font-mono">{selected.subscriptionPlanId}</p>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-text-muted uppercase tracking-wide">Status</label>
+                  <span className={`mt-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${statusBadge(selected.status)}`}>
+                    {selected.status}
+                  </span>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-text-muted uppercase tracking-wide">Billing Cycle</label>
+                  <p className="text-sm text-text-primary mt-1">{selected.billingCycle || '—'}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-text-muted uppercase tracking-wide">Start Date</label>
+                  <p className="text-sm text-text-primary mt-1">{formatDate(selected.startDate)}</p>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-text-muted uppercase tracking-wide">End Date</label>
+                  <p className="text-sm text-text-primary mt-1">{formatDate(selected.endDate)}</p>
+                </div>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-text-muted uppercase tracking-wide">Seats</label>
+                  <p className="text-sm text-text-primary mt-1">{selected.seats ?? '—'}</p>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-text-muted uppercase tracking-wide">Auto Renew</label>
+                  <p className="text-sm text-text-primary mt-1">{selected.autoRenew ? 'Yes' : 'No'}</p>
+                </div>
+              </div>
+              {selected.trial && (
+                <div>
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-primary-50 text-primary-700">
+                    Trial Subscription
+                  </span>
+                </div>
+              )}
+              {selected.canceledAt && (
+                <div>
+                  <label className="text-xs font-medium text-text-muted uppercase tracking-wide">Canceled At</label>
+                  <p className="text-sm text-danger-600 mt-1">{formatDate(selected.canceledAt)}</p>
+                </div>
+              )}
+              <div className="pt-4 border-t border-border">
+                <label className="text-xs font-medium text-text-muted uppercase tracking-wide">Timestamps</label>
+                <div className="mt-1 space-y-1 text-sm text-text-secondary">
+                  <p>Created: {formatDate(selected.createdAt)}</p>
+                  <p>Updated: {formatDate(selected.updatedAt)}</p>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </AdminLayout>
