@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import { RefreshCw, AlertTriangle, Search, Users, Eye, Ban, CheckCircle } from 'lucide-react';
+import { RefreshCw, AlertTriangle, Search, Users, Eye, Ban, CheckCircle, X } from 'lucide-react';
 import AdminLayout from '../../components/admin/AdminLayout';
 import PageHeader from '../../components/ui/PageHeader';
 import EmptyState from '../../components/ui/EmptyState';
@@ -16,6 +16,7 @@ export default function UsersPage() {
   const [totalPages, setTotalPages] = useState(0);
   const [totalElements, setTotalElements] = useState(0);
   const [search, setSearch] = useState('');
+  const [selectedUser, setSelectedUser] = useState(null);
   const [actionInProgress, setActionInProgress] = useState(null);
 
   const loadData = useCallback(async (pageNum = page, searchQuery = search) => {
@@ -152,7 +153,11 @@ export default function UsersPage() {
                   </td>
                   <td className="px-4 py-3 text-right">
                     <div className="flex items-center justify-end gap-1">
-                      <button className="p-1.5 rounded-lg hover:bg-border-light text-text-muted hover:text-text-primary transition-colors" title="View">
+                      <button
+                        onClick={() => setSelectedUser(u)}
+                        className="p-1.5 rounded-lg hover:bg-border-light text-text-muted hover:text-text-primary transition-colors"
+                        title="View"
+                      >
                         <Eye size={14} />
                       </button>
                       {u.status !== 'DISABLED' ? (
@@ -187,6 +192,71 @@ export default function UsersPage() {
             size={size}
             onPageChange={handlePageChange}
           />
+        </div>
+      )}
+
+      {selectedUser && (
+        <div className="fixed inset-0 z-50 flex justify-end">
+          <div className="absolute inset-0 bg-black/40" onClick={() => setSelectedUser(null)} />
+          <div className="relative w-full max-w-md h-full bg-bg-card border-l border-border shadow-xl overflow-y-auto">
+            <div className="flex items-center justify-between p-4 border-b border-border">
+              <h2 className="text-base font-semibold text-text-primary">User Details</h2>
+              <button
+                onClick={() => setSelectedUser(null)}
+                className="p-1.5 rounded-lg hover:bg-border-light text-text-muted hover:text-text-primary transition-colors"
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className="p-4 space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full bg-primary-50 flex items-center justify-center text-lg font-semibold text-primary-600">
+                  {selectedUser.name?.charAt(0)?.toUpperCase() || '?'}
+                </div>
+                <div>
+                  <h3 className="text-base font-semibold text-text-primary">{selectedUser.name}</h3>
+                  <p className="text-sm text-text-muted">{selectedUser.email}</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-text-muted uppercase tracking-wide">ID</label>
+                  <p className="text-sm text-text-primary mt-1 font-mono">{selectedUser.id}</p>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-text-muted uppercase tracking-wide">Status</label>
+                  <span className={`mt-1 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                    selectedUser.status === 'ACTIVE'
+                      ? 'bg-success-50 text-success-700'
+                      : selectedUser.status === 'DISABLED'
+                      ? 'bg-danger-50 text-danger-700'
+                      : 'bg-warning-50 text-warning-700'
+                  }`}>
+                    {selectedUser.status || 'UNKNOWN'}
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs font-medium text-text-muted uppercase tracking-wide">Role</label>
+                  <p className="text-sm text-text-primary mt-1">{selectedUser.role || '—'}</p>
+                </div>
+                <div>
+                  <label className="text-xs font-medium text-text-muted uppercase tracking-wide">Organization</label>
+                  <p className="text-sm text-text-primary mt-1">{selectedUser.organizationName || '—'}</p>
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-medium text-text-muted uppercase tracking-wide">Last Login</label>
+                <p className="text-sm text-text-primary mt-1">
+                  {selectedUser.lastLoginAt ? new Date(selectedUser.lastLoginAt).toLocaleString() : 'Never'}
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
       )}
     </AdminLayout>
