@@ -24,6 +24,7 @@ import {
   CreditCard,
   FileText,
   Activity,
+  Shield,
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 
@@ -106,6 +107,7 @@ const navItems = [
   { to: '/analytics', label: 'Analytics', icon: BarChart3 },
   { to: '/insights', label: 'AI Insights', icon: Sparkles },
   { to: '/settings', label: 'Settings', icon: Settings },
+  { to: '/admin', label: 'Admin Portal', icon: Shield },
 ];
 
 function isChildActive(children, pathname) {

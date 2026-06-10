@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './contexts/AuthContext';
 import ProtectedRoute from './components/auth/ProtectedRoute';
+import AdminRoute from './components/auth/AdminRoute';
 import LoginPage from './pages/auth/LoginPage';
 import RegisterPage from './pages/auth/RegisterPage';
 import DashboardPage from './pages/dashboard/DashboardPage';
@@ -40,6 +41,16 @@ import SubscriptionHistoryPage from './pages/billing/SubscriptionHistoryPage';
 import AnalyticsPage from './pages/analytics/AnalyticsPage';
 import InsightsPage from './pages/insights/InsightsPage';
 import SettingsPage from './pages/settings/SettingsPage';
+import PlatformOverviewPage from './pages/admin/PlatformOverviewPage';
+import OrganizationsPage from './pages/admin/OrganizationsPage';
+import OrganizationDetailsPage from './pages/admin/OrganizationDetailsPage';
+import UsersPage from './pages/admin/UsersPage';
+import SubscriptionsPage from './pages/admin/SubscriptionsPage';
+import AIUsagePage from './pages/admin/AIUsagePage';
+import SystemHealthPage from './pages/admin/SystemHealthPage';
+import AuditLogsPage from './pages/admin/AuditLogsPage';
+import GlobalSettingsPage from './pages/admin/GlobalSettingsPage';
+import SupportToolsPage from './pages/admin/SupportToolsPage';
 
 export default function App() {
   return (
@@ -341,6 +352,86 @@ export default function App() {
             <ProtectedRoute>
               <SettingsPage />
             </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <PlatformOverviewPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/organizations"
+          element={
+            <AdminRoute>
+              <OrganizationsPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/organizations/:organizationId"
+          element={
+            <AdminRoute>
+              <OrganizationDetailsPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/users"
+          element={
+            <AdminRoute>
+              <UsersPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/subscriptions"
+          element={
+            <AdminRoute>
+              <SubscriptionsPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/ai-usage"
+          element={
+            <AdminRoute>
+              <AIUsagePage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/system-health"
+          element={
+            <AdminRoute>
+              <SystemHealthPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/audit-logs"
+          element={
+            <AdminRoute>
+              <AuditLogsPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/settings"
+          element={
+            <AdminRoute>
+              <GlobalSettingsPage />
+            </AdminRoute>
+          }
+        />
+        <Route
+          path="/admin/support"
+          element={
+            <AdminRoute>
+              <SupportToolsPage />
+            </AdminRoute>
           }
         />
         <Route path="/" element={<Navigate to="/dashboard" replace />} />
