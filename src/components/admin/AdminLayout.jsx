@@ -13,7 +13,7 @@ import {
   PanelLeft,
 } from 'lucide-react';
 import { useState } from 'react';
-import logo from '../../assets/logo.png';
+import logo from '../../assets/logo-with-text-2.png';
 
 const adminNavItems = [
   { to: '/admin', label: 'Platform Overview', icon: LayoutDashboard },
@@ -61,7 +61,7 @@ export default function AdminLayout({ children }) {
         <div className="flex items-center justify-between h-16 px-4 border-b border-white/10">
           {!collapsed && (
             <div className="flex items-center">
-              <img src={logo} alt="Admin Portal" className="h-10 object-contain" />
+              <img src={logo} alt="Admin Portal" className="h-14 object-contain" />
             </div>
           )}
           <button
