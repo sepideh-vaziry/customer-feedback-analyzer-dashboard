@@ -54,7 +54,7 @@ export default function LoginPage() {
     <div className="min-h-screen flex items-center justify-center bg-bg-base px-4">
       <div className="w-full max-w-sm">
         <div className="flex items-center justify-center mb-8">
-          <img src={logo} alt="Feedback AI" className="h-16 object-contain" />
+          <img src={logo} alt="Feedback AI" className="h-40 object-contain" />
         </div>
 
         <div className="bg-bg-card rounded-2xl border border-border p-8 shadow-xs">
