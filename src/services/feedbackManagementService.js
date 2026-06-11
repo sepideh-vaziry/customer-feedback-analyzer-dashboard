@@ -31,3 +31,8 @@ export async function reanalyzeFeedback(feedbackId) {
   const response = await apiClient.post(`${FEEDBACK_BASE}/${feedbackId}/analysis/reanalyze`);
   return response.data;
 }
+
+export async function reprocessFeedback(feedbackId) {
+  const response = await apiClient.post(`${FEEDBACK_BASE}/${feedbackId}/reprocess`);
+  return response.data;
+}

@@ -1,12 +1,12 @@
 import { useNavigate } from 'react-router-dom';
-import { Eye, ArrowUpDown } from 'lucide-react';
+import { Eye, ArrowUpDown, Play } from 'lucide-react';
 import FeedbackStatusBadge from './FeedbackStatusBadge';
 import FeedbackContentPreview from './FeedbackContentPreview';
 import EmptyState from '../ui/EmptyState';
 import LoadingSpinner from '../ui/LoadingSpinner';
 import { MessageSquare } from 'lucide-react';
 
-export default function FeedbackTable({ feedbacks, loading, sortConfig, onSort }) {
+export default function FeedbackTable({ feedbacks, loading, sortConfig, onSort, onReprocess, reprocessingId }) {
   const navigate = useNavigate();
 
   if (loading) {
@@ -100,14 +100,27 @@ export default function FeedbackTable({ feedbacks, loading, sortConfig, onSort }
                 <FeedbackContentPreview content={feedback.content} maxLength={60} />
               </td>
               <td className="py-3 px-4 text-right">
-                <button
-                  onClick={() => navigate(`/feedback/${feedback.id}`)}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-md transition-colors"
-                  title="View details"
-                >
-                  <Eye size={14} />
-                  View
-                </button>
+                <div className="flex items-center justify-end gap-2">
+                  {feedback.status !== 'PROCESSED' && (
+                    <button
+                      onClick={() => onReprocess?.(feedback.id)}
+                      disabled={reprocessingId === feedback.id}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-success-600 hover:text-success-700 hover:bg-success-50 rounded-md transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                      title="Reprocess feedback"
+                    >
+                      <Play size={14} />
+                      {reprocessingId === feedback.id ? 'Processing...' : 'Process'}
+                    </button>
+                  )}
+                  <button
+                    onClick={() => navigate(`/feedback/${feedback.id}`)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-md transition-colors"
+                    title="View details"
+                  >
+                    <Eye size={14} />
+                    View
+                  </button>
+                </div>
               </td>
             </tr>
           ))}

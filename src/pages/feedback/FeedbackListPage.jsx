@@ -6,7 +6,7 @@ import PageHeader from '../../components/ui/PageHeader';
 import FeedbackSearch from '../../components/feedback/FeedbackSearch';
 import FeedbackFilters from '../../components/feedback/FeedbackFilters';
 import FeedbackTable from '../../components/feedback/FeedbackTable';
-import { getFeedbackList } from '../../services/feedbackManagementService';
+import { getFeedbackList, reprocessFeedback } from '../../services/feedbackManagementService';
 
 export default function FeedbackListPage() {
   const navigate = useNavigate();
@@ -16,6 +16,7 @@ export default function FeedbackListPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState({ source: '', status: '' });
   const [sortConfig, setSortConfig] = useState({ key: 'createdAt', direction: 'desc' });
+  const [reprocessingId, setReprocessingId] = useState(null);
 
   const loadFeedbacks = useCallback(async () => {
     setLoading(true);
@@ -40,6 +41,20 @@ export default function FeedbackListPage() {
       direction: prev.key === key && prev.direction === 'asc' ? 'desc' : 'asc',
     }));
   }, []);
+
+  const handleReprocess = useCallback(async (feedbackId) => {
+    setReprocessingId(feedbackId);
+    setError('');
+    try {
+      await reprocessFeedback(feedbackId);
+      await loadFeedbacks();
+    } catch (err) {
+      const message = err.response?.data?.message || err.message || 'Failed to reprocess feedback';
+      setError(message);
+    } finally {
+      setReprocessingId(null);
+    }
+  }, [loadFeedbacks]);
 
   const filteredFeedbacks = useMemo(() => {
     let result = [...feedbacks];
@@ -134,6 +149,8 @@ export default function FeedbackListPage() {
                 loading={loading}
                 sortConfig={sortConfig}
                 onSort={handleSort}
+                onReprocess={handleReprocess}
+                reprocessingId={reprocessingId}
               />
             </div>
           </div>

@@ -24,6 +24,7 @@ import {
   FileText,
   Activity,
   Shield,
+  Sparkles,
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
