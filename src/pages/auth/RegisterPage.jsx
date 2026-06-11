@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Sparkles, Loader2, CheckCircle2 } from 'lucide-react';
+import { Loader2, CheckCircle2 } from 'lucide-react';
 import { register } from '../../services/authService';
+import logo from '../../assets/logo.png';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
@@ -76,9 +77,7 @@ export default function RegisterPage() {
     <div className="min-h-screen flex items-center justify-center bg-bg-base px-4 py-8">
       <div className="w-full max-w-md">
         <div className="flex items-center justify-center gap-2.5 mb-8">
-          <div className="w-10 h-10 rounded-xl bg-primary-600 flex items-center justify-center">
-            <Sparkles size={22} className="text-white" />
-          </div>
+          <img src={logo} alt="Feedback AI" className="w-10 h-10 rounded-xl object-cover" />
           <span className="text-xl font-semibold text-text-primary tracking-tight">
             Feedback AI
           </span>

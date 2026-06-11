@@ -8,12 +8,12 @@ import {
   HeartPulse,
   ClipboardList,
   Settings,
-  Shield,
   Wrench,
   PanelLeftClose,
   PanelLeft,
 } from 'lucide-react';
 import { useState } from 'react';
+import logo from '../../assets/logo.png';
 
 const adminNavItems = [
   { to: '/admin', label: 'Platform Overview', icon: LayoutDashboard },
@@ -61,9 +61,7 @@ export default function AdminLayout({ children }) {
         <div className="flex items-center justify-between h-16 px-4 border-b border-white/10">
           {!collapsed && (
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-danger-600 flex items-center justify-center">
-                <Shield size={18} className="text-white" />
-              </div>
+              <img src={logo} alt="Admin Portal" className="w-8 h-8 rounded-lg object-cover" />
               <span className="font-semibold text-sm tracking-tight">Admin Portal</span>
             </div>
           )}

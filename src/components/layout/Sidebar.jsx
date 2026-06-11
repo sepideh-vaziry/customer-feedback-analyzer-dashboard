@@ -3,7 +3,6 @@ import {
   LayoutDashboard,
   MessageSquare,
   BarChart3,
-  Sparkles,
   TrendingUp,
   Settings,
   PanelLeftClose,
@@ -28,6 +27,7 @@ import {
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
+import logo from '../../assets/logo.png';
 
 const baseNavItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -204,9 +204,7 @@ export default function Sidebar() {
       <div className="flex items-center justify-between h-16 px-4 border-b border-white/10">
         {!collapsed && (
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-primary-600 flex items-center justify-center">
-              <Sparkles size={18} className="text-white" />
-            </div>
+            <img src={logo} alt="Feedback AI" className="w-8 h-8 rounded-lg object-cover" />
             <span className="font-semibold text-sm tracking-tight">Feedback AI</span>
           </div>
         )}
