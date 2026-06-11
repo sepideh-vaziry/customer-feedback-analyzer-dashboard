@@ -60,9 +60,8 @@ export default function AdminLayout({ children }) {
       >
         <div className="flex items-center justify-between h-16 px-4 border-b border-white/10">
           {!collapsed && (
-            <div className="flex items-center gap-2.5">
-              <img src={logo} alt="Admin Portal" className="w-8 h-8 rounded-lg object-cover" />
-              <span className="font-semibold text-sm tracking-tight">Admin Portal</span>
+            <div className="flex items-center">
+              <img src={logo} alt="Admin Portal" className="h-10 object-contain" />
             </div>
           )}
           <button

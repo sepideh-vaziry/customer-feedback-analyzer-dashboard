@@ -53,11 +53,8 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-bg-base px-4">
       <div className="w-full max-w-sm">
-        <div className="flex items-center justify-center gap-2.5 mb-8">
-          <img src={logo} alt="Feedback AI" className="w-10 h-10 rounded-xl object-cover" />
-          <span className="text-xl font-semibold text-text-primary tracking-tight">
-            Feedback AI
-          </span>
+        <div className="flex items-center justify-center mb-8">
+          <img src={logo} alt="Feedback AI" className="h-16 object-contain" />
         </div>
 
         <div className="bg-bg-card rounded-2xl border border-border p-8 shadow-xs">

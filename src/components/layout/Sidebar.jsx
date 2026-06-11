@@ -204,9 +204,8 @@ export default function Sidebar() {
     >
       <div className="flex items-center justify-between h-16 px-4 border-b border-white/10">
         {!collapsed && (
-          <div className="flex items-center gap-2.5">
-            <img src={logo} alt="Feedback AI" className="w-10 h-10 rounded-lg object-cover" />
-            <span className="font-semibold text-sm tracking-tight">Feedback AI</span>
+          <div className="flex items-center">
+            <img src={logo} alt="Feedback AI" className="h-10 object-contain" />
           </div>
         )}
         <button
