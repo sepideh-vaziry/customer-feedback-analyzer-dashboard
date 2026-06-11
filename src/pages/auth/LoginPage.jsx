@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
-import logo from '../../assets/logo.png';
+import logo from '../../assets/logo-with-text.png';
 
 export default function LoginPage() {
   const navigate = useNavigate();

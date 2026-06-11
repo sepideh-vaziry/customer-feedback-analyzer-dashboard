@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loader2, CheckCircle2 } from 'lucide-react';
 import { register } from '../../services/authService';
-import logo from '../../assets/logo.png';
+import logo from '../../assets/logo-with-text.png';
 
 export default function RegisterPage() {
   const navigate = useNavigate();
