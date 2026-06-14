@@ -34,22 +34,10 @@ export default function LoginPage() {
 
   useEffect(() => {
     const el = altchaRef.current;
-    if (!el || !captchaChallenge) return;
-
-    const configureWidget = async () => {
-      try {
-        await el.configure({
-          challenge: captchaChallenge,
-          auto: 'off',
-        });
-      } catch (err) {
-        console.error('Altcha configure error:', err);
-      }
-    };
-
-    configureWidget();
+    if (!el) return;
 
     const handleStateChange = (ev) => {
+      console.log('Altcha statechange:', ev.detail);
       if (ev.detail?.payload) {
         setForm((prev) => ({ ...prev, captchaPayload: ev.detail.payload }));
         setErrors((prev) => ({ ...prev, captchaPayload: '' }));
@@ -60,7 +48,7 @@ export default function LoginPage() {
     return () => {
       el.removeEventListener('statechange', handleStateChange);
     };
-  }, [captchaChallenge]);
+  }, []);
 
   function validate() {
     const nextErrors = {};
@@ -177,6 +165,8 @@ export default function LoginPage() {
               {captchaChallenge ? (
                 <altcha-widget
                   ref={altchaRef}
+                  challenge={JSON.stringify(captchaChallenge)}
+                  auto="off"
                 />
               ) : (
                 <div className="p-3 rounded-lg bg-danger-50 text-sm text-danger-700">
