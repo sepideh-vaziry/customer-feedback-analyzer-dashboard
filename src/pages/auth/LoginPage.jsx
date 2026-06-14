@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -14,6 +14,14 @@ export default function LoginPage() {
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState('');
+  const altchaRef = useRef(null);
+
+  const handleAltchaStateChange = useCallback((ev) => {
+    if (ev.detail?.payload) {
+      setForm((prev) => ({ ...prev, captchaPayload: ev.detail.payload }));
+      setErrors((prev) => ({ ...prev, captchaPayload: '' }));
+    }
+  }, []);
 
   async function fetchCaptcha() {
     try {
@@ -30,6 +38,15 @@ export default function LoginPage() {
   useEffect(() => {
     fetchCaptcha();
   }, []);
+
+  useEffect(() => {
+    const el = altchaRef.current;
+    if (!el) return;
+    el.addEventListener('statechange', handleAltchaStateChange);
+    return () => {
+      el.removeEventListener('statechange', handleAltchaStateChange);
+    };
+  }, [handleAltchaStateChange, captchaChallenge]);
 
   function validate() {
     const nextErrors = {};
@@ -145,13 +162,8 @@ export default function LoginPage() {
             <div className="space-y-2">
               {captchaChallenge ? (
                 <altcha-widget
+                  ref={altchaRef}
                   challengejson={JSON.stringify(captchaChallenge)}
-                  onStateChange={(ev) => {
-                    if (ev.detail?.payload) {
-                      setForm((prev) => ({ ...prev, captchaPayload: ev.detail.payload }));
-                      setErrors((prev) => ({ ...prev, captchaPayload: '' }));
-                    }
-                  }}
                 />
               ) : (
                 <div className="p-3 rounded-lg bg-danger-50 text-sm text-danger-700">
