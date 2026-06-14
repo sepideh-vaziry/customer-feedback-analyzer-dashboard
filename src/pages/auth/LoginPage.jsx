@@ -16,13 +16,6 @@ export default function LoginPage() {
   const [apiError, setApiError] = useState('');
   const altchaRef = useRef(null);
 
-  const handleAltchaStateChange = useCallback((ev) => {
-    if (ev.detail?.payload) {
-      setForm((prev) => ({ ...prev, captchaPayload: ev.detail.payload }));
-      setErrors((prev) => ({ ...prev, captchaPayload: '' }));
-    }
-  }, []);
-
   async function fetchCaptcha() {
     try {
       const data = await getCaptchaChallenge();
@@ -41,12 +34,33 @@ export default function LoginPage() {
 
   useEffect(() => {
     const el = altchaRef.current;
-    if (!el) return;
-    el.addEventListener('statechange', handleAltchaStateChange);
-    return () => {
-      el.removeEventListener('statechange', handleAltchaStateChange);
+    if (!el || !captchaChallenge) return;
+
+    const configureWidget = async () => {
+      try {
+        await el.configure({
+          challenge: captchaChallenge,
+          auto: 'off',
+        });
+      } catch (err) {
+        console.error('Altcha configure error:', err);
+      }
     };
-  }, [handleAltchaStateChange, captchaChallenge]);
+
+    configureWidget();
+
+    const handleStateChange = (ev) => {
+      if (ev.detail?.payload) {
+        setForm((prev) => ({ ...prev, captchaPayload: ev.detail.payload }));
+        setErrors((prev) => ({ ...prev, captchaPayload: '' }));
+      }
+    };
+
+    el.addEventListener('statechange', handleStateChange);
+    return () => {
+      el.removeEventListener('statechange', handleStateChange);
+    };
+  }, [captchaChallenge]);
 
   function validate() {
     const nextErrors = {};
@@ -163,7 +177,6 @@ export default function LoginPage() {
               {captchaChallenge ? (
                 <altcha-widget
                   ref={altchaRef}
-                  challengejson={JSON.stringify(captchaChallenge)}
                 />
               ) : (
                 <div className="p-3 rounded-lg bg-danger-50 text-sm text-danger-700">

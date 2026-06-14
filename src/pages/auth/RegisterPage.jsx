@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loader2, CheckCircle2 } from 'lucide-react';
 import { register } from '../../services/authService';
@@ -23,13 +23,6 @@ export default function RegisterPage() {
   const [success, setSuccess] = useState(false);
   const altchaRef = useRef(null);
 
-  const handleAltchaStateChange = useCallback((ev) => {
-    if (ev.detail?.payload) {
-      setForm((prev) => ({ ...prev, captchaPayload: ev.detail.payload }));
-      setErrors((prev) => ({ ...prev, captchaPayload: '' }));
-    }
-  }, []);
-
   async function fetchCaptcha() {
     try {
       const data = await getCaptchaChallenge();
@@ -48,12 +41,33 @@ export default function RegisterPage() {
 
   useEffect(() => {
     const el = altchaRef.current;
-    if (!el) return;
-    el.addEventListener('statechange', handleAltchaStateChange);
-    return () => {
-      el.removeEventListener('statechange', handleAltchaStateChange);
+    if (!el || !captchaChallenge) return;
+
+    const configureWidget = async () => {
+      try {
+        await el.configure({
+          challenge: captchaChallenge,
+          auto: 'off',
+        });
+      } catch (err) {
+        console.error('Altcha configure error:', err);
+      }
     };
-  }, [handleAltchaStateChange, captchaChallenge]);
+
+    configureWidget();
+
+    const handleStateChange = (ev) => {
+      if (ev.detail?.payload) {
+        setForm((prev) => ({ ...prev, captchaPayload: ev.detail.payload }));
+        setErrors((prev) => ({ ...prev, captchaPayload: '' }));
+      }
+    };
+
+    el.addEventListener('statechange', handleStateChange);
+    return () => {
+      el.removeEventListener('statechange', handleStateChange);
+    };
+  }, [captchaChallenge]);
 
   function validate() {
     const nextErrors = {};
@@ -265,7 +279,6 @@ export default function RegisterPage() {
                 {captchaChallenge ? (
                   <altcha-widget
                     ref={altchaRef}
-                    challengejson={JSON.stringify(captchaChallenge)}
                   />
                 ) : (
                   <div className="p-3 rounded-lg bg-danger-50 text-sm text-danger-700">
