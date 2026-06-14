@@ -26,6 +26,7 @@ export default function RegisterPage() {
   async function fetchCaptcha() {
     try {
       const data = await getCaptchaChallenge();
+      console.log('Raw captcha challenge:', data);
       setCaptchaChallenge(data);
       setForm((prev) => ({ ...prev, captchaPayload: '' }));
       setApiError('');
