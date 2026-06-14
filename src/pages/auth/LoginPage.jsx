@@ -34,7 +34,10 @@ export default function LoginPage() {
 
   useEffect(() => {
     const el = altchaRef.current;
-    if (!el) return;
+    if (!el || !captchaChallenge) return;
+
+    el.setAttribute('challenge', JSON.stringify(captchaChallenge));
+    el.setAttribute('auto', 'off');
 
     const handleStateChange = (ev) => {
       console.log('Altcha statechange:', ev.detail);
@@ -48,7 +51,7 @@ export default function LoginPage() {
     return () => {
       el.removeEventListener('statechange', handleStateChange);
     };
-  }, []);
+  }, [captchaChallenge]);
 
   function validate() {
     const nextErrors = {};
@@ -165,8 +168,6 @@ export default function LoginPage() {
               {captchaChallenge ? (
                 <altcha-widget
                   ref={altchaRef}
-                  challenge={JSON.stringify(captchaChallenge)}
-                  auto="off"
                 />
               ) : (
                 <div className="p-3 rounded-lg bg-danger-50 text-sm text-danger-700">
