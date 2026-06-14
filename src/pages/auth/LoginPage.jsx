@@ -22,8 +22,10 @@ export default function LoginPage() {
       const image = data.imageBase64 || data.captchaImage || data.image || '';
       setForm((prev) => ({ ...prev, captchaChallenge: challenge, captchaSolution: '' }));
       setCaptchaImage(image);
-    } catch {
+      setApiError('');
+    } catch (err) {
       setCaptchaImage('');
+      setApiError('Failed to load captcha. Please refresh the page or try again later.');
     }
   }
 
@@ -143,8 +145,8 @@ export default function LoginPage() {
               )}
             </div>
 
-            {captchaImage && (
-              <div className="space-y-2">
+            <div className="space-y-2">
+              {captchaImage ? (
                 <div className="flex items-center justify-center">
                   <img
                     src={`data:image/png;base64,${captchaImage}`}
@@ -152,29 +154,33 @@ export default function LoginPage() {
                     className="rounded border border-border"
                   />
                 </div>
-                <input
-                  id="captchaSolution"
-                  name="captchaSolution"
-                  type="text"
-                  value={form.captchaSolution}
-                  onChange={handleChange}
-                  placeholder="Enter captcha solution"
-                  className={`w-full px-3 py-2.5 text-sm bg-bg-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all ${
-                    errors.captchaSolution ? 'border-danger-300' : 'border-border'
-                  }`}
-                />
-                {errors.captchaSolution && (
-                  <p className="mt-1.5 text-xs text-danger-600">{errors.captchaSolution}</p>
-                )}
-                <button
-                  type="button"
-                  onClick={fetchCaptcha}
-                  className="text-sm text-primary-600 hover:text-primary-700 font-medium"
-                >
-                  Refresh captcha
-                </button>
-              </div>
-            )}
+              ) : (
+                <div className="p-3 rounded-lg bg-danger-50 text-sm text-danger-700">
+                  Captcha image not available.
+                </div>
+              )}
+              <input
+                id="captchaSolution"
+                name="captchaSolution"
+                type="text"
+                value={form.captchaSolution}
+                onChange={handleChange}
+                placeholder="Enter captcha solution"
+                className={`w-full px-3 py-2.5 text-sm bg-bg-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all ${
+                  errors.captchaSolution ? 'border-danger-300' : 'border-border'
+                }`}
+              />
+              {errors.captchaSolution && (
+                <p className="mt-1.5 text-xs text-danger-600">{errors.captchaSolution}</p>
+              )}
+              <button
+                type="button"
+                onClick={fetchCaptcha}
+                className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+              >
+                Refresh captcha
+              </button>
+            </div>
 
             {apiError && (
               <div className="p-3 rounded-lg bg-danger-50 text-sm text-danger-700">

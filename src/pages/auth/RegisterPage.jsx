@@ -30,8 +30,10 @@ export default function RegisterPage() {
       const image = data.imageBase64 || data.captchaImage || data.image || '';
       setForm((prev) => ({ ...prev, captchaChallenge: challenge, captchaSolution: '' }));
       setCaptchaImage(image);
-    } catch {
+      setApiError('');
+    } catch (err) {
       setCaptchaImage('');
+      setApiError('Failed to load captcha. Please refresh the page or try again later.');
     }
   }
 
@@ -246,13 +248,19 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-2">
-                <div className="flex items-center justify-center">
-                  <img
-                    src={`data:image/png;base64,${captchaImage}`}
-                    alt="Captcha"
-                    className="rounded border border-border"
-                  />
-                </div>
+                {captchaImage ? (
+                  <div className="flex items-center justify-center">
+                    <img
+                      src={`data:image/png;base64,${captchaImage}`}
+                      alt="Captcha"
+                      className="rounded border border-border"
+                    />
+                  </div>
+                ) : (
+                  <div className="p-3 rounded-lg bg-danger-50 text-sm text-danger-700">
+                    Captcha image not available.
+                  </div>
+                )}
                 <input
                   id="captchaSolution"
                   name="captchaSolution"
