@@ -9,8 +9,8 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [form, setForm] = useState({ email: '', password: '', captchaChallenge: '', captchaSolution: '' });
-  const [captchaImage, setCaptchaImage] = useState('');
+  const [form, setForm] = useState({ email: '', password: '', captchaPayload: '' });
+  const [captchaChallenge, setCaptchaChallenge] = useState(null);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState('');
@@ -18,13 +18,11 @@ export default function LoginPage() {
   async function fetchCaptcha() {
     try {
       const data = await getCaptchaChallenge();
-      const challenge = data.challengeId || data.captchaChallenge || data.challenge || '';
-      const image = data.imageBase64 || data.captchaImage || data.image || '';
-      setForm((prev) => ({ ...prev, captchaChallenge: challenge, captchaSolution: '' }));
-      setCaptchaImage(image);
+      setCaptchaChallenge(data);
+      setForm((prev) => ({ ...prev, captchaPayload: '' }));
       setApiError('');
     } catch (err) {
-      setCaptchaImage('');
+      setCaptchaChallenge(null);
       setApiError('Failed to load captcha. Please refresh the page or try again later.');
     }
   }
@@ -41,8 +39,8 @@ export default function LoginPage() {
     if (!form.password) {
       nextErrors.password = 'Password is required';
     }
-    if (!form.captchaSolution.trim()) {
-      nextErrors.captchaSolution = 'Captcha solution is required';
+    if (!form.captchaPayload.trim()) {
+      nextErrors.captchaPayload = 'Captcha verification is required';
     }
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
@@ -65,8 +63,7 @@ export default function LoginPage() {
     const result = await login({
       email: form.email,
       password: form.password,
-      captchaChallenge: form.captchaChallenge,
-      captchaSolution: form.captchaSolution,
+      captchaPayload: form.captchaPayload,
     });
 
     if (result.success) {
@@ -146,32 +143,23 @@ export default function LoginPage() {
             </div>
 
             <div className="space-y-2">
-              {captchaImage ? (
-                <div className="flex items-center justify-center">
-                  <img
-                    src={`data:image/png;base64,${captchaImage}`}
-                    alt="Captcha"
-                    className="rounded border border-border"
-                  />
-                </div>
+              {captchaChallenge ? (
+                <altcha-widget
+                  challengejson={JSON.stringify(captchaChallenge)}
+                  onStateChange={(ev) => {
+                    if (ev.detail?.payload) {
+                      setForm((prev) => ({ ...prev, captchaPayload: ev.detail.payload }));
+                      setErrors((prev) => ({ ...prev, captchaPayload: '' }));
+                    }
+                  }}
+                />
               ) : (
                 <div className="p-3 rounded-lg bg-danger-50 text-sm text-danger-700">
-                  Captcha image not available.
+                  Captcha challenge not available.
                 </div>
               )}
-              <input
-                id="captchaSolution"
-                name="captchaSolution"
-                type="text"
-                value={form.captchaSolution}
-                onChange={handleChange}
-                placeholder="Enter captcha solution"
-                className={`w-full px-3 py-2.5 text-sm bg-bg-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all ${
-                  errors.captchaSolution ? 'border-danger-300' : 'border-border'
-                }`}
-              />
-              {errors.captchaSolution && (
-                <p className="mt-1.5 text-xs text-danger-600">{errors.captchaSolution}</p>
+              {errors.captchaPayload && (
+                <p className="mt-1.5 text-xs text-danger-600">{errors.captchaPayload}</p>
               )}
               <button
                 type="button"
