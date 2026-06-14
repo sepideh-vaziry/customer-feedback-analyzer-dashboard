@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loader2, CheckCircle2 } from 'lucide-react';
 import { register } from '../../services/authService';
+import { getCaptchaChallenge } from '../../services/captchaService';
 import logo from '../../assets/logo-with-text.png';
 
 export default function RegisterPage() {
@@ -16,10 +17,27 @@ export default function RegisterPage() {
     captchaChallenge: '',
     captchaSolution: '',
   });
+  const [captchaImage, setCaptchaImage] = useState('');
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState('');
   const [success, setSuccess] = useState(false);
+
+  async function fetchCaptcha() {
+    try {
+      const data = await getCaptchaChallenge();
+      const challenge = data.challengeId || data.captchaChallenge || data.challenge || '';
+      const image = data.imageBase64 || data.captchaImage || data.image || '';
+      setForm((prev) => ({ ...prev, captchaChallenge: challenge, captchaSolution: '' }));
+      setCaptchaImage(image);
+    } catch {
+      setCaptchaImage('');
+    }
+  }
+
+  useEffect(() => {
+    fetchCaptcha();
+  }, []);
 
   function validate() {
     const nextErrors = {};
@@ -41,6 +59,9 @@ export default function RegisterPage() {
       nextErrors.password = 'Password is required';
     } else if (form.password.length < 8) {
       nextErrors.password = 'Password must be at least 8 characters';
+    }
+    if (!form.captchaSolution.trim()) {
+      nextErrors.captchaSolution = 'Captcha solution is required';
     }
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
@@ -68,6 +89,7 @@ export default function RegisterPage() {
       }, 2000);
     } catch (error) {
       setApiError(error.response?.data?.message || error.message || 'Registration failed');
+      await fetchCaptcha();
     } finally {
       setSubmitting(false);
     }
@@ -223,42 +245,35 @@ export default function RegisterPage() {
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label
-                    htmlFor="captchaChallenge"
-                    className="block text-sm font-medium text-text-primary mb-1.5"
-                  >
-                    Captcha Challenge
-                  </label>
-                  <input
-                    id="captchaChallenge"
-                    name="captchaChallenge"
-                    type="text"
-                    value={form.captchaChallenge}
-                    onChange={handleChange}
-                    placeholder="Challenge"
-                    className="w-full px-3 py-2.5 text-sm bg-bg-base border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+              <div className="space-y-2">
+                <div className="flex items-center justify-center">
+                  <img
+                    src={`data:image/png;base64,${captchaImage}`}
+                    alt="Captcha"
+                    className="rounded border border-border"
                   />
                 </div>
-
-                <div>
-                  <label
-                    htmlFor="captchaSolution"
-                    className="block text-sm font-medium text-text-primary mb-1.5"
-                  >
-                    Captcha Solution
-                  </label>
-                  <input
-                    id="captchaSolution"
-                    name="captchaSolution"
-                    type="text"
-                    value={form.captchaSolution}
-                    onChange={handleChange}
-                    placeholder="Solution"
-                    className="w-full px-3 py-2.5 text-sm bg-bg-base border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
-                  />
-                </div>
+                <input
+                  id="captchaSolution"
+                  name="captchaSolution"
+                  type="text"
+                  value={form.captchaSolution}
+                  onChange={handleChange}
+                  placeholder="Enter captcha solution"
+                  className={`w-full px-3 py-2.5 text-sm bg-bg-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all ${
+                    errors.captchaSolution ? 'border-danger-300' : 'border-border'
+                  }`}
+                />
+                {errors.captchaSolution && (
+                  <p className="mt-1.5 text-xs text-danger-600">{errors.captchaSolution}</p>
+                )}
+                <button
+                  type="button"
+                  onClick={fetchCaptcha}
+                  className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                >
+                  Refresh captcha
+                </button>
               </div>
 
               {apiError && (

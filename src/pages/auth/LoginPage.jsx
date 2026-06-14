@@ -1,17 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loader2 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
+import { getCaptchaChallenge } from '../../services/captchaService';
 import logo from '../../assets/logo-with-text.png';
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [form, setForm] = useState({ email: '', password: '' });
+  const [form, setForm] = useState({ email: '', password: '', captchaChallenge: '', captchaSolution: '' });
+  const [captchaImage, setCaptchaImage] = useState('');
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState('');
+
+  async function fetchCaptcha() {
+    try {
+      const data = await getCaptchaChallenge();
+      const challenge = data.challengeId || data.captchaChallenge || data.challenge || '';
+      const image = data.imageBase64 || data.captchaImage || data.image || '';
+      setForm((prev) => ({ ...prev, captchaChallenge: challenge, captchaSolution: '' }));
+      setCaptchaImage(image);
+    } catch {
+      setCaptchaImage('');
+    }
+  }
+
+  useEffect(() => {
+    fetchCaptcha();
+  }, []);
 
   function validate() {
     const nextErrors = {};
@@ -20,6 +38,9 @@ export default function LoginPage() {
     }
     if (!form.password) {
       nextErrors.password = 'Password is required';
+    }
+    if (!form.captchaSolution.trim()) {
+      nextErrors.captchaSolution = 'Captcha solution is required';
     }
     setErrors(nextErrors);
     return Object.keys(nextErrors).length === 0;
@@ -39,12 +60,18 @@ export default function LoginPage() {
     setSubmitting(true);
     setApiError('');
 
-    const result = await login({ email: form.email, password: form.password });
+    const result = await login({
+      email: form.email,
+      password: form.password,
+      captchaChallenge: form.captchaChallenge,
+      captchaSolution: form.captchaSolution,
+    });
 
     if (result.success) {
       navigate('/dashboard');
     } else {
       setApiError(result.error);
+      await fetchCaptcha();
     }
 
     setSubmitting(false);
@@ -115,6 +142,39 @@ export default function LoginPage() {
                 </p>
               )}
             </div>
+
+            {captchaImage && (
+              <div className="space-y-2">
+                <div className="flex items-center justify-center">
+                  <img
+                    src={`data:image/png;base64,${captchaImage}`}
+                    alt="Captcha"
+                    className="rounded border border-border"
+                  />
+                </div>
+                <input
+                  id="captchaSolution"
+                  name="captchaSolution"
+                  type="text"
+                  value={form.captchaSolution}
+                  onChange={handleChange}
+                  placeholder="Enter captcha solution"
+                  className={`w-full px-3 py-2.5 text-sm bg-bg-base border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all ${
+                    errors.captchaSolution ? 'border-danger-300' : 'border-border'
+                  }`}
+                />
+                {errors.captchaSolution && (
+                  <p className="mt-1.5 text-xs text-danger-600">{errors.captchaSolution}</p>
+                )}
+                <button
+                  type="button"
+                  onClick={fetchCaptcha}
+                  className="text-sm text-primary-600 hover:text-primary-700 font-medium"
+                >
+                  Refresh captcha
+                </button>
+              </div>
+            )}
 
             {apiError && (
               <div className="p-3 rounded-lg bg-danger-50 text-sm text-danger-700">
