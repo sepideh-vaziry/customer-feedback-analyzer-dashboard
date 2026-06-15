@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Loader2, CheckCircle2 } from 'lucide-react';
 import { register } from '../../services/authService';
-import { getCaptchaChallenge } from '../../services/captchaService';
+import CaptchaWidget from '../../components/auth/CaptchaWidget';
 import logo from '../../assets/logo-with-text.png';
 
 export default function RegisterPage() {
@@ -16,50 +16,11 @@ export default function RegisterPage() {
     organizationName: '',
     captchaPayload: '',
   });
-  const [captchaChallenge, setCaptchaChallenge] = useState(null);
   const [errors, setErrors] = useState({});
   const [submitting, setSubmitting] = useState(false);
   const [apiError, setApiError] = useState('');
   const [success, setSuccess] = useState(false);
-  const altchaRef = useRef(null);
-
-  async function fetchCaptcha() {
-    try {
-      const data = await getCaptchaChallenge();
-      console.log('Raw captcha challenge:', data);
-      setCaptchaChallenge(data);
-      setForm((prev) => ({ ...prev, captchaPayload: '' }));
-      setApiError('');
-    } catch (err) {
-      setCaptchaChallenge(null);
-      setApiError('Failed to load captcha. Please refresh the page or try again later.');
-    }
-  }
-
-  useEffect(() => {
-    fetchCaptcha();
-  }, []);
-
-  useEffect(() => {
-    const el = altchaRef.current;
-    if (!el || !captchaChallenge) return;
-
-    el.setAttribute('challenge', JSON.stringify(captchaChallenge));
-    el.setAttribute('auto', 'off');
-
-    const handleStateChange = (ev) => {
-      console.log('Altcha statechange:', ev.detail);
-      if (ev.detail?.payload) {
-        setForm((prev) => ({ ...prev, captchaPayload: ev.detail.payload }));
-        setErrors((prev) => ({ ...prev, captchaPayload: '' }));
-      }
-    };
-
-    el.addEventListener('statechange', handleStateChange);
-    return () => {
-      el.removeEventListener('statechange', handleStateChange);
-    };
-  }, [captchaChallenge]);
+  const captchaRef = useRef(null);
 
   function validate() {
     const nextErrors = {};
@@ -111,7 +72,7 @@ export default function RegisterPage() {
       }, 2000);
     } catch (error) {
       setApiError(error.response?.data?.message || error.message || 'Registration failed');
-      await fetchCaptcha();
+      await captchaRef.current?.reset();
     } finally {
       setSubmitting(false);
     }
@@ -268,25 +229,15 @@ export default function RegisterPage() {
               </div>
 
               <div className="space-y-2">
-                {captchaChallenge ? (
-                  <altcha-widget
-                    ref={altchaRef}
-                  />
-                ) : (
-                  <div className="p-3 rounded-lg bg-danger-50 text-sm text-danger-700">
-                    Captcha challenge not available.
-                  </div>
-                )}
-                {errors.captchaPayload && (
-                  <p className="mt-1.5 text-xs text-danger-600">{errors.captchaPayload}</p>
-                )}
-                <button
-                  type="button"
-                  onClick={fetchCaptcha}
-                  className="text-sm text-primary-600 hover:text-primary-700 font-medium"
-                >
-                  Refresh captcha
-                </button>
+              <CaptchaWidget
+                ref={captchaRef}
+                value={form.captchaPayload}
+                onChange={(payload) =>
+                  setForm((prev) => ({ ...prev, captchaPayload: payload }))
+                }
+                error={errors.captchaPayload}
+                disabled={submitting}
+              />
               </div>
 
               {apiError && (
