@@ -1,8 +1,28 @@
 import { useEffect, useState } from 'react';
-import { X, Loader2, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { X, Loader2, AlertCircle, Inbox } from 'lucide-react';
 import { getConnector } from '../../services/connectorService';
 
+function EventTypeDisplay({ eventTypes }) {
+  if (!eventTypes || eventTypes.length === 0) {
+    return <span className="text-sm font-medium text-text-primary">All events</span>;
+  }
+  return (
+    <div className="flex flex-wrap gap-1">
+      {eventTypes.map((type) => (
+        <span
+          key={type}
+          className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-primary-50 text-primary-700"
+        >
+          {type}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export default function ConnectorDetailsModal({ connectorId, onClose }) {
+  const navigate = useNavigate();
   const [connector, setConnector] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -62,6 +82,10 @@ export default function ConnectorDetailsModal({ connectorId, onClose }) {
                 <span className="text-sm text-text-secondary">Source</span>
                 <span className="text-sm font-medium text-text-primary">{connector.source}</span>
               </div>
+              <div className="flex justify-between items-start">
+                <span className="text-sm text-text-secondary pt-0.5">Event Types</span>
+                <EventTypeDisplay eventTypes={connector.enabledEventTypes} />
+              </div>
               <div className="flex justify-between items-center">
                 <span className="text-sm text-text-secondary">Created</span>
                 <span className="text-sm font-medium text-text-primary">
@@ -94,7 +118,17 @@ export default function ConnectorDetailsModal({ connectorId, onClose }) {
           ) : null}
         </div>
 
-        <div className="px-6 py-4 border-t border-border bg-bg-base">
+        <div className="px-6 py-4 border-t border-border bg-bg-base space-y-2">
+          <button
+            onClick={() => {
+              onClose();
+              navigate(`/connectors/${connectorId}/webhooks`);
+            }}
+            className="w-full flex items-center justify-center gap-2 px-4 py-2.5 bg-primary-600 text-white text-sm font-medium rounded-lg hover:bg-primary-700 transition-colors"
+          >
+            <Inbox size={16} />
+            Webhook Deliveries
+          </button>
           <button
             onClick={onClose}
             className="w-full px-4 py-2.5 bg-bg-card border border-border text-sm font-medium text-text-primary rounded-lg hover:bg-border-light transition-colors"

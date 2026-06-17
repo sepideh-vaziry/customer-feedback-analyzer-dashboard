@@ -9,6 +9,8 @@ import FeedbackListPage from './pages/feedback/FeedbackListPage';
 import FeedbackDetailsPage from './pages/feedback/FeedbackDetailsPage';
 import ImportFeedbackPage from './pages/feedback/ImportFeedbackPage';
 import ConnectorsPage from './pages/connectors/ConnectorsPage';
+import WebhookDeliveryDashboardPage from './pages/connectors/WebhookDeliveryDashboardPage';
+import WebhookIntegrationGuidePage from './pages/connectors/WebhookIntegrationGuidePage';
 import ComplaintsOverviewPage from './pages/complaints/ComplaintsOverviewPage';
 import ComplaintCategoriesPage from './pages/complaints/ComplaintCategoriesPage';
 import RecurringComplaintsPage from './pages/complaints/RecurringComplaintsPage';
@@ -96,6 +98,22 @@ export default function App() {
           element={
             <ProtectedRoute>
               <ConnectorsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/connectors/:connectorId/webhooks"
+          element={
+            <ProtectedRoute>
+              <WebhookDeliveryDashboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/connectors/webhooks/guide"
+          element={
+            <ProtectedRoute>
+              <WebhookIntegrationGuidePage />
             </ProtectedRoute>
           }
         />

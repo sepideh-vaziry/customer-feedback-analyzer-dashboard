@@ -1,19 +1,19 @@
 import { useState } from 'react';
-import { FileText, Upload, Webhook } from 'lucide-react';
+import { FileText, Upload, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import PageHeader from '../../components/ui/PageHeader';
 import ManualFeedbackForm from '../../components/feedback/ManualFeedbackForm';
 import CsvUploadForm from '../../components/feedback/CsvUploadForm';
-import WebhookDocumentation from '../../components/feedback/WebhookDocumentation';
 
 const tabs = [
   { id: 'manual', label: 'Manual Entry', icon: FileText },
   { id: 'csv', label: 'CSV Upload', icon: Upload },
-  { id: 'webhook', label: 'Webhook', icon: Webhook },
 ];
 
 export default function ImportFeedbackPage() {
   const [activeTab, setActiveTab] = useState('manual');
+  const navigate = useNavigate();
 
   return (
     <DashboardLayout>
@@ -47,8 +47,23 @@ export default function ImportFeedbackPage() {
         <div className="p-6">
           {activeTab === 'manual' && <ManualFeedbackForm />}
           {activeTab === 'csv' && <CsvUploadForm />}
-          {activeTab === 'webhook' && <WebhookDocumentation />}
         </div>
+      </div>
+
+      <div className="mt-6 bg-bg-card rounded-xl border border-border p-5 flex items-center justify-between">
+        <div>
+          <h3 className="text-sm font-semibold text-text-primary">Looking for automated imports?</h3>
+          <p className="text-sm text-text-secondary mt-1">
+            Set up webhooks and connectors to receive feedback automatically from external systems.
+          </p>
+        </div>
+        <button
+          onClick={() => navigate('/connectors')}
+          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary-600 hover:text-primary-700 bg-primary-50 hover:bg-primary-100 rounded-lg transition-colors"
+        >
+          Go to Connectors
+          <ArrowRight size={16} />
+        </button>
       </div>
     </DashboardLayout>
   );

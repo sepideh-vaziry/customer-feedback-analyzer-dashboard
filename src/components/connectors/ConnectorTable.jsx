@@ -15,6 +15,24 @@ function StatusBadge({ status }) {
   );
 }
 
+function EventTypeBadges({ eventTypes }) {
+  if (!eventTypes || eventTypes.length === 0) {
+    return <span className="text-xs text-text-muted">All events</span>;
+  }
+  return (
+    <div className="flex flex-wrap gap-1">
+      {eventTypes.map((type) => (
+        <span
+          key={type}
+          className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-primary-50 text-primary-700"
+        >
+          {type}
+        </span>
+      ))}
+    </div>
+  );
+}
+
 export default function ConnectorTable({ connectors, onView, onPullSuccess, loading }) {
   const [pullingId, setPullingId] = useState(null);
   const [pullError, setPullError] = useState('');
@@ -64,6 +82,7 @@ export default function ConnectorTable({ connectors, onView, onPullSuccess, load
             <tr className="bg-bg-base border-b border-border">
               <th className="text-left px-4 py-3 font-medium text-text-secondary">Source</th>
               <th className="text-left px-4 py-3 font-medium text-text-secondary">Status</th>
+              <th className="text-left px-4 py-3 font-medium text-text-secondary">Event Types</th>
               <th className="text-left px-4 py-3 font-medium text-text-secondary">Mock</th>
               <th className="text-left px-4 py-3 font-medium text-text-secondary">Last Pulled</th>
               <th className="text-left px-4 py-3 font-medium text-text-secondary">Created</th>
@@ -76,6 +95,9 @@ export default function ConnectorTable({ connectors, onView, onPullSuccess, load
                 <td className="px-4 py-3 font-medium text-text-primary">{c.source}</td>
                 <td className="px-4 py-3">
                   <StatusBadge status={c.status} />
+                </td>
+                <td className="px-4 py-3">
+                  <EventTypeBadges eventTypes={c.enabledEventTypes} />
                 </td>
                 <td className="px-4 py-3">
                   <span className={c.isMock ? 'text-warning-600' : 'text-success-600'}>

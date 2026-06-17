@@ -25,6 +25,8 @@ import {
   Activity,
   Shield,
   Sparkles,
+  Inbox,
+  BookOpen,
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -39,6 +41,7 @@ const baseNavItems = [
       { to: '/feedback', label: 'Feedback List', icon: MessageSquare },
       { to: '/feedback/import', label: 'Import Feedback', icon: Import },
       { to: '/connectors', label: 'Connectors', icon: Plug },
+      { to: '/connectors/webhooks/guide', label: 'Webhook Guide', icon: BookOpen },
     ],
   },
   {
