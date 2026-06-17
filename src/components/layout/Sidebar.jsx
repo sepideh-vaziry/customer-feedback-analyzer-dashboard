@@ -252,25 +252,7 @@ export default function Sidebar() {
 
       {/* Footer */}
       <div className="p-4 border-t border-white/5">
-        {!collapsed && (
-          <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-accent-500 flex items-center justify-center text-white text-xs font-bold shadow-md">
-              {auth?.fullName?.charAt(0)?.toUpperCase() || 'U'}
-            </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium text-white truncate">{auth?.fullName || 'User'}</p>
-              <p className="text-xs text-slate-500 truncate">{auth?.email || ''}</p>
-            </div>
-          </div>
-        )}
-        {collapsed && (
-          <div className="flex justify-center">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-accent-500 flex items-center justify-center text-white text-xs font-bold shadow-md">
-              {auth?.fullName?.charAt(0)?.toUpperCase() || 'U'}
-            </div>
-          </div>
-        )}
-        <div className="mt-3 text-center">
+        <div className="text-center">
           <span className="text-[10px] text-slate-600 font-medium">v0.1.0</span>
         </div>
       </div>

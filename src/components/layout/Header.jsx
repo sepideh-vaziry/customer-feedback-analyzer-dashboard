@@ -1,4 +1,4 @@
-import { Search, Bell, User, ChevronDown, LogOut } from 'lucide-react';
+import { Search, User, ChevronDown, LogOut } from 'lucide-react';
 import { useState } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
 
@@ -25,12 +25,6 @@ export default function Header() {
 
       {/* Right Actions */}
       <div className="flex items-center gap-2">
-        {/* Notification Bell */}
-        <button className="relative p-2.5 rounded-xl hover:bg-bg-hover transition-all duration-200 group">
-          <Bell size={18} className="text-text-secondary group-hover:text-text-primary transition-colors" />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-danger-500 rounded-full ring-2 ring-white" />
-        </button>
-
         {/* User Menu */}
         <div className="relative">
           <button
