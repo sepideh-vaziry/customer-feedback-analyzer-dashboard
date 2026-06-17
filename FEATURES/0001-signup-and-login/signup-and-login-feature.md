@@ -42,8 +42,7 @@ POST /api/v1/auth/register
   "firstName": "John",
   "lastName": "Doe",
   "organizationName": "Acme Corp",
-  "captchaChallenge": "challenge-string",
-  "captchaSolution": "solution-string"
+  "captchaPayload": "altcha-payload-string"
 }
 ```
 
@@ -73,8 +72,7 @@ POST /api/v1/auth/register
    * Email
    * Password
    * Organization Name
-   * Captcha Challenge
-   * Captcha Solution
+   * Altcha Captcha (verified via widget payload)
 3. Frontend validates all fields.
 4. Frontend calls registration API.
 5. On success:

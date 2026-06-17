@@ -48,12 +48,12 @@
       "description": "Admin AI usage APIs"
     },
     {
-      "name": "Captcha",
-      "description": "Endpoints for generating CAPTCHA challenges"
-    },
-    {
       "name": "Admin Organizations",
       "description": "Admin organization management APIs"
+    },
+    {
+      "name": "Captcha",
+      "description": "Endpoints for generating CAPTCHA challenges"
     }
   ],
   "paths": {
@@ -620,6 +620,38 @@
         }
       }
     },
+    "/api/v1/feedback/{feedbackId}/reprocess": {
+      "post": {
+        "tags": [
+          "Feedback Analysis"
+        ],
+        "summary": "Reprocess a feedback item through the full pipeline if not yet processed",
+        "operationId": "reprocess",
+        "parameters": [
+          {
+            "name": "feedbackId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/FeedbackResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/feedback/{feedbackId}/analysis/reanalyze": {
       "post": {
         "tags": [
@@ -659,11 +691,44 @@
         ],
         "summary": "Receive feedback via webhook",
         "operationId": "webhook",
+        "parameters": [
+          {
+            "name": "source",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "MANUAL",
+                "CSV",
+                "INSTAGRAM",
+                "WHATSAPP",
+                "ZENDESK",
+                "TYPEFORM",
+                "WEBHOOK",
+                "EMAIL",
+                "SURVEY",
+                "SUPPORT_TICKET",
+                "TRUSTPILOT",
+                "LIVE_CHAT",
+                "OTHER"
+              ]
+            }
+          },
+          {
+            "name": "X-Webhook-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/WebhookFeedbackRequest"
+                "type": "string"
               }
             }
           },
@@ -775,6 +840,47 @@
         }
       }
     },
+    "/api/v1/connectors/{connectorId}/webhooks/deliveries/{deliveryId}/replay": {
+      "post": {
+        "tags": [
+          "Webhook Deliveries"
+        ],
+        "summary": "Replay a failed webhook delivery",
+        "operationId": "replayDelivery",
+        "parameters": [
+          {
+            "name": "connectorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "deliveryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/WebhookDeliveryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/connectors/{connectorId}/pull": {
       "post": {
         "tags": [
@@ -804,6 +910,89 @@
                     "type": "integer",
                     "format": "int32"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/connectors/{connectorId}/credentials/{credentialId}/revoke": {
+      "post": {
+        "tags": [
+          "Source Connectors"
+        ],
+        "summary": "Revoke a connector credential",
+        "operationId": "revokeCredential",
+        "parameters": [
+          {
+            "name": "connectorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "credentialId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConnectorCredentialResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/connectors/{connectorId}/credentials/rotate": {
+      "post": {
+        "tags": [
+          "Source Connectors"
+        ],
+        "summary": "Rotate connector credentials",
+        "operationId": "rotateCredential",
+        "parameters": [
+          {
+            "name": "connectorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RotateConnectorCredentialRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RotateConnectorCredentialResponse"
                 }
               }
             }
@@ -923,47 +1112,6 @@
           },
           "401": {
             "description": "Invalid refresh token",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/auth/refresh-jwt": {
-      "post": {
-        "tags": [
-          "Authentication"
-        ],
-        "summary": "Refresh an expired JWT using a valid bearer token",
-        "operationId": "refreshJwt",
-        "parameters": [
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Token refreshed successfully",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/AuthResponse"
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Invalid token",
             "content": {
               "*/*": {
                 "schema": {
@@ -1366,7 +1514,7 @@
         "tags": [
           "AI Usage & Cost Monitoring"
         ],
-        "summary": "Get full usage and cost report for a billing period",
+        "summary": "Get full usage and cost report for a billing period (defaults to current)",
         "operationId": "getReport",
         "parameters": [
           {
@@ -1378,27 +1526,6 @@
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/UsageReportResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/usage/report/current": {
-      "get": {
-        "tags": [
-          "AI Usage & Cost Monitoring"
-        ],
-        "summary": "Get usage and cost report for the current billing period",
-        "operationId": "getCurrentReport",
         "responses": {
           "200": {
             "description": "OK",
@@ -1448,58 +1575,6 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/TrendSnapshotResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/tenant/usage": {
-      "get": {
-        "tags": [
-          "Tenant Usage"
-        ],
-        "summary": "Get AI token usage summary for the current billing period",
-        "operationId": "getCurrentUsage",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/TenantUsageSummaryResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/tenant/usage/{billingPeriod}": {
-      "get": {
-        "tags": [
-          "Tenant Usage"
-        ],
-        "summary": "Get AI token usage for a specific billing period (YYYY-MM)",
-        "operationId": "getUsageForPeriod",
-        "parameters": [
-          {
-            "name": "billingPeriod",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/TenantUsageSummaryResponse"
                 }
               }
             }
@@ -1622,7 +1697,9 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "maxLength": 500,
+              "minLength": 0
             }
           },
           {
@@ -1663,7 +1740,9 @@
             "required": false,
             "schema": {
               "type": "string",
-              "default": "Summarize the most important customer feedback"
+              "default": "Summarize the most important customer feedback",
+              "maxLength": 500,
+              "minLength": 0
             }
           },
           {
@@ -1703,7 +1782,9 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "maxLength": 500,
+              "minLength": 0
             }
           },
           {
@@ -1743,7 +1824,9 @@
             "in": "query",
             "required": true,
             "schema": {
-              "type": "string"
+              "type": "string",
+              "maxLength": 500,
+              "minLength": 0
             }
           },
           {
@@ -2136,6 +2219,90 @@
         }
       }
     },
+    "/api/v1/connectors/{connectorId}/webhooks/deliveries": {
+      "get": {
+        "tags": [
+          "Webhook Deliveries"
+        ],
+        "summary": "List webhook deliveries for a connector",
+        "operationId": "listDeliveries",
+        "parameters": [
+          {
+            "name": "connectorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "PENDING",
+                "SUCCESS",
+                "FAILED",
+                "DISCARDED"
+              ]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/WebhookDeliveryResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/connectors/{connectorId}/credentials": {
+      "get": {
+        "tags": [
+          "Source Connectors"
+        ],
+        "summary": "List connector credentials",
+        "operationId": "listCredentials",
+        "parameters": [
+          {
+            "name": "connectorId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ConnectorCredentialResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/complaints/recurring": {
       "get": {
         "tags": [
@@ -2302,6 +2469,30 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/HighRiskCustomerResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/captcha/challenge": {
+      "get": {
+        "tags": [
+          "Captcha"
+        ],
+        "summary": "Generate a new CAPTCHA challenge",
+        "operationId": "getChallenge",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "object"
                   }
                 }
               }
@@ -2658,29 +2849,6 @@
           }
         }
       }
-    },
-    "/api/captcha/challenge": {
-      "get": {
-        "tags": [
-          "Captcha"
-        ],
-        "operationId": "getChallenge",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "type": "object",
-                  "additionalProperties": {
-                    "type": "string"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
     }
   },
   "components": {
@@ -2853,13 +3021,19 @@
             "type": "boolean"
           },
           "defaultPlan": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 0
           },
           "defaultAiProvider": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 0
           },
           "defaultAiModel": {
-            "type": "string"
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 0
           },
           "maxOrganizations": {
             "type": "integer",
@@ -2869,7 +3043,13 @@
             "type": "integer",
             "format": "int64"
           }
-        }
+        },
+        "required": [
+          "maintenanceMode",
+          "maxOrganizations",
+          "maxUsersPerOrganization",
+          "registrationEnabled"
+        ]
       },
       "AdminSettingsResponse": {
         "type": "object",
@@ -3068,8 +3248,8 @@
           },
           "adminPassword": {
             "type": "string",
-            "maxLength": 100,
-            "minLength": 8
+            "maxLength": 128,
+            "minLength": 12
           },
           "planId": {
             "type": "string"
@@ -3450,40 +3630,6 @@
           }
         }
       },
-      "WebhookFeedbackRequest": {
-        "type": "object",
-        "properties": {
-          "source": {
-            "type": "string",
-            "enum": [
-              "MANUAL",
-              "CSV",
-              "INSTAGRAM",
-              "WHATSAPP",
-              "ZENDESK",
-              "TYPEFORM",
-              "WEBHOOK",
-              "EMAIL",
-              "SURVEY",
-              "SUPPORT_TICKET",
-              "TRUSTPILOT",
-              "LIVE_CHAT",
-              "OTHER"
-            ]
-          },
-          "payload": {
-            "type": "string",
-            "minLength": 1
-          },
-          "apiKey": {
-            "type": "string",
-            "minLength": 1
-          }
-        },
-        "required": [
-          "source"
-        ]
-      },
       "CsvUploadResponse": {
         "type": "object",
         "properties": {
@@ -3540,6 +3686,13 @@
             "additionalProperties": {
               "type": "string"
             }
+          },
+          "enabledEventTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
           }
         },
         "required": [
@@ -3582,6 +3735,13 @@
           "isMock": {
             "type": "boolean"
           },
+          "enabledEventTypes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true
+          },
           "lastPulledAt": {
             "type": "string",
             "format": "date-time"
@@ -3589,6 +3749,107 @@
           "createdAt": {
             "type": "string",
             "format": "date-time"
+          }
+        }
+      },
+      "WebhookDeliveryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "idempotencyKey": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "SUCCESS",
+              "FAILED",
+              "DISCARDED"
+            ]
+          },
+          "feedbackId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "retryCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errorMessage": {
+            "type": "string"
+          },
+          "receivedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "processedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "ConnectorCredentialResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "keyName": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "ACTIVE",
+              "REVOKED",
+              "EXPIRED",
+              "DEPRECATED"
+            ]
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "revokedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "expiresAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastUsedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "RotateConnectorCredentialRequest": {
+        "type": "object",
+        "properties": {
+          "keyName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "expiresInDays": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "RotateConnectorCredentialResponse": {
+        "type": "object",
+        "properties": {
+          "credential": {
+            "$ref": "#/components/schemas/ConnectorCredentialResponse"
+          },
+          "value": {
+            "type": "string"
           }
         }
       },
@@ -3651,9 +3912,9 @@
           },
           "password": {
             "type": "string",
-            "maxLength": 2147483647,
-            "minLength": 8,
-            "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]+$"
+            "maxLength": 128,
+            "minLength": 12,
+            "pattern": "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{12,}$"
           },
           "firstName": {
             "type": "string",
@@ -3669,11 +3930,9 @@
           "organizationId": {
             "type": "string"
           },
-          "captchaChallenge": {
-            "type": "string"
-          },
-          "captchaSolution": {
-            "type": "string"
+          "captchaPayload": {
+            "type": "string",
+            "minLength": 1
           }
         }
       },
@@ -3763,6 +4022,10 @@
             "minLength": 1
           },
           "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "captchaPayload": {
             "type": "string",
             "minLength": 1
           }
@@ -3969,33 +4232,6 @@
           },
           "status": {
             "type": "string"
-          }
-        }
-      },
-      "TenantUsageSummaryResponse": {
-        "type": "object",
-        "properties": {
-          "billingPeriod": {
-            "type": "string"
-          },
-          "totalTokensUsed": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "monthlyTokenBudget": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "budgetUtilizationPercent": {
-            "type": "number",
-            "format": "double"
-          },
-          "tokensByEventType": {
-            "type": "object",
-            "additionalProperties": {
-              "type": "integer",
-              "format": "int64"
-            }
           }
         }
       },
