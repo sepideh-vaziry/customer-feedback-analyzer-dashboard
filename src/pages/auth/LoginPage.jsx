@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Loader2, Sparkles, Shield, Zap, BarChart3 } from 'lucide-react';
 import { useAuth } from '../../contexts/AuthContext';
 import CaptchaWidget from '../../components/auth/CaptchaWidget';
+import logo from '../../assets/logo-with-text.png';
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -73,14 +74,8 @@ export default function LoginPage() {
         </div>
 
         <div className="relative z-10 flex flex-col justify-between p-12">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-400 to-accent-500 flex items-center justify-center shadow-lg shadow-primary-500/30">
-              <Sparkles size={22} className="text-white" />
-            </div>
-            <div>
-              <h1 className="text-xl font-bold text-white tracking-tight">Feedback AI</h1>
-              <p className="text-xs text-slate-400 font-medium uppercase tracking-wider">Analytics Platform</p>
-            </div>
+          <div className="flex items-center">
+            <img src={logo} alt="Feedback AI" className="h-18 w-auto object-contain" />
           </div>
 
           <div className="space-y-8">
@@ -130,9 +125,7 @@ export default function LoginPage() {
         <div className="relative z-10 w-full max-w-md">
           {/* Mobile Logo */}
           <div className="lg:hidden flex items-center justify-center mb-8">
-            <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-500 to-accent-600 flex items-center justify-center shadow-lg shadow-primary-500/20">
-              <Sparkles size={24} className="text-white" />
-            </div>
+            <img src={logo} alt="Feedback AI" className="h-12 w-auto object-contain" />
           </div>
 
           <div className="bg-bg-card rounded-2xl border border-border shadow-lg shadow-black/5 p-8">

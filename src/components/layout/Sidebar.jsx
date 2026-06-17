@@ -31,7 +31,7 @@ import {
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
-import logo from '../../assets/logo-with-text-2.png';
+import logo from '../../assets/logo-with-text.png';
 
 const baseNavItems = [
   { to: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
@@ -225,14 +225,8 @@ export default function Sidebar() {
       {/* Logo Area */}
       <div className="flex items-center justify-between h-16 px-4 border-b border-white/5">
         {!collapsed && (
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-600 flex items-center justify-center shadow-lg shadow-primary-500/20">
-              <Sparkles size={18} className="text-white" />
-            </div>
-            <div>
-              <h1 className="text-sm font-bold text-white tracking-tight">Feedback AI</h1>
-              <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Dashboard</p>
-            </div>
+          <div className="flex items-center">
+            <img src={logo} alt="Feedback AI" className="h-12 w-auto object-contain" />
           </div>
         )}
         {collapsed && (

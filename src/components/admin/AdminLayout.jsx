@@ -13,7 +13,7 @@ import {
   PanelLeft,
 } from 'lucide-react';
 import { useState } from 'react';
-import logo from '../../assets/logo-with-text-2.png';
+import logo from '../../assets/logo-with-text.png';
 
 const adminNavItems = [
   { to: '/admin', label: 'Platform Overview', icon: LayoutDashboard },
