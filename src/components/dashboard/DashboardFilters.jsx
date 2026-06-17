@@ -10,15 +10,15 @@ export default function DashboardFilters({ window, onChange }) {
   return (
     <div className="flex items-center gap-2">
       <Calendar size={16} className="text-text-muted" />
-      <div className="flex items-center bg-bg-card border border-border rounded-lg p-0.5">
+      <div className="flex items-center bg-bg-card border border-border rounded-xl p-0.5 shadow-sm">
         {WINDOWS.map((w) => (
           <button
             key={w.value}
             onClick={() => onChange(w.value)}
-            className={`px-3 py-1.5 text-xs font-medium rounded-md transition-colors ${
+            className={`px-3.5 py-1.5 text-xs font-semibold rounded-lg transition-all duration-200 ${
               window === w.value
-                ? 'bg-primary-50 text-primary-700'
-                : 'text-text-secondary hover:text-text-primary'
+                ? 'bg-gradient-to-r from-primary-50 to-primary-100 text-primary-700 shadow-sm'
+                : 'text-text-secondary hover:text-text-primary hover:bg-bg-hover'
             }`}
           >
             {w.label}

@@ -27,6 +27,7 @@ import {
   Sparkles,
   Inbox,
   BookOpen,
+  ChevronDown,
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -125,18 +126,31 @@ function SidebarItem({ item, collapsed }) {
 
   if (item.children) {
     return (
-      <div className="space-y-1">
+      <div className="space-y-0.5">
         {!collapsed && (
           <button
             onClick={() => setExpanded(!expanded)}
-            className="flex items-center gap-3 px-3 py-2 w-full rounded-lg text-sm font-medium text-slate-400 hover:bg-white/5 hover:text-white transition-colors"
+            className={`flex items-center gap-3 px-3 py-2.5 w-full rounded-xl text-sm font-medium transition-all duration-200 ${
+              hasActiveChild
+                ? 'text-white bg-white/10'
+                : 'text-slate-400 hover:bg-white/5 hover:text-white'
+            }`}
           >
             <item.icon size={18} />
             <span className="flex-1 text-left">{item.label}</span>
+            <ChevronDown
+              size={14}
+              className={`transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`}
+            />
           </button>
         )}
         {collapsed && (
-          <div className="px-3 py-2 rounded-lg text-slate-400" title={item.label}>
+          <div
+            className={`px-3 py-2.5 rounded-xl transition-colors ${
+              hasActiveChild ? 'text-white bg-white/10' : 'text-slate-400'
+            }`}
+            title={item.label}
+          >
             <item.icon size={18} />
           </div>
         )}
@@ -147,11 +161,11 @@ function SidebarItem({ item, collapsed }) {
               to={child.to}
               end
               className={({ isActive }) =>
-                `flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                  collapsed ? '' : 'ml-6'
+                `flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 ${
+                  collapsed ? '' : 'ml-2'
                 } ${
                   isActive
-                    ? 'bg-primary-600/20 text-primary-400'
+                    ? 'bg-gradient-to-r from-primary-600/20 to-primary-500/10 text-primary-400 shadow-sm shadow-primary-500/10'
                     : 'text-slate-400 hover:bg-white/5 hover:text-white'
                 }`
               }
@@ -170,9 +184,9 @@ function SidebarItem({ item, collapsed }) {
       to={item.to}
       end
       className={({ isActive }) =>
-        `flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+        `flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
           isActive
-            ? 'bg-primary-600/20 text-primary-400'
+            ? 'bg-gradient-to-r from-primary-600/20 to-primary-500/10 text-primary-400 shadow-sm shadow-primary-500/10'
             : 'text-slate-400 hover:bg-white/5 hover:text-white'
         }`
       }
@@ -201,33 +215,70 @@ export default function Sidebar() {
 
   return (
     <aside
-      className={`flex flex-col bg-bg-sidebar text-text-inverse h-screen transition-all duration-300 ${
-        collapsed ? 'w-16' : 'w-64'
+      className={`flex flex-col h-screen transition-all duration-300 ease-in-out ${
+        collapsed ? 'w-[72px]' : 'w-[260px]'
       }`}
+      style={{
+        background: 'linear-gradient(180deg, #0f172a 0%, #1e293b 100%)',
+      }}
     >
-      <div className="flex items-center justify-between h-16 px-4 border-b border-white/10">
+      {/* Logo Area */}
+      <div className="flex items-center justify-between h-16 px-4 border-b border-white/5">
         {!collapsed && (
-          <div className="flex items-center">
-            <img src={logo} alt="Feedback AI" className="h-14 object-contain" />
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-600 flex items-center justify-center shadow-lg shadow-primary-500/20">
+              <Sparkles size={18} className="text-white" />
+            </div>
+            <div>
+              <h1 className="text-sm font-bold text-white tracking-tight">Feedback AI</h1>
+              <p className="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Dashboard</p>
+            </div>
+          </div>
+        )}
+        {collapsed && (
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-500 to-accent-600 flex items-center justify-center shadow-lg shadow-primary-500/20 mx-auto">
+            <Sparkles size={18} className="text-white" />
           </div>
         )}
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-1.5 rounded-md hover:bg-white/10 transition-colors"
+          className="p-1.5 rounded-lg hover:bg-white/10 transition-colors text-slate-400"
           aria-label={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
         >
-          {collapsed ? <PanelLeft size={18} /> : <PanelLeftClose size={18} />}
+          {collapsed ? <PanelLeft size={16} /> : <PanelLeftClose size={16} />}
         </button>
       </div>
 
-      <nav className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
+      {/* Navigation */}
+      <nav className="flex-1 py-4 px-2.5 space-y-1 overflow-y-auto">
         {navItems.map((item) => (
           <SidebarItem key={item.label} item={item} collapsed={collapsed} />
         ))}
       </nav>
 
-      <div className="p-4 border-t border-white/10">
-        {!collapsed && <div className="text-xs text-slate-500">v0.1.0</div>}
+      {/* Footer */}
+      <div className="p-4 border-t border-white/5">
+        {!collapsed && (
+          <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl bg-white/5">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-accent-500 flex items-center justify-center text-white text-xs font-bold shadow-md">
+              {auth?.fullName?.charAt(0)?.toUpperCase() || 'U'}
+            </div>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-white truncate">{auth?.fullName || 'User'}</p>
+              <p className="text-xs text-slate-500 truncate">{auth?.email || ''}</p>
+            </div>
+          </div>
+        )}
+        {collapsed && (
+          <div className="flex justify-center">
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary-400 to-accent-500 flex items-center justify-center text-white text-xs font-bold shadow-md">
+              {auth?.fullName?.charAt(0)?.toUpperCase() || 'U'}
+            </div>
+          </div>
+        )}
+        <div className="mt-3 text-center">
+          <span className="text-[10px] text-slate-600 font-medium">v0.1.0</span>
+        </div>
       </div>
     </aside>
   );

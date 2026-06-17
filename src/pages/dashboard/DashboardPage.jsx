@@ -8,6 +8,7 @@ import {
   ShieldAlert,
   Users,
   RefreshCw,
+  ArrowUpRight,
 } from 'lucide-react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import PageHeader from '../../components/ui/PageHeader';
@@ -116,7 +117,7 @@ export default function DashboardPage() {
           <button
             onClick={loadDashboard}
             disabled={loading}
-            className="p-2 rounded-lg hover:bg-border-light text-text-secondary hover:text-text-primary transition-colors disabled:opacity-50"
+            className="p-2.5 rounded-xl hover:bg-bg-hover text-text-secondary hover:text-text-primary transition-all duration-200 disabled:opacity-50 border border-transparent hover:border-border"
             title="Refresh"
           >
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
@@ -125,14 +126,14 @@ export default function DashboardPage() {
       </PageHeader>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertCircle size={16} />
           {error}
         </div>
       )}
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
         {kpiCards.length > 0 ? (
           kpiCards.map((kpi, index) => (
             <KpiCard key={index} {...kpi} loading={loading} />
@@ -148,19 +149,19 @@ export default function DashboardPage() {
       </div>
 
       {/* Sentiment Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
         <SentimentTrendWidget data={trends?.sentimentTrend} loading={loading} />
         <SentimentWidget data={analytics?.sentimentBreakdown} loading={loading} />
       </div>
 
       {/* Complaints & Feature Requests */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
         <ComplaintWidget data={complaints} loading={loading} />
         <FeatureRequestWidget data={featureRequests} loading={loading} />
       </div>
 
       {/* Churn Risk & Trends */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
         <ChurnRiskWidget
           breakdown={analytics?.churnRiskBreakdown}
           highRiskCustomers={highRiskCustomers}
@@ -170,33 +171,36 @@ export default function DashboardPage() {
       </div>
 
       {/* Activity Feed */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <div className="lg:col-span-2">
           <ActivityWidget loading={loading} />
         </div>
-        <div className="bg-bg-card rounded-xl border border-border p-6 shadow-xs">
-          <h3 className="text-base font-semibold text-text-primary mb-4">Feedback by Source</h3>
+        <div className="bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div className="flex items-center justify-between mb-5">
+            <h3 className="text-base font-bold text-text-primary">Feedback by Source</h3>
+            <button className="text-xs font-semibold text-primary-600 hover:text-primary-700 transition-colors flex items-center gap-1">
+              View all <ArrowUpRight size={12} />
+            </button>
+          </div>
           {analytics?.feedbackBySource?.length > 0 ? (
-            <div className="space-y-3">
+            <div className="space-y-4">
               {analytics.feedbackBySource.map((source) => (
-                <div key={source.source} className="flex items-center justify-between">
-                  <span className="text-sm text-text-secondary">{source.source}</span>
-                  <div className="flex items-center gap-3">
-                    <div className="h-2 w-24 bg-bg-base rounded-full overflow-hidden">
-                      <div
-                        className="h-full bg-primary-500 rounded-full"
-                        style={{ width: `${source.percent || 0}%` }}
-                      />
-                    </div>
-                    <span className="text-sm font-medium text-text-primary w-10 text-right">
-                      {source.count}
-                    </span>
+                <div key={source.source} className="group">
+                  <div className="flex items-center justify-between mb-1.5">
+                    <span className="text-sm font-medium text-text-secondary">{source.source}</span>
+                    <span className="text-sm font-bold text-text-primary">{source.count}</span>
+                  </div>
+                  <div className="h-2.5 w-full bg-bg-base rounded-full overflow-hidden">
+                    <div
+                      className="h-full rounded-full bg-gradient-to-r from-primary-500 to-primary-400 transition-all duration-500 group-hover:from-primary-400 group-hover:to-accent-400"
+                      style={{ width: `${source.percent || 0}%` }}
+                    />
                   </div>
                 </div>
               ))}
             </div>
           ) : (
-            <p className="text-sm text-text-muted text-center py-8">No source data available</p>
+            <p className="text-sm text-text-muted text-center py-8 font-medium">No source data available</p>
           )}
         </div>
       </div>

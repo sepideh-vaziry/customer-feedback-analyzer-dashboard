@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
-import { Plug, Loader2, AlertCircle } from 'lucide-react';
+import { Plug, Loader2, AlertCircle, ArrowUpRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import PageHeader from '../../components/ui/PageHeader';
 import ConnectorForm from '../../components/connectors/ConnectorForm';
@@ -12,6 +13,7 @@ export default function ConnectorsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedId, setSelectedId] = useState(null);
+  const navigate = useNavigate();
 
   const loadConnectors = useCallback(async () => {
     setLoading(true);
@@ -35,29 +37,37 @@ export default function ConnectorsPage() {
       <PageHeader
         title="Connectors"
         description="Manage external source integrations for feedback ingestion"
-      />
+      >
+        <button
+          onClick={() => navigate('/connectors/webhooks/guide')}
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-primary-700 bg-gradient-to-r from-primary-50 to-primary-100 rounded-xl hover:from-primary-100 hover:to-primary-200 transition-all border border-primary-200 shadow-sm"
+        >
+          <ArrowUpRight size={16} />
+          Webhook Guide
+        </button>
+      </PageHeader>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <div className="lg:col-span-1">
-          <div className="bg-bg-card rounded-xl border border-border p-6 shadow-xs">
-            <div className="flex items-center gap-2.5 mb-5">
-              <div className="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center">
-                <Plug size={16} className="text-primary-600" />
+          <div className="bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+            <div className="flex items-center gap-3 mb-5">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center shadow-sm">
+                <Plug size={18} className="text-primary-600" />
               </div>
-              <h3 className="text-base font-semibold text-text-primary">New Connector</h3>
+              <h3 className="text-base font-bold text-text-primary">New Connector</h3>
             </div>
             <ConnectorForm onSuccess={loadConnectors} />
           </div>
         </div>
 
         <div className="lg:col-span-2">
-          <div className="bg-bg-card rounded-xl border border-border p-6 shadow-xs">
+          <div className="bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
             <div className="flex items-center justify-between mb-5">
-              <h3 className="text-base font-semibold text-text-primary">Your Connectors</h3>
+              <h3 className="text-base font-bold text-text-primary">Your Connectors</h3>
               <button
                 onClick={loadConnectors}
                 disabled={loading}
-                className="p-2 rounded-lg hover:bg-border-light text-text-secondary hover:text-text-primary transition-colors disabled:opacity-50"
+                className="p-2.5 rounded-xl hover:bg-bg-hover text-text-secondary hover:text-text-primary transition-all duration-200 disabled:opacity-50 border border-transparent hover:border-border"
                 title="Refresh"
               >
                 <Loader2 size={16} className={loading ? 'animate-spin' : ''} />
@@ -65,7 +75,7 @@ export default function ConnectorsPage() {
             </div>
 
             {error && (
-              <div className="p-3 rounded-lg bg-danger-50 text-sm text-danger-700 flex items-center gap-2 mb-4">
+              <div className="p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium mb-4">
                 <AlertCircle size={16} />
                 {error}
               </div>
