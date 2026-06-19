@@ -26,7 +26,7 @@ export default function ComplaintWidget({ data, loading }) {
   const chartData = data.map((item) => ({
     name: item.categoryName || 'Unknown',
     count: item.occurrenceCount || 0,
-    rate: item.occurrenceRate || 0,
+    rate: item.severityScore || 0,
   }));
 
   return (

@@ -63,7 +63,7 @@ export default function ComplaintCategoriesPage() {
         <button
           onClick={loadData}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
         >
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           Refresh
@@ -71,7 +71,7 @@ export default function ComplaintCategoriesPage() {
       </PageHeader>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>
@@ -80,44 +80,44 @@ export default function ComplaintCategoriesPage() {
       {categories.length === 0 ? (
         <EmptyState icon={Tag} title="No categories found" description="Categories will appear as feedback is analyzed." />
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
           {categories.map((category) => {
             const stats = categoryStats[category];
             return (
               <div
                 key={category}
-                className="bg-bg-card rounded-xl border border-border p-5 shadow-xs hover:shadow-md transition-shadow"
+                className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300"
               >
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-lg bg-danger-50 flex items-center justify-center">
+                    <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-danger-50 to-danger-100 flex items-center justify-center shadow-sm">
                       <Tag size={16} className="text-danger-600" />
                     </div>
-                    <h3 className="text-sm font-semibold text-text-primary">{category}</h3>
+                    <h3 className="text-sm font-bold text-text-primary">{category}</h3>
                   </div>
                 </div>
 
                 {stats ? (
                   <div className="space-y-2">
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-text-muted">Occurrences</span>
-                      <span className="text-sm font-medium text-text-primary">{stats.occurrenceCount || 0}</span>
+                      <span className="text-xs font-medium text-text-muted">Occurrences</span>
+                      <span className="text-sm font-bold text-text-primary">{stats.occurrenceCount || 0}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-xs text-text-muted">Rate</span>
-                      <span className="text-sm font-medium text-text-primary">
-                        {stats.occurrenceRate ? `${(stats.occurrenceRate * 100).toFixed(1)}%` : '—'}
+                      <span className="text-xs font-medium text-text-muted">Rate</span>
+                      <span className="text-sm font-bold text-text-primary">
+                        {stats.severityScore != null ? `${stats.severityScore.toFixed(1)}%` : '—'}
                       </span>
                     </div>
                     <div className="h-2 w-full bg-bg-base rounded-full overflow-hidden mt-2">
                       <div
-                        className="h-full bg-danger-500 rounded-full"
+                        className="h-full bg-gradient-to-r from-danger-500 to-danger-600 rounded-full"
                         style={{ width: `${Math.min((stats.occurrenceCount || 0) * 2, 100)}%` }}
                       />
                     </div>
                   </div>
                 ) : (
-                  <p className="text-xs text-text-muted">No data for this period</p>
+                  <p className="text-xs text-text-muted font-medium">No data for this period</p>
                 )}
               </div>
             );

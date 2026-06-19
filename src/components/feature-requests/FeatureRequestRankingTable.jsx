@@ -83,7 +83,7 @@ export default function FeatureRequestRankingTable({ features, loading, onView }
                 <SortHeader column="occurrenceCount">Occurrences</SortHeader>
               </th>
               <th className="text-left py-3 px-4 text-xs font-semibold text-text-muted uppercase tracking-wide">
-                <SortHeader column="demandRate">Demand Rate</SortHeader>
+                <SortHeader column="demandScore">Demand Rate</SortHeader>
               </th>
               <th className="text-left py-3 px-4 text-xs font-semibold text-text-muted uppercase tracking-wide">
                 Priority
@@ -105,7 +105,7 @@ export default function FeatureRequestRankingTable({ features, loading, onView }
                 <td className="py-3 px-4 text-sm text-text-secondary">{feature.occurrenceCount || 0}</td>
                 <td className="py-3 px-4">
                   <span className="text-sm text-text-secondary">
-                    {feature.demandRate ? `${(feature.demandRate * 100).toFixed(1)}%` : '—'}
+                    {feature.demandScore != null ? `${feature.demandScore.toFixed(1)}%` : '—'}
                   </span>
                 </td>
                 <td className="py-3 px-4">

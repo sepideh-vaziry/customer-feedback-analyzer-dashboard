@@ -82,7 +82,7 @@ export default function ComplaintTable({ complaints, loading, onView }) {
                 <SortHeader column="occurrenceCount">Occurrences</SortHeader>
               </th>
               <th className="text-left py-3 px-4 text-xs font-semibold text-text-muted uppercase tracking-wide">
-                <SortHeader column="occurrenceRate">Rate</SortHeader>
+                <SortHeader column="severityScore">Rate</SortHeader>
               </th>
               <th className="text-left py-3 px-4 text-xs font-semibold text-text-muted uppercase tracking-wide">
                 Severity
@@ -103,7 +103,7 @@ export default function ComplaintTable({ complaints, loading, onView }) {
                 </td>
                 <td className="py-3 px-4 text-sm text-text-secondary">{complaint.occurrenceCount || 0}</td>
                 <td className="py-3 px-4">
-                  <span className="text-sm text-text-secondary">{complaint.occurrenceRate ? `${(complaint.occurrenceRate * 100).toFixed(1)}%` : '—'}</span>
+                  <span className="text-sm text-text-secondary">{complaint.severityScore != null ? `${complaint.severityScore.toFixed(1)}%` : '—'}</span>
                 </td>
                 <td className="py-3 px-4">
                   <ComplaintSeverityBadge severity={complaint.severity || 'MEDIUM'} />

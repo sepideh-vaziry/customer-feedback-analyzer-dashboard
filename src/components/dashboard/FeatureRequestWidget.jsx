@@ -26,7 +26,7 @@ export default function FeatureRequestWidget({ data, loading }) {
   const chartData = data.map((item) => ({
     name: item.clusterName || 'Unknown',
     count: item.occurrenceCount || 0,
-    rate: item.demandRate || 0,
+    rate: item.demandScore || 0,
   }));
 
   return (

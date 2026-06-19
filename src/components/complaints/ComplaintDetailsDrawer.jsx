@@ -48,7 +48,7 @@ export default function ComplaintDetailsDrawer({ complaint, onClose }) {
                 <p className="text-xs font-medium text-text-muted uppercase tracking-wide">Rate</p>
               </div>
               <p className="text-2xl font-semibold text-text-primary">
-                {complaint.occurrenceRate ? `${(complaint.occurrenceRate * 100).toFixed(1)}%` : '—'}
+                {complaint.severityScore != null ? `${complaint.severityScore.toFixed(1)}%` : '—'}
               </p>
             </div>
           </div>

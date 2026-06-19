@@ -48,7 +48,7 @@ export default function FeatureRequestDetailsDrawer({ feature, onClose }) {
                 <p className="text-xs font-medium text-text-muted uppercase tracking-wide">Demand Rate</p>
               </div>
               <p className="text-2xl font-semibold text-text-primary">
-                {feature.demandRate ? `${(feature.demandRate * 100).toFixed(1)}%` : '—'}
+                {feature.demandScore != null ? `${feature.demandScore.toFixed(1)}%` : '—'}
               </p>
             </div>
           </div>
