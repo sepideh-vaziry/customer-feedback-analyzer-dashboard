@@ -1,14 +1,14 @@
-import { TrendingUp, TrendingDown, AlertTriangle, Lightbulb, Activity } from 'lucide-react';
+import { TrendingUp, TrendingDown, Users, AlertTriangle, Lightbulb, Activity } from 'lucide-react';
 import TrendStatusBadge from './TrendStatusBadge';
 
-const typeIcons = {
+const TYPE_ICONS = {
   COMPLAINT_SPIKE: AlertTriangle,
   EMERGING_TOPIC: Lightbulb,
   SENTIMENT_SHIFT: Activity,
 };
 
 export default function TrendImpactCard({ trend, onClick }) {
-  const Icon = typeIcons[trend.type] || TrendingUp;
+  const Icon = TYPE_ICONS[trend.type] || TrendingUp;
   const isPositive = (trend.changeRatio || 0) > 0;
   const changePercent = trend.changeRatio != null
     ? Math.round(trend.changeRatio * 100)
@@ -30,10 +30,13 @@ export default function TrendImpactCard({ trend, onClick }) {
           </div>
           <span className="text-sm font-medium text-text-primary">{trend.subject}</span>
         </div>
-        <TrendStatusBadge status={trend.severity} />
+        <div className="flex items-center gap-1.5">
+          {trend.status && <TrendStatusBadge status={trend.status} />}
+          <TrendStatusBadge status={trend.severity} />
+        </div>
       </div>
 
-      <div className="flex items-center gap-4 mt-3">
+      <div className="flex items-center gap-4 mt-3 flex-wrap">
         <div>
           <p className="text-xs text-text-muted">Current</p>
           <p className="text-lg font-semibold text-text-primary">{trend.currentCount || 0}</p>
@@ -48,6 +51,15 @@ export default function TrendImpactCard({ trend, onClick }) {
             <p className={`text-lg font-semibold flex items-center gap-0.5 ${isPositive ? 'text-danger-600' : 'text-success-600'}`}>
               {isPositive ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
               {isPositive ? '+' : ''}{changePercent}%
+            </p>
+          </div>
+        )}
+        {trend.affectedCustomers != null && (
+          <div>
+            <p className="text-xs text-text-muted">Affected</p>
+            <p className="text-lg font-semibold text-text-primary flex items-center gap-1">
+              <Users size={14} className="text-text-muted" />
+              {trend.affectedCustomers}
             </p>
           </div>
         )}

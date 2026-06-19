@@ -1,82 +1,99 @@
 import { useState, useEffect, useCallback, useMemo } from 'react';
-import { RefreshCw, AlertTriangle, Search, Calendar, TrendingUp, TrendingDown, Minus, Activity, Play } from 'lucide-react';
+import {
+  RefreshCw,
+  AlertTriangle,
+  Search,
+  Calendar,
+  TrendingUp,
+  TrendingDown,
+  Activity,
+  Play,
+  ChevronLeft,
+  ChevronRight,
+} from 'lucide-react';
 import DashboardLayout from '../../components/layout/DashboardLayout';
 import PageHeader from '../../components/ui/PageHeader';
 import TrendStatusBadge from '../../components/trends/TrendStatusBadge';
 import TrendDetailsDrawer from '../../components/trends/TrendDetailsDrawer';
 import EmptyState from '../../components/ui/EmptyState';
 import LoadingSpinner from '../../components/ui/LoadingSpinner';
-import { getLatestTrends, detectTrends } from '../../services/trendService';
+import { getTrendHistory } from '../../services/trendService';
+import { useTrendDetection } from '../../hooks/useTrendDetection';
 
-function getTrendStatus(trend) {
-  const ratio = trend.changeRatio || 0;
-  if (ratio > 0.5) return 'GROWING';
-  if (ratio > 0.1) return 'EMERGING';
-  if (ratio > -0.1) return 'STABLE';
-  if (ratio > -0.5) return 'DECLINING';
-  return 'EXPIRED';
-}
+const WINDOWS = [
+  { value: 7, label: 'Last 7 Days' },
+  { value: 30, label: 'Last 30 Days' },
+  { value: 90, label: 'Last 90 Days' },
+];
+
+const STATUS_OPTIONS = ['ALL', 'EMERGING', 'GROWING', 'STABLE', 'DECLINING', 'EXPIRED'];
+
+const PAGE_SIZE = 20;
 
 export default function TrendHistoryPage() {
+  const [windowDays, setWindowDays] = useState(90);
+  const [statusFilter, setStatusFilter] = useState('ALL');
+  const [page, setPage] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [detecting, setDetecting] = useState(false);
   const [error, setError] = useState('');
-  const [trends, setTrends] = useState([]);
+  const [historyPage, setHistoryPage] = useState(null);
   const [search, setSearch] = useState('');
-  const [filterStatus, setFilterStatus] = useState('ALL');
   const [selectedTrend, setSelectedTrend] = useState(null);
+  const [detectTrigger, setDetectTrigger] = useState(0);
+
+  const detection = useTrendDetection();
 
   const loadData = useCallback(async () => {
     setLoading(true);
     setError('');
     try {
-      const data = await getLatestTrends();
-      setTrends(data?.entries || []);
+      const params = {
+        days: windowDays,
+        page,
+        size: PAGE_SIZE,
+      };
+      if (statusFilter !== 'ALL') params.status = statusFilter;
+      const data = await getTrendHistory(params);
+      setHistoryPage(data || null);
     } catch (err) {
       setError('Failed to load trend history.');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [windowDays, statusFilter, page]);
 
   useEffect(() => {
     loadData();
   }, [loadData]);
 
-  const handleDetect = async () => {
-    setDetecting(true);
-    try {
-      await detectTrends();
-      await loadData();
-    } catch {
-      setError('Failed to trigger trend detection.');
-    } finally {
-      setDetecting(false);
+  useEffect(() => {
+    if (detection.job?.status === 'COMPLETED') {
+      loadData();
     }
-  };
+  }, [detection.job?.status]);
 
-  const enrichedTrends = useMemo(() => {
-    return trends.map((t) => ({
-      ...t,
-      status: getTrendStatus(t),
-    }));
-  }, [trends]);
+  const entries = historyPage?.entries || historyPage?.content || historyPage?.items || (Array.isArray(historyPage) ? historyPage : []);
+  const totalPages = historyPage?.totalPages ?? Math.max(1, Math.ceil((historyPage?.totalElements ?? entries.length) / PAGE_SIZE));
+  const totalElements = historyPage?.totalElements ?? entries.length;
 
   const filtered = useMemo(() => {
-    return enrichedTrends.filter((t) => {
-      const matchesSearch = t.subject?.toLowerCase().includes(search.toLowerCase());
-      const matchesStatus = filterStatus === 'ALL' || t.status === filterStatus;
-      return matchesSearch && matchesStatus;
-    });
-  }, [enrichedTrends, search, filterStatus]);
+    if (!search.trim()) return entries;
+    const q = search.toLowerCase();
+    return entries.filter((t) => t.subject?.toLowerCase().includes(q));
+  }, [entries, search]);
 
-  const sorted = useMemo(() => {
-    return [...filtered].sort((a, b) => {
-      const aDate = a.detectedAt ? new Date(a.detectedAt).getTime() : 0;
-      const bDate = b.detectedAt ? new Date(b.detectedAt).getTime() : 0;
-      return bDate - aDate;
-    });
-  }, [filtered]);
+  const handleDetect = async () => {
+    await detection.start(windowDays);
+    setDetectTrigger((n) => n + 1);
+  };
+
+  useEffect(() => {
+    if (detectTrigger > 0) loadData();
+  }, [detectTrigger]);
+
+  const detectionRunning = detection.loading || (detection.job && !['COMPLETED', 'FAILED'].includes(detection.job.status));
+  const detectionStatus = detection.job?.status;
+  const detectionProgress = detection.job?.progress;
 
   return (
     <DashboardLayout>
@@ -85,18 +102,27 @@ export default function TrendHistoryPage() {
         description="Track the lifecycle of detected trends over time"
       >
         <div className="flex items-center gap-2">
+          <select
+            value={windowDays}
+            onChange={(e) => { setWindowDays(Number(e.target.value)); setPage(0); }}
+            className="px-3 py-2.5 text-sm bg-bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+          >
+            {WINDOWS.map((w) => (
+              <option key={w.value} value={w.value}>{w.label}</option>
+            ))}
+          </select>
           <button
             onClick={handleDetect}
-            disabled={detecting}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors disabled:opacity-50"
+            disabled={detectionRunning}
+            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-primary-700 bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200 rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
           >
-            <Play size={16} />
-            {detecting ? 'Detecting...' : 'Detect Now'}
+            <Play size={16} className={detectionRunning ? 'animate-pulse' : ''} />
+            {detectionRunning ? `Detecting${detectionProgress != null ? ` ${detectionProgress}%` : '...'}` : 'Detect Now'}
           </button>
           <button
             onClick={loadData}
             disabled={loading}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
           >
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
             Refresh
@@ -104,10 +130,16 @@ export default function TrendHistoryPage() {
         </div>
       </PageHeader>
 
-      {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+      {(error || detection.error) && (
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
-          {error}
+          {detection.error || error}
+        </div>
+      )}
+
+      {detectionStatus === 'COMPLETED' && !detection.error && (
+        <div className="mb-6 p-3 rounded-xl bg-success-50 border border-success-200 text-sm text-success-700 font-medium">
+          Detection completed. Trend history refreshed.
         </div>
       )}
 
@@ -119,29 +151,28 @@ export default function TrendHistoryPage() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search trends..."
-            className="w-full pl-9 pr-4 py-2 text-sm bg-bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+            className="w-full pl-9 pr-4 py-2.5 text-sm bg-bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
           />
         </div>
         <select
-          value={filterStatus}
-          onChange={(e) => setFilterStatus(e.target.value)}
-          className="px-3 py-2 text-sm bg-bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+          value={statusFilter}
+          onChange={(e) => { setStatusFilter(e.target.value); setPage(0); }}
+          className="px-3 py-2.5 text-sm bg-bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all"
         >
-          <option value="ALL">All Statuses</option>
-          <option value="EMERGING">Emerging</option>
-          <option value="GROWING">Growing</option>
-          <option value="STABLE">Stable</option>
-          <option value="DECLINING">Declining</option>
-          <option value="EXPIRED">Expired</option>
+          {STATUS_OPTIONS.map((s) => (
+            <option key={s} value={s}>
+              {s === 'ALL' ? 'All Statuses' : s.charAt(0) + s.slice(1).toLowerCase()}
+            </option>
+          ))}
         </select>
       </div>
 
-      {loading && trends.length === 0 ? (
+      {loading && entries.length === 0 ? (
         <div className="flex items-center justify-center py-24">
           <LoadingSpinner size="xl" />
         </div>
-      ) : sorted.length === 0 ? (
-        <div className="bg-bg-card rounded-xl border border-border p-6 shadow-xs">
+      ) : filtered.length === 0 ? (
+        <div className="bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
           <EmptyState
             icon={Activity}
             title="No trend history"
@@ -149,50 +180,54 @@ export default function TrendHistoryPage() {
           />
         </div>
       ) : (
-        <div className="bg-bg-card rounded-xl border border-border shadow-xs overflow-hidden">
+        <div className="bg-bg-card rounded-2xl border border-border shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
           <table className="w-full text-sm">
             <thead className="bg-bg-base border-b border-border">
               <tr>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Trend</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Type</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Status</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Severity</th>
-                <th className="text-right px-4 py-3 font-medium text-text-secondary">Current</th>
-                <th className="text-right px-4 py-3 font-medium text-text-secondary">Previous</th>
-                <th className="text-right px-4 py-3 font-medium text-text-secondary">Change</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Detected</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Trend</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Type</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Status</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Severity</th>
+                <th className="text-right px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Current</th>
+                <th className="text-right px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Previous</th>
+                <th className="text-right px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Change</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">First Seen</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Last Seen</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
-              {sorted.map((trend, i) => {
+              {filtered.map((trend) => {
                 const isPositive = (trend.changeRatio || 0) > 0;
                 const changePercent = trend.changeRatio != null
                   ? Math.round(trend.changeRatio * 100)
                   : null;
+                const firstSeen = trend.firstDetectedAt || trend.detectedAt;
+                const lastSeen = trend.lastSeenAt || trend.detectedAt;
+                const key = trend.id || `${trend.subject}-${firstSeen}-${lastSeen}`;
 
                 return (
                   <tr
-                    key={i}
-                    className="hover:bg-bg-base/50 cursor-pointer"
+                    key={key}
+                    className="hover:bg-bg-base/50 cursor-pointer transition-colors"
                     onClick={() => setSelectedTrend(trend)}
                   >
-                    <td className="px-4 py-3">
-                      <span className="font-medium text-text-primary">{trend.subject}</span>
+                    <td className="px-4 py-3.5">
+                      <span className="font-semibold text-text-primary">{trend.subject}</span>
                     </td>
-                    <td className="px-4 py-3">
-                      <TrendStatusBadge status={trend.type} />
+                    <td className="px-4 py-3.5">
+                      {trend.type ? <TrendStatusBadge status={trend.type} /> : <span className="text-text-muted">—</span>}
                     </td>
-                    <td className="px-4 py-3">
-                      <TrendStatusBadge status={trend.status} />
+                    <td className="px-4 py-3.5">
+                      {trend.status ? <TrendStatusBadge status={trend.status} /> : <span className="text-text-muted">—</span>}
                     </td>
-                    <td className="px-4 py-3">
-                      <TrendStatusBadge status={trend.severity} />
+                    <td className="px-4 py-3.5">
+                      {trend.severity ? <TrendStatusBadge status={trend.severity} /> : <span className="text-text-muted">—</span>}
                     </td>
-                    <td className="px-4 py-3 text-right font-medium text-text-primary">{trend.currentCount || 0}</td>
-                    <td className="px-4 py-3 text-right text-text-secondary">{trend.previousCount || 0}</td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-3.5 text-right font-semibold text-text-primary">{trend.currentCount || 0}</td>
+                    <td className="px-4 py-3.5 text-right text-text-secondary font-medium">{trend.previousCount || 0}</td>
+                    <td className="px-4 py-3.5 text-right">
                       {changePercent != null ? (
-                        <span className={`inline-flex items-center gap-0.5 font-medium ${isPositive ? 'text-danger-600' : 'text-success-600'}`}>
+                        <span className={`inline-flex items-center gap-0.5 font-semibold ${isPositive ? 'text-danger-600' : 'text-success-600'}`}>
                           {isPositive ? <TrendingUp size={14} /> : <TrendingDown size={14} />}
                           {isPositive ? '+' : ''}{changePercent}%
                         </span>
@@ -200,10 +235,16 @@ export default function TrendHistoryPage() {
                         <span className="text-text-muted">—</span>
                       )}
                     </td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1.5 text-text-secondary">
+                    <td className="px-4 py-3.5">
+                      <div className="flex items-center gap-1.5 text-text-secondary font-medium">
                         <Calendar size={14} />
-                        {trend.detectedAt ? new Date(trend.detectedAt).toLocaleDateString() : '—'}
+                        {firstSeen ? new Date(firstSeen).toLocaleDateString() : '—'}
+                      </div>
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <div className="flex items-center gap-1.5 text-text-secondary font-medium">
+                        <Calendar size={14} />
+                        {lastSeen ? new Date(lastSeen).toLocaleDateString() : '—'}
                       </div>
                     </td>
                   </tr>
@@ -211,6 +252,32 @@ export default function TrendHistoryPage() {
               })}
             </tbody>
           </table>
+
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between px-4 py-3 border-t border-border bg-bg-base">
+              <p className="text-xs text-text-muted font-medium">
+                Showing page {page + 1} of {totalPages} · {totalElements} total
+              </p>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => setPage((p) => Math.max(0, p - 1))}
+                  disabled={page === 0 || loading}
+                  className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-text-secondary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+                >
+                  <ChevronLeft size={14} />
+                  Previous
+                </button>
+                <button
+                  onClick={() => setPage((p) => Math.min(totalPages - 1, p + 1))}
+                  disabled={page >= totalPages - 1 || loading}
+                  className="inline-flex items-center gap-1 px-3 py-1.5 text-xs font-medium text-text-secondary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+                >
+                  Next
+                  <ChevronRight size={14} />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       )}
 
