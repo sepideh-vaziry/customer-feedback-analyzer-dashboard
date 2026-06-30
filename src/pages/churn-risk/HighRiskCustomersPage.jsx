@@ -38,7 +38,7 @@ export default function HighRiskCustomersPage() {
         <button
           onClick={loadData}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
         >
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           Refresh
@@ -46,13 +46,13 @@ export default function HighRiskCustomersPage() {
       </PageHeader>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>
       )}
 
-      <div className="bg-bg-card rounded-xl border border-border p-6 shadow-xs">
+      <div className="bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
         <HighRiskCustomerTable
           customers={customers}
           loading={loading}

@@ -64,13 +64,13 @@ export default function ComplaintExplorerPage() {
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Describe a complaint to find similar issues..."
-              className="w-full pl-9 pr-4 py-2.5 text-sm bg-bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+              className="w-full pl-9 pr-4 py-2.5 text-sm bg-bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
             />
           </div>
           <button
             type="submit"
             disabled={loading || !inputValue.trim()}
-            className="px-4 py-2.5 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50"
+            className="px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-primary-700 rounded-xl hover:from-primary-500 hover:to-primary-600 transition-all shadow-lg shadow-primary-500/20 disabled:opacity-50"
           >
             {loading ? <RefreshCw size={16} className="animate-spin" /> : 'Explore'}
           </button>
@@ -78,7 +78,7 @@ export default function ComplaintExplorerPage() {
       </form>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>
@@ -103,7 +103,7 @@ export default function ComplaintExplorerPage() {
           {results.map((item) => (
             <div
               key={item.feedbackId}
-              className="bg-bg-card rounded-xl border border-border p-5 shadow-xs hover:shadow-md transition-shadow"
+              className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">

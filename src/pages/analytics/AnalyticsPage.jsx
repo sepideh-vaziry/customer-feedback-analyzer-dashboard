@@ -10,11 +10,13 @@ export default function AnalyticsPage() {
         title="Analytics"
         description="Deep-dive analytics and reporting on customer feedback"
       />
-      <EmptyState
-        icon={BarChart3}
-        title="Analytics coming soon"
-        description="Detailed analytics, reports, and data exports will be available here."
-      />
+      <div className="bg-bg-card rounded-2xl border border-border p-12 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <EmptyState
+          icon={BarChart3}
+          title="Analytics coming soon"
+          description="Detailed analytics, reports, and data exports will be available here."
+        />
+      </div>
     </DashboardLayout>
   );
 }

@@ -44,7 +44,7 @@ export default function UsagePage() {
         <button
           onClick={loadData}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
         >
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           Refresh
@@ -52,7 +52,7 @@ export default function UsagePage() {
       </PageHeader>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>
@@ -71,10 +71,12 @@ export default function UsagePage() {
       ) : (
         <>
           {quota && (
-            <div className="bg-bg-card rounded-xl border border-border p-6 shadow-xs mb-6">
+            <div className="bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300 mb-6">
               <div className="flex items-center gap-2 mb-4">
-                <Cpu size={18} className="text-primary-500" />
-                <h3 className="text-base font-semibold text-text-primary">Token Quota</h3>
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center shadow-sm">
+                  <Cpu size={16} className="text-primary-600" />
+                </div>
+                <h3 className="text-base font-bold text-text-primary">Token Quota</h3>
               </div>
               <UsageProgressBar
                 used={quota.consumedTokens || 0}
@@ -82,7 +84,7 @@ export default function UsagePage() {
                 label="Tokens Consumed"
               />
               {quota.budgetExceeded && (
-                <div className="mt-4 p-3 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700">
+                <div className="mt-4 p-3 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 font-medium">
                   You have exceeded your token budget for this billing period.
                 </div>
               )}
@@ -90,13 +92,15 @@ export default function UsagePage() {
           )}
 
           {usage && (
-            <div className="bg-bg-card rounded-xl border border-border p-6 shadow-xs mb-6">
+            <div className="bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300 mb-6">
               <div className="flex items-center gap-2 mb-4">
-                <MessageSquare size={18} className="text-primary-500" />
-                <h3 className="text-base font-semibold text-text-primary">AI Token Usage</h3>
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center shadow-sm">
+                  <MessageSquare size={16} className="text-primary-600" />
+                </div>
+                <h3 className="text-base font-bold text-text-primary">AI Token Usage</h3>
               </div>
-              <p className="text-sm text-text-muted mb-4">
-                Billing Period: <span className="font-medium text-text-primary">{usage.billingPeriod}</span>
+              <p className="text-sm text-text-muted font-medium mb-4">
+                Billing Period: <span className="font-semibold text-text-primary">{usage.billingPeriod}</span>
               </p>
               <UsageProgressBar
                 used={usage.totalTokensUsed || 0}
@@ -107,13 +111,13 @@ export default function UsagePage() {
           )}
 
           {usage?.tokensByEventType && Object.keys(usage.tokensByEventType).length > 0 && (
-            <div className="bg-bg-card rounded-xl border border-border p-6 shadow-xs">
-              <h3 className="text-base font-semibold text-text-primary mb-4">Usage by Event Type</h3>
+            <div className="bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+              <h3 className="text-base font-bold text-text-primary mb-4">Usage by Event Type</h3>
               <div className="space-y-4">
                 {Object.entries(usage.tokensByEventType).map(([eventType, tokens]) => (
-                  <div key={eventType} className="flex items-center justify-between p-3 rounded-lg bg-bg-base border border-border">
-                    <span className="text-sm text-text-secondary capitalize">{eventType.replace(/_/g, ' ')}</span>
-                    <span className="text-sm font-medium text-text-primary">{tokens.toLocaleString()} tokens</span>
+                  <div key={eventType} className="flex items-center justify-between p-4 rounded-xl bg-gradient-to-br from-bg-base to-bg-card border border-border hover:border-primary-200 transition-colors">
+                    <span className="text-sm font-medium text-text-secondary capitalize">{eventType.replace(/_/g, ' ')}</span>
+                    <span className="text-sm font-bold text-text-primary">{tokens.toLocaleString()} tokens</span>
                   </div>
                 ))}
               </div>

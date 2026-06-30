@@ -59,7 +59,7 @@ export default function SubscriptionsPage() {
         <button
           onClick={loadData}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
         >
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           Refresh
@@ -67,7 +67,7 @@ export default function SubscriptionsPage() {
       </PageHeader>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>
@@ -80,7 +80,7 @@ export default function SubscriptionsPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search subscriptions..."
-          className="w-full pl-9 pr-4 py-2 text-sm bg-bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+          className="w-full pl-9 pr-4 py-2.5 text-sm bg-bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
         />
       </div>
 
@@ -95,45 +95,45 @@ export default function SubscriptionsPage() {
           description="No subscriptions found."
         />
       ) : (
-        <div className="bg-bg-card rounded-xl border border-border shadow-xs overflow-hidden">
+        <div className="bg-bg-card rounded-2xl border border-border shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
           <table className="w-full text-sm">
             <thead className="bg-bg-base border-b border-border">
               <tr>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Organization ID</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Plan ID</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Status</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Billing</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Start</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">End</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Seats</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Auto Renew</th>
-                <th className="text-right px-4 py-3 font-medium text-text-secondary">Actions</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Organization ID</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Plan ID</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Status</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Billing</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Start</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">End</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Seats</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Auto Renew</th>
+                <th className="text-right px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {filtered.map((s) => (
-                <tr key={s.id} className="hover:bg-bg-base/50">
-                  <td className="px-4 py-3">
-                    <span className="font-medium text-text-primary">{s.organizationId?.slice(0, 8)}...</span>
+                <tr key={s.id} className="hover:bg-bg-base/50 transition-colors">
+                  <td className="px-4 py-3.5">
+                    <span className="font-semibold text-text-primary">{s.organizationId?.slice(0, 8)}...</span>
                   </td>
-                  <td className="px-4 py-3 text-text-secondary">{s.subscriptionPlanId?.slice(0, 8)}...</td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${statusBadge(s.status)}`}>
+                  <td className="px-4 py-3.5 text-text-secondary font-medium">{s.subscriptionPlanId?.slice(0, 8)}...</td>
+                  <td className="px-4 py-3.5">
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold ${statusBadge(s.status)}`}>
                       {s.status || 'UNKNOWN'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-text-secondary">{s.billingCycle || '—'}</td>
-                  <td className="px-4 py-3 text-text-secondary">{formatDate(s.startDate)}</td>
-                  <td className="px-4 py-3 text-text-secondary">{formatDate(s.endDate)}</td>
-                  <td className="px-4 py-3 text-text-secondary">{s.seats ?? '—'}</td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5 text-text-secondary font-medium">{s.billingCycle || '—'}</td>
+                  <td className="px-4 py-3.5 text-text-secondary font-medium">{formatDate(s.startDate)}</td>
+                  <td className="px-4 py-3.5 text-text-secondary font-medium">{formatDate(s.endDate)}</td>
+                  <td className="px-4 py-3.5 text-text-secondary font-medium">{s.seats ?? '—'}</td>
+                  <td className="px-4 py-3.5">
                     {s.autoRenew ? (
                       <CheckCircle size={14} className="text-success-600" />
                     ) : (
                       <Ban size={14} className="text-text-muted" />
                     )}
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3.5 text-right">
                     <button
                       onClick={() => setSelected(s)}
                       className="p-1.5 rounded-lg hover:bg-border-light text-text-muted hover:text-text-primary transition-colors"

@@ -81,7 +81,7 @@ export default function OrganizationsPage() {
         <button
           onClick={() => loadData()}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
         >
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           Refresh
@@ -89,7 +89,7 @@ export default function OrganizationsPage() {
       </PageHeader>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>
@@ -102,7 +102,7 @@ export default function OrganizationsPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search organizations..."
-          className="w-full pl-9 pr-4 py-2 text-sm bg-bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+          className="w-full pl-9 pr-4 py-2.5 text-sm bg-bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
         />
       </div>
 
@@ -117,31 +117,31 @@ export default function OrganizationsPage() {
           description="No organizations found."
         />
       ) : (
-        <div className="bg-bg-card rounded-xl border border-border shadow-xs overflow-hidden">
+        <div className="bg-bg-card rounded-2xl border border-border shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
           <table className="w-full text-sm">
             <thead className="bg-bg-base border-b border-border">
               <tr>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Name</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Status</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Plan</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Created</th>
-                <th className="text-right px-4 py-3 font-medium text-text-secondary">Actions</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Name</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Status</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Plan</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Created</th>
+                <th className="text-right px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {filtered.map((org) => (
-                <tr key={org.id} className="hover:bg-bg-base/50">
-                  <td className="px-4 py-3">
-                    <span className="font-medium text-text-primary">{org.name}</span>
+                <tr key={org.id} className="hover:bg-bg-base/50 transition-colors">
+                  <td className="px-4 py-3.5">
+                    <span className="font-semibold text-text-primary">{org.name}</span>
                   </td>
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5">
                     <OrganizationStatusBadge status={org.status} />
                   </td>
-                  <td className="px-4 py-3 text-text-secondary">{org.plan || '—'}</td>
-                  <td className="px-4 py-3 text-text-secondary">
+                  <td className="px-4 py-3.5 text-text-secondary font-medium">{org.plan || '—'}</td>
+                  <td className="px-4 py-3.5 text-text-secondary font-medium">
                     {org.createdAt ? new Date(org.createdAt).toLocaleDateString() : '—'}
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3.5 text-right">
                     <div className="flex items-center justify-end gap-1">
                       <button className="p-1.5 rounded-lg hover:bg-border-light text-text-muted hover:text-text-primary transition-colors" title="View">
                         <Eye size={14} />

@@ -58,7 +58,7 @@ export default function SimilarFeatureRequestsPage() {
           <button
             type="submit"
             disabled={loading || !query.trim()}
-            className="px-4 py-2.5 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50"
+            className="px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all duration-200 disabled:opacity-50 shadow-sm"
           >
             {loading ? <RefreshCw size={16} className="animate-spin" /> : 'Find Similar'}
           </button>
@@ -79,7 +79,7 @@ export default function SimilarFeatureRequestsPage() {
       </form>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>
@@ -96,7 +96,7 @@ export default function SimilarFeatureRequestsPage() {
           description="Try a different description to find related feature requests."
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {results.map((result, i) => (
             <SearchResultCard key={i} result={result} />
           ))}

@@ -45,7 +45,7 @@ export default function AIUsagePage() {
         <button
           onClick={loadData}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
         >
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           Refresh
@@ -53,13 +53,13 @@ export default function AIUsagePage() {
       </PageHeader>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>
       )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
         <AdminKpiCard
           title="Total AI Cost"
           value={usage?.totalCost != null ? `$${usage.totalCost.toLocaleString()}` : '—'}
@@ -97,9 +97,9 @@ export default function AIUsagePage() {
           description="No AI usage data available."
         />
       ) : (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-bg-card rounded-xl border border-border p-5 shadow-xs">
-            <h3 className="text-sm font-medium text-text-primary mb-4">Cost by Provider</h3>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-5">
+          <div className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
+            <h3 className="text-sm font-bold text-text-primary mb-4">Cost by Provider</h3>
             {byProvider.length === 0 ? (
               <p className="text-sm text-text-muted">No provider data available.</p>
             ) : (
@@ -117,8 +117,8 @@ export default function AIUsagePage() {
             )}
           </div>
 
-          <div className="bg-bg-card rounded-xl border border-border p-5 shadow-xs">
-            <h3 className="text-sm font-medium text-text-primary mb-4">Cost by Model</h3>
+          <div className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
+            <h3 className="text-sm font-bold text-text-primary mb-4">Cost by Model</h3>
             {byModel.length === 0 ? (
               <p className="text-sm text-text-muted">No model data available.</p>
             ) : (
@@ -134,8 +134,8 @@ export default function AIUsagePage() {
             )}
           </div>
 
-          <div className="bg-bg-card rounded-xl border border-border p-5 shadow-xs lg:col-span-2">
-            <h3 className="text-sm font-medium text-text-primary mb-4">Cost by Organization</h3>
+          <div className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300 lg:col-span-2">
+            <h3 className="text-sm font-bold text-text-primary mb-4">Cost by Organization</h3>
             {byOrganization.length === 0 ? (
               <p className="text-sm text-text-muted">No organization data available.</p>
             ) : (

@@ -9,10 +9,12 @@ import { getDashboardAnalytics } from '../../services/dashboardService';
 
 function InsightCard({ icon: Icon, title, children, className = '' }) {
   return (
-    <div className={`bg-bg-card rounded-xl border border-border p-6 shadow-xs ${className}`}>
+    <div className={`bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300 ${className}`}>
       <div className="flex items-center gap-2 mb-4">
-        <Icon size={18} className="text-primary-500" />
-        <h3 className="text-sm font-semibold text-text-primary">{title}</h3>
+        <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center shadow-sm">
+          <Icon size={16} className="text-primary-600" />
+        </div>
+        <h3 className="text-sm font-bold text-text-primary">{title}</h3>
       </div>
       {children}
     </div>
@@ -24,11 +26,11 @@ function SignalBar({ label, count, total, colorClass }) {
   return (
     <div className="mb-3 last:mb-0">
       <div className="flex items-center justify-between text-sm mb-1">
-        <span className="text-text-secondary">{label}</span>
-        <span className="font-medium text-text-primary">{count} <span className="text-text-muted">({percent}%)</span></span>
+        <span className="text-text-secondary font-medium">{label}</span>
+        <span className="font-bold text-text-primary">{count} <span className="text-text-muted font-medium">({percent}%)</span></span>
       </div>
       <div className="h-2 w-full bg-bg-base rounded-full overflow-hidden">
-        <div className={`h-full ${colorClass} transition-all duration-500`} style={{ width: `${percent}%` }} />
+        <div className={`h-full bg-gradient-to-r ${colorClass} transition-all duration-500`} style={{ width: `${percent}%` }} />
       </div>
     </div>
   );
@@ -160,7 +162,7 @@ export default function RetentionInsightsPage() {
         <button
           onClick={loadData}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
         >
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           Refresh
@@ -168,7 +170,7 @@ export default function RetentionInsightsPage() {
       </PageHeader>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>
@@ -180,40 +182,48 @@ export default function RetentionInsightsPage() {
         </div>
       ) : (
         <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-            <div className="bg-bg-card rounded-xl border border-border p-5 shadow-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 mb-6">
+            <div className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
               <div className="flex items-center gap-2 mb-2">
-                <Users size={16} className="text-primary-500" />
-                <span className="text-xs font-medium text-text-muted uppercase tracking-wide">Customers Assessed</span>
+                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center shadow-sm">
+                  <Users size={14} className="text-primary-600" />
+                </div>
+                <span className="text-xs font-bold text-text-muted uppercase tracking-wide">Customers Assessed</span>
               </div>
-              <p className="text-2xl font-semibold text-text-primary">{insights.totalAssessed}</p>
+              <p className="text-2xl font-bold text-text-primary">{insights.totalAssessed}</p>
             </div>
-            <div className="bg-bg-card rounded-xl border border-border p-5 shadow-xs">
+            <div className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
               <div className="flex items-center gap-2 mb-2">
-                <AlertTriangle size={16} className="text-danger-500" />
-                <span className="text-xs font-medium text-text-muted uppercase tracking-wide">High + Critical</span>
+                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-danger-50 to-danger-100 flex items-center justify-center shadow-sm">
+                  <AlertTriangle size={14} className="text-danger-600" />
+                </div>
+                <span className="text-xs font-bold text-text-muted uppercase tracking-wide">High + Critical</span>
               </div>
-              <p className="text-2xl font-semibold text-text-primary">{insights.highCritical}</p>
-              <p className="text-xs text-text-muted mt-1">{insights.atRiskPercent}% of total</p>
+              <p className="text-2xl font-bold text-text-primary">{insights.highCritical}</p>
+              <p className="text-xs text-text-muted font-medium mt-1">{insights.atRiskPercent}% of total</p>
             </div>
-            <div className="bg-bg-card rounded-xl border border-border p-5 shadow-xs">
+            <div className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
               <div className="flex items-center gap-2 mb-2">
-                <TrendingUp size={16} className="text-warning-500" />
-                <span className="text-xs font-medium text-text-muted uppercase tracking-wide">Avg Risk Score</span>
+                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-warning-50 to-warning-100 flex items-center justify-center shadow-sm">
+                  <TrendingUp size={14} className="text-warning-600" />
+                </div>
+                <span className="text-xs font-bold text-text-muted uppercase tracking-wide">Avg Risk Score</span>
               </div>
-              <p className="text-2xl font-semibold text-text-primary">{insights.avgScore}%</p>
+              <p className="text-2xl font-bold text-text-primary">{insights.avgScore}%</p>
             </div>
-            <div className="bg-bg-card rounded-xl border border-border p-5 shadow-xs">
+            <div className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
               <div className="flex items-center gap-2 mb-2">
-                <MessageSquare size={16} className="text-success-500" />
-                <span className="text-xs font-medium text-text-muted uppercase tracking-wide">With Signals</span>
+                <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-success-50 to-success-100 flex items-center justify-center shadow-sm">
+                  <MessageSquare size={14} className="text-success-600" />
+                </div>
+                <span className="text-xs font-bold text-text-muted uppercase tracking-wide">With Signals</span>
               </div>
-              <p className="text-2xl font-semibold text-text-primary">{insights.withSignals}</p>
-              <p className="text-xs text-text-muted mt-1">Of {insights.totalAtRisk} at-risk</p>
+              <p className="text-2xl font-bold text-text-primary">{insights.withSignals}</p>
+              <p className="text-xs text-text-muted font-medium mt-1">Of {insights.totalAtRisk} at-risk</p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-5 mb-6">
             <InsightCard icon={AlertTriangle} title="Most Common Churn Signals">
               {insights.sortedSignals.length === 0 ? (
                 <EmptyState
@@ -229,7 +239,7 @@ export default function RetentionInsightsPage() {
                       label={signal}
                       count={count}
                       total={insights.withSignals}
-                      colorClass="bg-danger-500"
+                      colorClass="from-danger-400 to-danger-600"
                     />
                   ))}
                 </div>
@@ -246,18 +256,18 @@ export default function RetentionInsightsPage() {
               ) : (
                 <div className="space-y-3">
                   {opportunities.map((op, i) => (
-                    <div key={i} className="p-4 rounded-lg bg-bg-base border border-border">
+                    <div key={i} className="p-4 rounded-xl bg-gradient-to-br from-bg-base to-bg-card border border-border hover:border-primary-200 transition-colors">
                       <div className="flex items-center justify-between mb-1">
-                        <p className="text-sm font-medium text-text-primary">{op.title}</p>
-                        <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                          op.impact === 'High' ? 'bg-danger-50 text-danger-700' :
-                          op.impact === 'Medium' ? 'bg-warning-50 text-warning-700' :
-                          'bg-success-50 text-success-700'
+                        <p className="text-sm font-bold text-text-primary">{op.title}</p>
+                        <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border ${
+                          op.impact === 'High' ? 'bg-danger-50 text-danger-700 border-danger-200' :
+                          op.impact === 'Medium' ? 'bg-warning-50 text-warning-700 border-warning-200' :
+                          'bg-success-50 text-success-700 border-success-200'
                         }`}>
                           {op.impact} Impact
                         </span>
                       </div>
-                      <p className="text-xs text-text-secondary leading-relaxed">{op.description}</p>
+                      <p className="text-xs text-text-secondary font-medium leading-relaxed">{op.description}</p>
                     </div>
                   ))}
                 </div>
@@ -274,31 +284,31 @@ export default function RetentionInsightsPage() {
               />
             ) : (
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-2">
-                <div className="p-4 rounded-lg bg-success-50 border border-success-200">
-                  <p className="text-xs font-medium text-success-700 uppercase tracking-wide">Low Risk</p>
-                  <p className="text-2xl font-semibold text-success-800 mt-1">{analytics?.churnRiskBreakdown?.lowCount || 0}</p>
-                  <p className="text-xs text-success-600 mt-1">
+                <div className="p-4 rounded-xl bg-gradient-to-br from-success-50 to-success-100 border border-success-200">
+                  <p className="text-xs font-bold text-success-700 uppercase tracking-wide">Low Risk</p>
+                  <p className="text-2xl font-bold text-success-800 mt-1">{analytics?.churnRiskBreakdown?.lowCount || 0}</p>
+                  <p className="text-xs text-success-600 font-medium mt-1">
                     {insights.totalAssessed > 0 ? Math.round(((analytics?.churnRiskBreakdown?.lowCount || 0) / insights.totalAssessed) * 100) : 0}% of total
                   </p>
                 </div>
-                <div className="p-4 rounded-lg bg-primary-50 border border-primary-200">
-                  <p className="text-xs font-medium text-primary-700 uppercase tracking-wide">Medium Risk</p>
-                  <p className="text-2xl font-semibold text-primary-800 mt-1">{analytics?.churnRiskBreakdown?.mediumCount || 0}</p>
-                  <p className="text-xs text-primary-600 mt-1">
+                <div className="p-4 rounded-xl bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200">
+                  <p className="text-xs font-bold text-primary-700 uppercase tracking-wide">Medium Risk</p>
+                  <p className="text-2xl font-bold text-primary-800 mt-1">{analytics?.churnRiskBreakdown?.mediumCount || 0}</p>
+                  <p className="text-xs text-primary-600 font-medium mt-1">
                     {insights.totalAssessed > 0 ? Math.round(((analytics?.churnRiskBreakdown?.mediumCount || 0) / insights.totalAssessed) * 100) : 0}% of total
                   </p>
                 </div>
-                <div className="p-4 rounded-lg bg-warning-50 border border-warning-200">
-                  <p className="text-xs font-medium text-warning-700 uppercase tracking-wide">High Risk</p>
-                  <p className="text-2xl font-semibold text-warning-800 mt-1">{analytics?.churnRiskBreakdown?.highCount || 0}</p>
-                  <p className="text-xs text-warning-600 mt-1">
+                <div className="p-4 rounded-xl bg-gradient-to-br from-warning-50 to-warning-100 border border-warning-200">
+                  <p className="text-xs font-bold text-warning-700 uppercase tracking-wide">High Risk</p>
+                  <p className="text-2xl font-bold text-warning-800 mt-1">{analytics?.churnRiskBreakdown?.highCount || 0}</p>
+                  <p className="text-xs text-warning-600 font-medium mt-1">
                     {insights.totalAssessed > 0 ? Math.round(((analytics?.churnRiskBreakdown?.highCount || 0) / insights.totalAssessed) * 100) : 0}% of total
                   </p>
                 </div>
-                <div className="p-4 rounded-lg bg-danger-50 border border-danger-200">
-                  <p className="text-xs font-medium text-danger-700 uppercase tracking-wide">Critical Risk</p>
-                  <p className="text-2xl font-semibold text-danger-800 mt-1">{analytics?.churnRiskBreakdown?.criticalCount || 0}</p>
-                  <p className="text-xs text-danger-600 mt-1">
+                <div className="p-4 rounded-xl bg-gradient-to-br from-danger-50 to-danger-100 border border-danger-200">
+                  <p className="text-xs font-bold text-danger-700 uppercase tracking-wide">Critical Risk</p>
+                  <p className="text-2xl font-bold text-danger-800 mt-1">{analytics?.churnRiskBreakdown?.criticalCount || 0}</p>
+                  <p className="text-xs text-danger-600 font-medium mt-1">
                     {insights.totalAssessed > 0 ? Math.round(((analytics?.churnRiskBreakdown?.criticalCount || 0) / insights.totalAssessed) * 100) : 0}% of total
                   </p>
                 </div>

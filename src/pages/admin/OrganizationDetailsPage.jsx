@@ -40,7 +40,7 @@ export default function OrganizationDetailsPage() {
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate('/admin/organizations')}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 shadow-sm"
           >
             <ArrowLeft size={16} />
             Back
@@ -48,7 +48,7 @@ export default function OrganizationDetailsPage() {
           <button
             onClick={loadData}
             disabled={loading}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
           >
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
             Refresh
@@ -57,7 +57,7 @@ export default function OrganizationDetailsPage() {
       </PageHeader>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>
@@ -68,50 +68,52 @@ export default function OrganizationDetailsPage() {
           <LoadingSpinner size="xl" />
         </div>
       ) : !org && !error ? (
-        <div className="bg-bg-card rounded-xl border border-border p-8 text-center">
-          <Building2 size={40} className="mx-auto text-text-muted mb-3" />
-          <h3 className="text-sm font-medium text-text-primary">Organization details unavailable</h3>
-          <p className="text-sm text-text-muted mt-1">No organization details available.</p>
+        <div className="bg-bg-card rounded-2xl border border-border p-8 text-center shadow-sm hover:shadow-md transition-shadow duration-300">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center mx-auto mb-3 shadow-sm">
+            <Building2 size={24} className="text-primary-600" />
+          </div>
+          <h3 className="text-sm font-bold text-text-primary">Organization details unavailable</h3>
+          <p className="text-sm text-text-muted font-medium mt-1">No organization details available.</p>
         </div>
       ) : org ? (
         <div className="space-y-6">
-          <div className="bg-bg-card rounded-xl border border-border p-5 shadow-xs">
+          <div className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center">
+              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center shadow-sm">
                 <Building2 size={20} className="text-primary-600" />
               </div>
               <div>
-                <h2 className="text-lg font-semibold text-text-primary">{org.name || 'Unnamed Organization'}</h2>
-                <p className="text-sm text-text-muted">{org.id}</p>
+                <h2 className="text-lg font-bold text-text-primary">{org.name || 'Unnamed Organization'}</h2>
+                <p className="text-sm text-text-muted font-medium">{org.id}</p>
               </div>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
               <div>
-                <span className="text-text-muted">Status:</span>{' '}
-                <span className={`font-medium ${
+                <span className="text-text-muted font-medium">Status:</span>{' '}
+                <span className={`font-bold ${
                   org.status === 'ACTIVE' ? 'text-success-600' :
                   org.status === 'SUSPENDED' ? 'text-danger-600' :
                   'text-text-secondary'
                 }`}>{org.status || '—'}</span>
               </div>
               <div>
-                <span className="text-text-muted">Plan:</span>{' '}
-                <span className="font-medium text-text-primary">{org.plan || '—'}</span>
+                <span className="text-text-muted font-medium">Plan:</span>{' '}
+                <span className="font-bold text-text-primary">{org.plan || '—'}</span>
               </div>
               <div>
-                <span className="text-text-muted">Created:</span>{' '}
-                <span className="font-medium text-text-primary">
+                <span className="text-text-muted font-medium">Created:</span>{' '}
+                <span className="font-bold text-text-primary">
                   {org.createdAt ? new Date(org.createdAt).toLocaleDateString() : '—'}
                 </span>
               </div>
               <div>
-                <span className="text-text-muted">Domain:</span>{' '}
-                <span className="font-medium text-text-primary">{org.domain || '—'}</span>
+                <span className="text-text-muted font-medium">Domain:</span>{' '}
+                <span className="font-bold text-text-primary">{org.domain || '—'}</span>
               </div>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             <AdminKpiCard
               title="Users"
               value={org.userCount?.toString() || '—'}
@@ -139,46 +141,46 @@ export default function OrganizationDetailsPage() {
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            <div className="bg-bg-card rounded-xl border border-border p-5 shadow-xs">
-              <h3 className="text-sm font-semibold text-text-primary mb-4">Subscription</h3>
+            <div className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
+              <h3 className="text-sm font-bold text-text-primary mb-4">Subscription</h3>
               {org.subscription ? (
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-text-muted">Plan</span>
-                    <span className="font-medium text-text-primary">{org.subscription.planName || '—'}</span>
+                    <span className="text-text-muted font-medium">Plan</span>
+                    <span className="font-bold text-text-primary">{org.subscription.planName || '—'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-text-muted">Status</span>
-                    <span className="font-medium text-text-primary">{org.subscription.status || '—'}</span>
+                    <span className="text-text-muted font-medium">Status</span>
+                    <span className="font-bold text-text-primary">{org.subscription.status || '—'}</span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-text-muted">Renewal</span>
-                    <span className="font-medium text-text-primary">
+                    <span className="text-text-muted font-medium">Renewal</span>
+                    <span className="font-bold text-text-primary">
                       {org.subscription.renewalDate ? new Date(org.subscription.renewalDate).toLocaleDateString() : '—'}
                     </span>
                   </div>
                 </div>
               ) : (
-                <p className="text-sm text-text-muted">No subscription data available.</p>
+                <p className="text-sm text-text-muted font-medium">No subscription data available.</p>
               )}
             </div>
 
-            <div className="bg-bg-card rounded-xl border border-border p-5 shadow-xs">
-              <h3 className="text-sm font-semibold text-text-primary mb-4">Recent Activity</h3>
+            <div className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
+              <h3 className="text-sm font-bold text-text-primary mb-4">Recent Activity</h3>
               {org.recentActivity && org.recentActivity.length > 0 ? (
                 <ul className="space-y-2">
                   {org.recentActivity.map((activity, i) => (
-                    <li key={i} className="text-sm text-text-secondary flex items-center gap-2">
+                    <li key={i} className="text-sm text-text-secondary font-medium flex items-center gap-2">
                       <CreditCard size={14} className="text-text-muted" />
                       {activity.description || 'Activity'}
-                      <span className="text-text-muted text-xs">
+                      <span className="text-text-muted text-xs font-medium">
                         {activity.timestamp ? new Date(activity.timestamp).toLocaleString() : ''}
                       </span>
                     </li>
                   ))}
                 </ul>
               ) : (
-                <p className="text-sm text-text-muted">No recent activity.</p>
+                <p className="text-sm text-text-muted font-medium">No recent activity.</p>
               )}
             </div>
           </div>

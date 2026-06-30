@@ -12,14 +12,14 @@ function ToolCard({ icon: Icon, title, description, placeholder, onSearch }) {
   };
 
   return (
-    <div className="bg-bg-card rounded-xl border border-border p-5 shadow-xs">
+    <div className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
       <div className="flex items-center gap-3 mb-3">
-        <div className="w-9 h-9 rounded-lg bg-primary-50 flex items-center justify-center">
+        <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center shadow-sm">
           <Icon size={18} className="text-primary-600" />
         </div>
         <div>
-          <h3 className="text-sm font-semibold text-text-primary">{title}</h3>
-          <p className="text-xs text-text-muted">{description}</p>
+          <h3 className="text-sm font-bold text-text-primary">{title}</h3>
+          <p className="text-xs text-text-muted font-medium">{description}</p>
         </div>
       </div>
       <form onSubmit={handleSubmit} className="flex gap-2">
@@ -28,11 +28,11 @@ function ToolCard({ icon: Icon, title, description, placeholder, onSearch }) {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder={placeholder}
-          className="flex-1 px-3 py-2 text-sm bg-bg-base border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+          className="flex-1 px-3 py-2.5 text-sm bg-bg-base border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
         />
         <button
           type="submit"
-          className="px-3 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
+          className="px-3 py-2.5 text-sm font-semibold text-white bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all duration-200 shadow-sm"
         >
           <ArrowRight size={16} />
         </button>
@@ -99,14 +99,14 @@ export default function SupportToolsPage() {
       </div>
 
       {results && (
-        <div className="bg-bg-card rounded-xl border border-border p-5 shadow-xs">
-          <h3 className="text-sm font-semibold text-text-primary mb-3 capitalize">
+        <div className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
+          <h3 className="text-sm font-bold text-text-primary mb-3 capitalize">
             {results.type} Lookup Results
           </h3>
-          <p className="text-sm text-text-muted">
-            Searched for: <span className="font-medium text-text-secondary">{results.query}</span>
+          <p className="text-sm text-text-muted font-medium">
+            Searched for: <span className="font-bold text-text-secondary">{results.query}</span>
           </p>
-          <div className="mt-4 p-4 bg-bg-base rounded-lg text-sm text-text-muted">
+          <div className="mt-4 p-4 bg-bg-base rounded-xl text-sm text-text-muted font-medium">
             Lookup results will appear here once the backend API is implemented.
           </div>
         </div>

@@ -304,15 +304,15 @@ export default function WebhookDeliveryDashboardPage() {
       >
         <button
           onClick={() => navigate('/connectors')}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 shadow-sm"
         >
           <ArrowLeft size={16} />
           Back to Connectors
         </button>
       </PageHeader>
 
-      <div className="bg-bg-card rounded-xl border border-border p-6 shadow-xs mb-6">
-        <label className="block text-sm font-medium text-text-primary mb-1.5">
+      <div className="bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300 mb-6">
+        <label className="block text-sm font-bold text-text-primary mb-1.5">
           Select Connector
         </label>
         <select
@@ -324,7 +324,7 @@ export default function WebhookDeliveryDashboardPage() {
               navigate(`/connectors/${id}/webhooks`, { replace: true });
             }
           }}
-          className="w-full max-w-md px-3 py-2.5 text-sm bg-bg-base border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+          className="w-full max-w-md px-3 py-2.5 text-sm bg-bg-base border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
         >
           <option value="">Choose a connector...</option>
           {connectors.map((c) => (
@@ -369,11 +369,11 @@ export default function WebhookDeliveryDashboardPage() {
             />
           </div>
 
-          <div className="bg-bg-card rounded-xl border border-border shadow-xs overflow-hidden">
+          <div className="bg-bg-card rounded-2xl border border-border shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
             <div className="flex items-center gap-4 border-b border-border px-6 py-3">
               <button
                 onClick={() => setActiveTab('deliveries')}
-                className={`text-sm font-medium pb-1 border-b-2 transition-colors ${
+                className={`text-sm font-semibold pb-1 border-b-2 transition-colors ${
                   activeTab === 'deliveries'
                     ? 'border-primary-600 text-primary-600'
                     : 'border-transparent text-text-secondary hover:text-text-primary'
@@ -386,7 +386,7 @@ export default function WebhookDeliveryDashboardPage() {
                   setActiveTab('credentials');
                   loadCredentials();
                 }}
-                className={`text-sm font-medium pb-1 border-b-2 transition-colors ${
+                className={`text-sm font-semibold pb-1 border-b-2 transition-colors ${
                   activeTab === 'credentials'
                     ? 'border-primary-600 text-primary-600'
                     : 'border-transparent text-text-secondary hover:text-text-primary'
@@ -399,11 +399,11 @@ export default function WebhookDeliveryDashboardPage() {
             {activeTab === 'deliveries' && (
               <>
                 <div className="flex items-center gap-3 px-6 py-4 border-b border-border">
-                  <label className="text-sm text-text-secondary">Status:</label>
+                  <label className="text-sm font-medium text-text-secondary">Status:</label>
                   <select
                     value={statusFilter}
                     onChange={(e) => setStatusFilter(e.target.value)}
-                    className="px-3 py-2 text-sm bg-bg-base border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+                    className="px-3 py-2 text-sm bg-bg-base border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   >
                     {STATUS_OPTIONS.map((s) => (
                       <option key={s} value={s}>
@@ -414,20 +414,20 @@ export default function WebhookDeliveryDashboardPage() {
                 </div>
 
                 {replaySuccess && (
-                  <div className="mx-6 mt-4 p-3 rounded-lg bg-success-50 text-sm text-success-700 flex items-center gap-2">
+                  <div className="mx-6 mt-4 p-3 rounded-xl bg-success-50 text-sm text-success-700 flex items-center gap-2 font-medium">
                     <CheckCircle2 size={16} />
                     {replaySuccess}
                   </div>
                 )}
                 {replayError && (
-                  <div className="mx-6 mt-4 p-3 rounded-lg bg-danger-50 text-sm text-danger-700 flex items-center gap-2">
+                  <div className="mx-6 mt-4 p-3 rounded-xl bg-danger-50 text-sm text-danger-700 flex items-center gap-2 font-medium">
                     <AlertCircle size={16} />
                     {replayError}
                   </div>
                 )}
 
                 {error && (
-                  <div className="mx-6 mt-4 p-3 rounded-lg bg-danger-50 text-sm text-danger-700 flex items-center gap-2">
+                  <div className="mx-6 mt-4 p-3 rounded-xl bg-danger-50 text-sm text-danger-700 flex items-center gap-2 font-medium">
                     <AlertCircle size={16} />
                     {error}
                   </div>
@@ -453,12 +453,12 @@ export default function WebhookDeliveryDashboardPage() {
                       <table className="w-full text-sm">
                         <thead>
                           <tr className="bg-bg-base border-b border-border">
-                            <th className="text-left px-4 py-3 font-medium text-text-secondary">Status</th>
-                            <th className="text-left px-4 py-3 font-medium text-text-secondary">Received At</th>
-                            <th className="text-left px-4 py-3 font-medium text-text-secondary">Processed At</th>
-                            <th className="text-left px-4 py-3 font-medium text-text-secondary">Retries</th>
-                            <th className="text-left px-4 py-3 font-medium text-text-secondary">Error</th>
-                            <th className="text-right px-4 py-3 font-medium text-text-secondary">Actions</th>
+                            <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Status</th>
+                            <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Received At</th>
+                            <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Processed At</th>
+                            <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Retries</th>
+                            <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Error</th>
+                            <th className="text-right px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Actions</th>
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-border">
@@ -487,33 +487,33 @@ export default function WebhookDeliveryDashboardPage() {
 
             {activeTab === 'credentials' && (
               <div className="p-6 space-y-6">
-                <div className="p-4 rounded-lg bg-primary-50 border border-primary-200 text-sm text-primary-800 flex items-start gap-3">
+                <div className="p-4 rounded-xl bg-gradient-to-br from-primary-50 to-primary-100 border border-primary-200 text-sm text-primary-800 flex items-start gap-3">
                   <Info size={18} className="shrink-0 mt-0.5" />
                   <div className="space-y-1">
-                    <p className="font-medium">Webhook Signature Verification</p>
+                    <p className="font-bold">Webhook Signature Verification</p>
                     <p>
                       External systems must send an <code className="bg-primary-100 px-1 rounded">X-Webhook-Signature</code> header
                       containing the HMAC-SHA256 of the payload. The secret is generated during connector registration and stored encrypted.
                     </p>
-                    <p className="text-xs text-primary-700">
+                    <p className="text-xs text-primary-700 font-medium">
                       Rate limit: 20 requests/minute per connector. Returns 429 Too Many Requests if exceeded.
                     </p>
                   </div>
                 </div>
 
                 {credentialsError && (
-                  <div className="p-3 rounded-lg bg-danger-50 text-sm text-danger-700 flex items-center gap-2">
+                  <div className="p-3 rounded-xl bg-danger-50 text-sm text-danger-700 flex items-center gap-2 font-medium">
                     <AlertCircle size={16} />
                     {credentialsError}
                   </div>
                 )}
 
                 <div className="flex items-center justify-between">
-                  <h3 className="text-base font-semibold text-text-primary">Credentials</h3>
+                  <h3 className="text-base font-bold text-text-primary">Credentials</h3>
                   <button
                     onClick={handleRotate}
                     disabled={rotating}
-                    className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50"
+                    className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-primary-700 rounded-xl hover:from-primary-500 hover:to-primary-600 transition-all shadow-lg shadow-primary-500/20 disabled:opacity-50"
                   >
                     {rotating ? (
                       <Loader2 size={14} className="animate-spin" />
@@ -539,37 +539,37 @@ export default function WebhookDeliveryDashboardPage() {
                     <table className="w-full text-sm">
                       <thead>
                         <tr className="bg-bg-base border-b border-border">
-                          <th className="text-left px-4 py-3 font-medium text-text-secondary">Key Name</th>
-                          <th className="text-left px-4 py-3 font-medium text-text-secondary">Status</th>
-                          <th className="text-left px-4 py-3 font-medium text-text-secondary">Last Used</th>
-                          <th className="text-right px-4 py-3 font-medium text-text-secondary">Actions</th>
+                          <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Key Name</th>
+                          <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Status</th>
+                          <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Last Used</th>
+                          <th className="text-right px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Actions</th>
                         </tr>
                       </thead>
                       <tbody className="divide-y divide-border">
                         {credentials.map((cred) => (
                           <tr key={cred.id} className="bg-bg-card hover:bg-bg-base transition-colors">
-                            <td className="px-4 py-3 font-medium text-text-primary">{cred.keyName}</td>
-                            <td className="px-4 py-3">
+                            <td className="px-4 py-3.5 font-semibold text-text-primary">{cred.keyName}</td>
+                            <td className="px-4 py-3.5">
                               <span
-                                className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${
+                                className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold ${
                                   cred.status === 'ACTIVE'
-                                    ? 'bg-success-50 text-success-700'
-                                    : 'bg-danger-50 text-danger-700'
+                                    ? 'bg-success-50 text-success-700 border border-success-200'
+                                    : 'bg-danger-50 text-danger-700 border border-danger-200'
                                 }`}
                               >
                                 {cred.status}
                               </span>
                             </td>
-                            <td className="px-4 py-3 text-text-secondary">
+                            <td className="px-4 py-3.5 text-text-secondary font-medium">
                               {cred.lastUsedAt ? new Date(cred.lastUsedAt).toLocaleString() : 'Never'}
                             </td>
-                            <td className="px-4 py-3">
+                            <td className="px-4 py-3.5">
                               <div className="flex items-center justify-end gap-2">
                                 {cred.status === 'ACTIVE' && (
                                   <button
                                     onClick={() => handleRevoke(cred.id)}
                                     disabled={revokingId === cred.id}
-                                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-medium bg-danger-50 text-danger-700 hover:bg-danger-100 transition-colors disabled:opacity-50"
+                                    className="inline-flex items-center gap-1 px-2.5 py-1 rounded-md text-xs font-semibold bg-danger-50 text-danger-700 hover:bg-danger-100 transition-colors disabled:opacity-50"
                                   >
                                     {revokingId === cred.id ? (
                                       <Loader2 size={12} className="animate-spin" />

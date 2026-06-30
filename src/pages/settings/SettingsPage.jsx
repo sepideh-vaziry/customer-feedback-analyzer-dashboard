@@ -10,11 +10,13 @@ export default function SettingsPage() {
         title="Settings"
         description="Manage your organization, integrations, and preferences"
       />
-      <EmptyState
-        icon={Settings}
-        title="Settings coming soon"
-        description="Organization settings, integrations, and user preferences will be available here."
-      />
+      <div className="bg-bg-card rounded-2xl border border-border p-12 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <EmptyState
+          icon={Settings}
+          title="Settings coming soon"
+          description="Organization settings, integrations, and user preferences will be available here."
+        />
+      </div>
     </DashboardLayout>
   );
 }

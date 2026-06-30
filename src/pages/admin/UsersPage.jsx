@@ -83,7 +83,7 @@ export default function UsersPage() {
         <button
           onClick={() => loadData()}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
         >
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           Refresh
@@ -91,7 +91,7 @@ export default function UsersPage() {
       </PageHeader>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>
@@ -104,7 +104,7 @@ export default function UsersPage() {
           value={search}
           onChange={(e) => handleSearch(e.target.value)}
           placeholder="Search users..."
-          className="w-full pl-9 pr-4 py-2 text-sm bg-bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+          className="w-full pl-9 pr-4 py-2.5 text-sm bg-bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
         />
       </div>
 
@@ -119,29 +119,29 @@ export default function UsersPage() {
           description="No users found."
         />
       ) : (
-        <div className="bg-bg-card rounded-xl border border-border shadow-xs overflow-hidden">
+        <div className="bg-bg-card rounded-2xl border border-border shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
           <table className="w-full text-sm">
             <thead className="bg-bg-base border-b border-border">
               <tr>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Name</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Email</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Organization</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Role</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Status</th>
-                <th className="text-right px-4 py-3 font-medium text-text-secondary">Actions</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Name</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Email</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Organization</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Role</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Status</th>
+                <th className="text-right px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {users.map((u) => (
-                <tr key={u.id} className="hover:bg-bg-base/50">
-                  <td className="px-4 py-3">
-                    <span className="font-medium text-text-primary">{u.name}</span>
+                <tr key={u.id} className="hover:bg-bg-base/50 transition-colors">
+                  <td className="px-4 py-3.5">
+                    <span className="font-semibold text-text-primary">{u.name}</span>
                   </td>
-                  <td className="px-4 py-3 text-text-secondary">{u.email}</td>
-                  <td className="px-4 py-3 text-text-secondary">{u.organizationName || '—'}</td>
-                  <td className="px-4 py-3 text-text-secondary">{u.role || '—'}</td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                  <td className="px-4 py-3.5 text-text-secondary font-medium">{u.email}</td>
+                  <td className="px-4 py-3.5 text-text-secondary font-medium">{u.organizationName || '—'}</td>
+                  <td className="px-4 py-3.5 text-text-secondary font-medium">{u.role || '—'}</td>
+                  <td className="px-4 py-3.5">
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold ${
                       u.status === 'ACTIVE'
                         ? 'bg-success-50 text-success-700'
                         : u.status === 'DISABLED'
@@ -151,7 +151,7 @@ export default function UsersPage() {
                       {u.status || 'UNKNOWN'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3.5 text-right">
                     <div className="flex items-center justify-end gap-1">
                       <button
                         onClick={() => setSelectedUser(u)}

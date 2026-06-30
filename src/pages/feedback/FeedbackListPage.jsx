@@ -109,37 +109,37 @@ export default function FeedbackListPage() {
         <button
           onClick={loadFeedbacks}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
         >
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           Refresh
         </button>
       </PageHeader>
 
-      <div className="space-y-6">
+      <div className="space-y-5">
         {error && (
-          <div className="p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+          <div className="p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
             <AlertCircle size={16} />
             {error}
           </div>
         )}
 
-        <div className="flex flex-col lg:flex-row gap-4 lg:items-start">
+        <div className="flex flex-col lg:flex-row gap-5 lg:items-start">
           <div className="lg:w-64 flex-shrink-0">
-            <div className="bg-bg-card rounded-xl border border-border p-4 shadow-xs">
+            <div className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
               <FeedbackFilters filters={filters} onChange={setFilters} />
             </div>
           </div>
 
           <div className="flex-1 min-w-0 space-y-4">
-            <div className="bg-bg-card rounded-xl border border-border p-4 shadow-xs">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4">
+            <div className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
                 <FeedbackSearch
                   value={searchQuery}
                   onChange={setSearchQuery}
                   placeholder="Search content, customer, email, ID..."
                 />
-                <span className="text-sm text-text-muted">
+                <span className="text-sm text-text-muted font-medium bg-bg-base px-3 py-1.5 rounded-lg border border-border">
                   {filteredFeedbacks.length} result{filteredFeedbacks.length !== 1 ? 's' : ''}
                 </span>
               </div>

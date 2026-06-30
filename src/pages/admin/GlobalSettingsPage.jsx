@@ -61,7 +61,7 @@ export default function GlobalSettingsPage() {
         <button
           onClick={loadData}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
         >
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           Refresh
@@ -69,14 +69,14 @@ export default function GlobalSettingsPage() {
       </PageHeader>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>
       )}
 
       {success && (
-        <div className="mb-6 p-4 rounded-lg bg-success-50 border border-success-200 text-sm text-success-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-success-50 border border-success-200 text-sm text-success-700 flex items-center gap-2 font-medium">
           <CheckCircle size={16} />
           {success}
         </div>
@@ -89,22 +89,24 @@ export default function GlobalSettingsPage() {
       ) : (
         <div className="max-w-2xl space-y-6">
           {booleanFields.length === 0 && textFields.length === 0 && numberFields.length === 0 ? (
-            <div className="bg-bg-card rounded-xl border border-border p-8 text-center">
-              <Settings size={40} className="mx-auto text-text-muted mb-3" />
-              <h3 className="text-sm font-medium text-text-primary">No settings available</h3>
-              <p className="text-sm text-text-muted mt-1">
+            <div className="bg-bg-card rounded-2xl border border-border p-8 text-center shadow-sm hover:shadow-md transition-shadow duration-300">
+              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center mx-auto mb-3 shadow-sm">
+                <Settings size={24} className="text-primary-600" />
+              </div>
+              <h3 className="text-sm font-bold text-text-primary">No settings available</h3>
+              <p className="text-sm text-text-muted font-medium mt-1">
                 No global settings configured.
               </p>
             </div>
           ) : (
             <>
               {booleanFields.length > 0 && (
-                <div className="bg-bg-card rounded-xl border border-border p-5 shadow-xs">
-                  <h3 className="text-sm font-semibold text-text-primary mb-4">Toggle Settings</h3>
+                <div className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
+                  <h3 className="text-sm font-bold text-text-primary mb-4">Toggle Settings</h3>
                   <div className="space-y-4">
                     {booleanFields.map(([key, value]) => (
                       <div key={key} className="flex items-center justify-between">
-                        <label className="text-sm text-text-secondary capitalize">
+                        <label className="text-sm text-text-secondary font-medium capitalize">
                           {key.replace(/([A-Z])/g, ' $1').trim()}
                         </label>
                         <button
@@ -126,19 +128,19 @@ export default function GlobalSettingsPage() {
               )}
 
               {textFields.length > 0 && (
-                <div className="bg-bg-card rounded-xl border border-border p-5 shadow-xs">
-                  <h3 className="text-sm font-semibold text-text-primary mb-4">Text Settings</h3>
+                <div className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
+                  <h3 className="text-sm font-bold text-text-primary mb-4">Text Settings</h3>
                   <div className="space-y-4">
                     {textFields.map(([key, value]) => (
                       <div key={key}>
-                        <label className="block text-sm text-text-secondary mb-1 capitalize">
+                        <label className="block text-sm text-text-secondary mb-1 font-medium capitalize">
                           {key.replace(/([A-Z])/g, ' $1').trim()}
                         </label>
                         <input
                           type="text"
                           value={value}
                           onChange={(e) => handleChange(key, e.target.value)}
-                          className="w-full px-3 py-2 text-sm bg-bg-base border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+                          className="w-full px-3 py-2.5 text-sm bg-bg-base border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                         />
                       </div>
                     ))}
@@ -147,19 +149,19 @@ export default function GlobalSettingsPage() {
               )}
 
               {numberFields.length > 0 && (
-                <div className="bg-bg-card rounded-xl border border-border p-5 shadow-xs">
-                  <h3 className="text-sm font-semibold text-text-primary mb-4">Numeric Settings</h3>
+                <div className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300">
+                  <h3 className="text-sm font-bold text-text-primary mb-4">Numeric Settings</h3>
                   <div className="space-y-4">
                     {numberFields.map(([key, value]) => (
                       <div key={key}>
-                        <label className="block text-sm text-text-secondary mb-1 capitalize">
+                        <label className="block text-sm text-text-secondary mb-1 font-medium capitalize">
                           {key.replace(/([A-Z])/g, ' $1').trim()}
                         </label>
                         <input
                           type="number"
                           value={value}
                           onChange={(e) => handleChange(key, Number(e.target.value))}
-                          className="w-full px-3 py-2 text-sm bg-bg-base border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+                          className="w-full px-3 py-2.5 text-sm bg-bg-base border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                         />
                       </div>
                     ))}
@@ -171,7 +173,7 @@ export default function GlobalSettingsPage() {
                 <button
                   onClick={handleSave}
                   disabled={saving}
-                  className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all duration-200 disabled:opacity-50 shadow-sm"
                 >
                   <Save size={16} />
                   {saving ? 'Saving...' : 'Save Settings'}

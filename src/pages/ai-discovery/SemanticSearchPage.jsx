@@ -71,7 +71,7 @@ export default function SemanticSearchPage() {
         <div className="flex items-center justify-between mb-4">
           <button
             onClick={() => setShowFilters(!showFilters)}
-            className="inline-flex items-center gap-1.5 text-xs font-medium text-text-secondary hover:text-text-primary transition-colors"
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-text-secondary hover:text-text-primary transition-colors"
           >
             <SlidersHorizontal size={14} />
             {showFilters ? 'Hide Filters' : 'Filters'}
@@ -84,13 +84,13 @@ export default function SemanticSearchPage() {
         </div>
 
         {showFilters && (
-          <div className="mb-6 p-4 rounded-xl bg-bg-card border border-border flex flex-col sm:flex-row gap-4">
+          <div className="mb-6 p-4 rounded-2xl bg-bg-card border border-border shadow-sm flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
-              <label className="block text-xs font-medium text-text-muted mb-1">Result Limit</label>
+              <label className="block text-xs font-bold text-text-muted mb-1">Result Limit</label>
               <select
                 value={limit}
                 onChange={(e) => setLimit(Number(e.target.value))}
-                className="w-full px-3 py-2 text-sm bg-bg-base border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20"
+                className="w-full px-3 py-2 text-sm bg-bg-base border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 transition-all"
               >
                 <option value={10}>10</option>
                 <option value={20}>20</option>
@@ -99,7 +99,7 @@ export default function SemanticSearchPage() {
               </select>
             </div>
             <div className="flex-1">
-              <label className="block text-xs font-medium text-text-muted mb-1">Min Similarity</label>
+              <label className="block text-xs font-bold text-text-muted mb-1">Min Similarity</label>
               <div className="flex items-center gap-3">
                 <input
                   type="range"
@@ -110,7 +110,7 @@ export default function SemanticSearchPage() {
                   onChange={(e) => setMinSimilarity(Number(e.target.value))}
                   className="flex-1 accent-primary-600"
                 />
-                <span className="text-sm font-medium text-text-primary w-12 text-right">
+                <span className="text-sm font-bold text-text-primary w-12 text-right">
                   {Math.round(minSimilarity * 100)}%
                 </span>
               </div>
@@ -119,7 +119,7 @@ export default function SemanticSearchPage() {
         )}
 
         {error && (
-          <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+          <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
             <AlertTriangle size={16} />
             {error}
           </div>
@@ -127,8 +127,8 @@ export default function SemanticSearchPage() {
 
         {!hasSearched ? (
           <div>
-            <p className="text-xs font-medium text-text-muted uppercase tracking-wide mb-3">Suggested Questions</p>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <p className="text-xs font-bold text-text-muted uppercase tracking-wide mb-3">Suggested Questions</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               {SUGGESTIONS.map((s, i) => (
                 <SearchSuggestionCard
                   key={i}

@@ -68,16 +68,16 @@ function CodeBlock({ label, code, language }) {
   return (
     <div className="space-y-2">
       <div className="flex items-center justify-between">
-        <span className="text-sm font-medium text-text-secondary">{label}</span>
+        <span className="text-sm font-bold text-text-secondary">{label}</span>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-text-secondary hover:text-text-primary bg-bg-base hover:bg-border-light rounded-md transition-colors"
+          className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-semibold text-text-secondary hover:text-text-primary bg-bg-base hover:bg-border-light rounded-md transition-colors"
         >
           {copied ? <Check size={14} className="text-success-500" /> : <Copy size={14} />}
           {copied ? 'Copied' : 'Copy'}
         </button>
       </div>
-      <pre className="bg-bg-sidebar text-text-inverse p-4 rounded-lg overflow-x-auto text-sm font-mono leading-relaxed">
+      <pre className="bg-bg-sidebar text-text-inverse p-4 rounded-xl overflow-x-auto text-sm font-mono leading-relaxed shadow-inner">
         <code>{code}</code>
       </pre>
     </div>
@@ -167,7 +167,7 @@ export default function WebhookIntegrationGuidePage() {
       >
         <button
           onClick={() => navigate('/connectors')}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 shadow-sm"
         >
           <ArrowLeft size={16} />
           Back to Connectors
@@ -176,14 +176,14 @@ export default function WebhookIntegrationGuidePage() {
 
       <div className="max-w-4xl space-y-10">
         {/* Endpoint Overview */}
-        <section className="bg-bg-card rounded-xl border border-border p-6 shadow-xs space-y-4">
+        <section className="bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center shadow-sm">
               <Webhook size={20} className="text-primary-600" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-text-primary">Endpoint</h2>
-              <p className="text-sm text-text-secondary">POST to the webhook endpoint with required headers</p>
+              <h2 className="text-lg font-bold text-text-primary">Endpoint</h2>
+              <p className="text-sm text-text-secondary font-medium">POST to the webhook endpoint with required headers</p>
             </div>
           </div>
 
@@ -193,28 +193,28 @@ export default function WebhookIntegrationGuidePage() {
           />
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div className="p-4 rounded-lg bg-bg-base border border-border space-y-2">
-              <h3 className="text-sm font-medium text-text-primary">Required Headers</h3>
+            <div className="p-4 rounded-xl bg-gradient-to-br from-bg-base to-bg-card border border-border hover:border-primary-200 transition-colors space-y-2">
+              <h3 className="text-sm font-bold text-text-primary">Required Headers</h3>
               <table className="w-full text-sm">
                 <tbody className="divide-y divide-border">
                   <tr>
-                    <td className="py-2 text-text-secondary font-mono text-xs">Content-Type</td>
-                    <td className="py-2 text-text-primary">application/json</td>
+                    <td className="py-2 text-text-secondary font-mono text-xs font-medium">Content-Type</td>
+                    <td className="py-2 text-text-primary font-medium">application/json</td>
                   </tr>
                   <tr>
-                    <td className="py-2 text-text-secondary font-mono text-xs">X-Webhook-Signature</td>
-                    <td className="py-2 text-text-primary">sha256={'{hex}'}</td>
+                    <td className="py-2 text-text-secondary font-mono text-xs font-medium">X-Webhook-Signature</td>
+                    <td className="py-2 text-text-primary font-medium">sha256={'{hex}'}</td>
                   </tr>
                 </tbody>
               </table>
             </div>
-            <div className="p-4 rounded-lg bg-bg-base border border-border space-y-2">
-              <h3 className="text-sm font-medium text-text-primary">Query Parameters</h3>
+            <div className="p-4 rounded-xl bg-gradient-to-br from-bg-base to-bg-card border border-border hover:border-primary-200 transition-colors space-y-2">
+              <h3 className="text-sm font-bold text-text-primary">Query Parameters</h3>
               <table className="w-full text-sm">
                 <tbody className="divide-y divide-border">
                   <tr>
-                    <td className="py-2 text-text-secondary font-mono text-xs">source</td>
-                    <td className="py-2 text-text-primary">INSTAGRAM, WHATSAPP, ZENDESK, TYPEFORM</td>
+                    <td className="py-2 text-text-secondary font-mono text-xs font-medium">source</td>
+                    <td className="py-2 text-text-primary font-medium">INSTAGRAM, WHATSAPP, ZENDESK, TYPEFORM</td>
                   </tr>
                 </tbody>
               </table>
@@ -223,21 +223,21 @@ export default function WebhookIntegrationGuidePage() {
         </section>
 
         {/* How to Generate Signature */}
-        <section className="bg-bg-card rounded-xl border border-border p-6 shadow-xs space-y-6">
+        <section className="bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300 space-y-6">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-success-50 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-success-50 to-success-100 flex items-center justify-center shadow-sm">
               <KeyRound size={20} className="text-success-600" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-text-primary">How to Generate the Webhook Signature</h2>
-              <p className="text-sm text-text-secondary">HMAC-SHA256 of the raw JSON payload using your connector secret</p>
+              <h2 className="text-lg font-bold text-text-primary">How to Generate the Webhook Signature</h2>
+              <p className="text-sm text-text-secondary font-medium">HMAC-SHA256 of the raw JSON payload using your connector secret</p>
             </div>
           </div>
 
-          <div className="p-4 rounded-lg bg-warning-50 border border-warning-200 text-sm text-warning-800 flex items-start gap-3">
+          <div className="p-4 rounded-xl bg-gradient-to-br from-warning-50 to-warning-100 border border-warning-200 text-sm text-warning-800 flex items-start gap-3 font-medium">
             <AlertTriangle size={18} className="shrink-0 mt-0.5" />
             <div>
-              <p className="font-medium">Important: Save your webhook secret immediately</p>
+              <p className="font-bold">Important: Save your webhook secret immediately</p>
               <p className="text-warning-700">
                 When you register a connector, the response includes a webhook secret. This is shown only once.
                 If you lose it, you must rotate credentials via the delivery dashboard.
@@ -253,75 +253,75 @@ export default function WebhookIntegrationGuidePage() {
         </section>
 
         {/* Event Types */}
-        <section className="bg-bg-card rounded-xl border border-border p-6 shadow-xs space-y-4">
+        <section className="bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-primary-50 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center shadow-sm">
               <Inbox size={20} className="text-primary-600" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-text-primary">Supported Event Types by Source</h2>
-              <p className="text-sm text-text-secondary">
+              <h2 className="text-lg font-bold text-text-primary">Supported Event Types by Source</h2>
+              <p className="text-sm text-text-secondary font-medium">
                 If enabledEventTypes is configured, only matching events are processed
               </p>
             </div>
           </div>
 
-          <div className="overflow-x-auto rounded-xl border border-border">
+          <div className="overflow-x-auto rounded-2xl border border-border">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-bg-base border-b border-border">
-                  <th className="text-left px-4 py-3 font-medium text-text-secondary">Source</th>
-                  <th className="text-left px-4 py-3 font-medium text-text-secondary">Event Types</th>
+                  <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Source</th>
+                  <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Event Types</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {EVENT_TYPES.map((row) => (
                   <tr key={row.source} className="bg-bg-card hover:bg-bg-base transition-colors">
-                    <td className="px-4 py-3 font-medium text-text-primary">{row.source}</td>
-                    <td className="px-4 py-3 text-text-secondary font-mono text-xs">{row.events}</td>
+                    <td className="px-4 py-3.5 font-bold text-text-primary">{row.source}</td>
+                    <td className="px-4 py-3.5 text-text-secondary font-mono text-xs font-medium">{row.events}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
           </div>
 
-          <p className="text-sm text-text-muted">
+          <p className="text-sm text-text-muted font-medium">
             If enabledEventTypes is null or empty, all events are accepted. Unmatched events are silently accepted
             but not stored as feedback — the delivery is still tracked as successful.
           </p>
         </section>
 
         {/* Error Responses */}
-        <section className="bg-bg-card rounded-xl border border-border p-6 shadow-xs space-y-4">
+        <section className="bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-danger-50 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-danger-50 to-danger-100 flex items-center justify-center shadow-sm">
               <AlertTriangle size={20} className="text-danger-600" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-text-primary">Error Responses</h2>
-              <p className="text-sm text-text-secondary">Possible error codes and their meanings</p>
+              <h2 className="text-lg font-bold text-text-primary">Error Responses</h2>
+              <p className="text-sm text-text-secondary font-medium">Possible error codes and their meanings</p>
             </div>
           </div>
 
-          <div className="overflow-x-auto rounded-xl border border-border">
+          <div className="overflow-x-auto rounded-2xl border border-border">
             <table className="w-full text-sm">
               <thead>
                 <tr className="bg-bg-base border-b border-border">
-                  <th className="text-left px-4 py-3 font-medium text-text-secondary">Status</th>
-                  <th className="text-left px-4 py-3 font-medium text-text-secondary">Code</th>
-                  <th className="text-left px-4 py-3 font-medium text-text-secondary">Meaning</th>
+                  <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Status</th>
+                  <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Code</th>
+                  <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Meaning</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {STATUS_CODES.map((row) => (
                   <tr key={row.code} className="bg-bg-card hover:bg-bg-base transition-colors">
-                    <td className="px-4 py-3">
-                      <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-danger-50 text-danger-700">
+                    <td className="px-4 py-3.5">
+                      <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-danger-50 text-danger-700 border border-danger-200">
                         {row.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3 font-mono text-xs text-text-primary">{row.code}</td>
-                    <td className="px-4 py-3 text-text-secondary">{row.meaning}</td>
+                    <td className="px-4 py-3.5 font-mono text-xs text-text-primary font-semibold">{row.code}</td>
+                    <td className="px-4 py-3.5 text-text-secondary font-medium">{row.meaning}</td>
                   </tr>
                 ))}
               </tbody>
@@ -330,30 +330,30 @@ export default function WebhookIntegrationGuidePage() {
         </section>
 
         {/* Delivery Dashboard Info */}
-        <section className="bg-bg-card rounded-xl border border-border p-6 shadow-xs space-y-4">
+        <section className="bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300 space-y-4">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-success-50 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-success-50 to-success-100 flex items-center justify-center shadow-sm">
               <Shield size={20} className="text-success-600" />
             </div>
             <div>
-              <h2 className="text-lg font-semibold text-text-primary">Delivery Dashboard</h2>
-              <p className="text-sm text-text-secondary">Monitor and manage webhook deliveries</p>
+              <h2 className="text-lg font-bold text-text-primary">Delivery Dashboard</h2>
+              <p className="text-sm text-text-secondary font-medium">Monitor and manage webhook deliveries</p>
             </div>
           </div>
 
-          <div className="p-4 rounded-lg bg-bg-base border border-border space-y-3 text-sm text-text-secondary">
+          <div className="p-4 rounded-xl bg-gradient-to-br from-bg-base to-bg-card border border-border space-y-3 text-sm text-text-secondary font-medium">
             <p>
               View all webhook deliveries for a connector via the{' '}
               <strong className="text-text-primary">Webhook Delivery Dashboard</strong>.
               You can filter by status, view error details, and replay failed deliveries.
             </p>
-            <div className="font-mono text-xs bg-white p-3 rounded-lg border border-border space-y-1">
+            <div className="font-mono text-xs bg-white p-3 rounded-xl border border-border space-y-1">
               <p>GET /api/v1/connectors/{'{connectorId}'}/webhooks/deliveries?status=FAILED</p>
               <p>POST /api/v1/connectors/{'{connectorId}'}/webhooks/deliveries/{'{deliveryId}'}/replay</p>
             </div>
             <button
               onClick={() => navigate('/connectors')}
-              className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
+              className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-primary-700 rounded-xl hover:from-primary-500 hover:to-primary-600 transition-all shadow-lg shadow-primary-500/20"
             >
               <Inbox size={16} />
               Open Delivery Dashboard

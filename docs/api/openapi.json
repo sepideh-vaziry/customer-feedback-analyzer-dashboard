@@ -288,18 +288,23 @@
         "tags": [
           "Trend Monitoring"
         ],
-        "summary": "Trigger an on-demand trend detection run",
+        "summary": "Trigger an async on-demand trend detection run",
         "operationId": "detect",
+        "parameters": [
+          {
+            "name": "windowDays",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 7
+            }
+          }
+        ],
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "*/*": {
-                "schema": {
-                  "$ref": "#/components/schemas/TrendSnapshotResponse"
-                }
-              }
-            }
+            "description": "OK"
           }
         }
       }
@@ -536,6 +541,37 @@
         }
       }
     },
+    "/api/v1/schemas/upload": {
+      "post": {
+        "tags": [
+          "Database Schemas"
+        ],
+        "summary": "Upload a database schema",
+        "operationId": "uploadSchema",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UploadSchemaRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadSchemaResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/rag/query": {
       "post": {
         "tags": [
@@ -560,6 +596,238 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/RagQueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/query-generator/schemas/{schemaId}/preview": {
+      "post": {
+        "tags": [
+          "Query Generator"
+        ],
+        "summary": "Preview SQL query without execution",
+        "operationId": "previewQuery",
+        "parameters": [
+          {
+            "name": "schemaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PreviewQueryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/PreviewQueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/query-generator/schemas/{schemaId}/generate": {
+      "post": {
+        "tags": [
+          "Query Generator"
+        ],
+        "summary": "Generate SQL query from natural language",
+        "operationId": "generateQuery",
+        "parameters": [
+          {
+            "name": "schemaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateQueryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GenerateQueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/query-generator/schemas/{schemaId}/execute": {
+      "post": {
+        "tags": [
+          "Query Generator"
+        ],
+        "summary": "Execute SQL query from natural language with caching and rate limiting",
+        "operationId": "executeQuery",
+        "parameters": [
+          {
+            "name": "schemaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ExecuteQueryRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExecuteQueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/query-generator/queries/{queryId}/validate": {
+      "post": {
+        "tags": [
+          "Query Generator"
+        ],
+        "summary": "Validate a generated query",
+        "operationId": "validateQuery",
+        "parameters": [
+          {
+            "name": "queryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGeneratedQueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/query-generator/queries/{queryId}/optimize": {
+      "post": {
+        "tags": [
+          "Query Generator"
+        ],
+        "summary": "Optimize a generated query",
+        "operationId": "optimizeQuery",
+        "parameters": [
+          {
+            "name": "queryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGeneratedQueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/query-generator/queries/{queryId}/execute": {
+      "post": {
+        "tags": [
+          "Query Generator"
+        ],
+        "summary": "Execute a previously generated query",
+        "operationId": "executeStoredQuery",
+        "parameters": [
+          {
+            "name": "queryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QueryExecutionRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryExecutionResponse"
                 }
               }
             }
@@ -1561,6 +1829,77 @@
         }
       }
     },
+    "/api/v1/trends/sentiment-shifts": {
+      "get": {
+        "tags": [
+          "Trend Monitoring"
+        ],
+        "summary": "Get sentiment shift trend entries",
+        "operationId": "getSentimentShifts",
+        "parameters": [
+          {
+            "name": "window",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "LAST_30_DAYS",
+              "enum": [
+                "LAST_7_DAYS",
+                "LAST_30_DAYS",
+                "LAST_90_DAYS"
+              ]
+            }
+          },
+          {
+            "name": "severity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TrendEntryResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/v1/trends/latest": {
       "get": {
         "tags": [
@@ -1568,6 +1907,78 @@
         ],
         "summary": "Get the latest trend snapshot for the organization",
         "operationId": "getLatest",
+        "parameters": [
+          {
+            "name": "window",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "LAST_7_DAYS",
+                "LAST_30_DAYS",
+                "LAST_90_DAYS"
+              ]
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "severity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "minChangeRatio",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "format": "double"
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "detectedAt,desc"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -1575,6 +1986,257 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/TrendSnapshotResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/trends/history": {
+      "get": {
+        "tags": [
+          "Trend Monitoring"
+        ],
+        "summary": "Get historical trend entries over time",
+        "operationId": "getHistory",
+        "parameters": [
+          {
+            "name": "days",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 90
+            }
+          },
+          {
+            "name": "type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "severity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "status",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrendHistoryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/trends/emerging-topics": {
+      "get": {
+        "tags": [
+          "Trend Monitoring"
+        ],
+        "summary": "Get emerging topic trend entries",
+        "operationId": "getEmergingTopics",
+        "parameters": [
+          {
+            "name": "window",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "LAST_30_DAYS",
+              "enum": [
+                "LAST_7_DAYS",
+                "LAST_30_DAYS",
+                "LAST_90_DAYS"
+              ]
+            }
+          },
+          {
+            "name": "severity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TrendEntryResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/trends/detect/{jobId}": {
+      "get": {
+        "tags": [
+          "Trend Monitoring"
+        ],
+        "summary": "Get the status of an async trend detection job",
+        "operationId": "getJobStatus",
+        "parameters": [
+          {
+            "name": "jobId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrendDetectionJobResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/trends/complaints": {
+      "get": {
+        "tags": [
+          "Trend Monitoring"
+        ],
+        "summary": "Get complaint spike trend entries",
+        "operationId": "getComplaints",
+        "parameters": [
+          {
+            "name": "window",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "LAST_30_DAYS",
+              "enum": [
+                "LAST_7_DAYS",
+                "LAST_30_DAYS",
+                "LAST_90_DAYS"
+              ]
+            }
+          },
+          {
+            "name": "severity",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 0
+            }
+          },
+          {
+            "name": "size",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "default": 20
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TrendEntryResponse"
+                  }
                 }
               }
             }
@@ -1680,6 +2342,82 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/v1/schemas": {
+      "get": {
+        "tags": [
+          "Database Schemas"
+        ],
+        "summary": "List all schemas for organization",
+        "operationId": "listSchemas",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListSchemasResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/schemas/{schemaId}": {
+      "get": {
+        "tags": [
+          "Database Schemas"
+        ],
+        "summary": "Get schema details",
+        "operationId": "getSchema",
+        "parameters": [
+          {
+            "name": "schemaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSchemaResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "Database Schemas"
+        ],
+        "summary": "Delete a schema",
+        "operationId": "deleteSchema",
+        "parameters": [
+          {
+            "name": "schemaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -1846,6 +2584,158 @@
               "*/*": {
                 "schema": {
                   "$ref": "#/components/schemas/RagQueryResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/query-generator/schemas/{schemaId}/queries": {
+      "get": {
+        "tags": [
+          "Query Generator"
+        ],
+        "summary": "List generated queries for a schema",
+        "operationId": "listQueriesBySchema",
+        "parameters": [
+          {
+            "name": "schemaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/GetGeneratedQueryResponse"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/query-generator/schemas/{schemaId}/cache/stats": {
+      "get": {
+        "tags": [
+          "Query Generator"
+        ],
+        "summary": "Get cache statistics for a schema",
+        "operationId": "getCacheStatistics",
+        "parameters": [
+          {
+            "name": "schemaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/CacheStatisticsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/query-generator/schemas/{schemaId}/analytics": {
+      "get": {
+        "tags": [
+          "Query Generator"
+        ],
+        "summary": "Get query analytics for a schema",
+        "operationId": "getQueryAnalytics",
+        "parameters": [
+          {
+            "name": "schemaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/QueryAnalyticsResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/query-generator/rate-limit/stats": {
+      "get": {
+        "tags": [
+          "Query Generator"
+        ],
+        "summary": "Get rate limit statistics for the user",
+        "operationId": "getRateLimitStats",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/RateLimitStats"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/query-generator/queries/{queryId}": {
+      "get": {
+        "tags": [
+          "Query Generator"
+        ],
+        "summary": "Get generated query by ID",
+        "operationId": "getQuery",
+        "parameters": [
+          {
+            "name": "queryId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetGeneratedQueryResponse"
                 }
               }
             }
@@ -2849,6 +3739,45 @@
           }
         }
       }
+    },
+    "/api/v1/query-generator/schemas/{schemaId}/cache": {
+      "delete": {
+        "tags": [
+          "Query Generator"
+        ],
+        "summary": "Clear cache for a schema",
+        "operationId": "clearSchemaCache",
+        "parameters": [
+          {
+            "name": "schemaId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/v1/query-generator/organizations/cache": {
+      "delete": {
+        "tags": [
+          "Query Generator"
+        ],
+        "summary": "Clear cache for the organization",
+        "operationId": "clearOrganizationCache",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -3155,85 +4084,6 @@
           }
         }
       },
-      "TrendEntryResponse": {
-        "type": "object",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "COMPLAINT_SPIKE",
-              "EMERGING_TOPIC",
-              "SENTIMENT_SHIFT"
-            ]
-          },
-          "severity": {
-            "type": "string",
-            "enum": [
-              "LOW",
-              "MEDIUM",
-              "HIGH",
-              "CRITICAL"
-            ]
-          },
-          "subject": {
-            "type": "string"
-          },
-          "currentCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "previousCount": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "changeRatio": {
-            "type": "number",
-            "format": "double"
-          },
-          "explanation": {
-            "type": "string"
-          }
-        }
-      },
-      "TrendSnapshotResponse": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "organizationId": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "windowStart": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "windowEnd": {
-            "type": "string",
-            "format": "date-time"
-          },
-          "windowDays": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "totalFeedbackInWindow": {
-            "type": "integer",
-            "format": "int32"
-          },
-          "entries": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TrendEntryResponse"
-            }
-          },
-          "detectedAt": {
-            "type": "string",
-            "format": "date-time"
-          }
-        }
-      },
       "TenantProvisionRequest": {
         "type": "object",
         "properties": {
@@ -3425,6 +4275,74 @@
           }
         }
       },
+      "UploadSchemaRequest": {
+        "type": "object",
+        "properties": {
+          "schemaName": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1
+          },
+          "databaseType": {
+            "type": "string",
+            "enum": [
+              "POSTGRESQL",
+              "MYSQL",
+              "SQL_SERVER",
+              "SQLITE"
+            ]
+          },
+          "rawDdl": {
+            "type": "string",
+            "maxLength": 5242880,
+            "minLength": 0
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "databaseType"
+        ]
+      },
+      "UploadSchemaResponse": {
+        "type": "object",
+        "properties": {
+          "schemaId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "schemaName": {
+            "type": "string"
+          },
+          "databaseType": {
+            "type": "string",
+            "enum": [
+              "POSTGRESQL",
+              "MYSQL",
+              "SQL_SERVER",
+              "SQLITE"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "VALID",
+              "INVALID",
+              "ANALYZING",
+              "ANALYZED"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "uploadedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "RagQueryRequest": {
         "type": "object",
         "properties": {
@@ -3488,6 +4406,684 @@
           },
           "fallback": {
             "type": "boolean"
+          }
+        }
+      },
+      "PreviewQueryRequest": {
+        "type": "object",
+        "properties": {
+          "naturalLanguageQuery": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contextParameters": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "ConnectionTemplate": {
+        "type": "object",
+        "properties": {
+          "databaseType": {
+            "type": "string"
+          },
+          "host": {
+            "type": "string"
+          },
+          "port": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "databaseName": {
+            "type": "string"
+          },
+          "jdbcUrlTemplate": {
+            "type": "string"
+          },
+          "odbcUrlTemplate": {
+            "type": "string"
+          },
+          "pythonExample": {
+            "type": "string"
+          },
+          "nodeJsExample": {
+            "type": "string"
+          },
+          "connectionProperties": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "driverClassName": {
+            "type": "string"
+          },
+          "driverVersion": {
+            "type": "string"
+          },
+          "supportsTransactions": {
+            "type": "boolean"
+          },
+          "supportsSavepoints": {
+            "type": "boolean"
+          },
+          "supportsBatchUpdates": {
+            "type": "boolean"
+          },
+          "defaultPoolSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxPoolSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "connectionTimeoutSeconds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "completeForPreview": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ExecutionSafety": {
+        "type": "object",
+        "properties": {
+          "isSafe": {
+            "type": "boolean"
+          },
+          "warnings": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "concerns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "recommendations": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "mightBeSlowQuery": {
+            "type": "boolean"
+          },
+          "accessesSensitiveTables": {
+            "type": "boolean"
+          },
+          "affectsLargeDataset": {
+            "type": "boolean"
+          },
+          "modifiesData": {
+            "type": "boolean"
+          },
+          "hasPotentialInjection": {
+            "type": "boolean"
+          },
+          "riskLevel": {
+            "type": "string"
+          },
+          "riskScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "safetyChecks": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SafetyCheck"
+            }
+          },
+          "readOnly": {
+            "type": "boolean"
+          },
+          "allMessages": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "safetySummary": {
+            "type": "string"
+          }
+        }
+      },
+      "OutputColumn": {
+        "type": "object",
+        "properties": {
+          "columnName": {
+            "type": "string"
+          },
+          "dataType": {
+            "type": "string"
+          },
+          "jdbcType": {
+            "type": "string"
+          },
+          "nullable": {
+            "type": "boolean"
+          },
+          "maxLength": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "precision": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "scale": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "isPrimaryKey": {
+            "type": "boolean"
+          },
+          "isForeignKey": {
+            "type": "boolean"
+          },
+          "referencedTable": {
+            "type": "string"
+          },
+          "referencedColumn": {
+            "type": "string"
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "PreviewQueryResponse": {
+        "type": "object",
+        "properties": {
+          "queryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "schemaId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "naturalLanguageQuery": {
+            "type": "string"
+          },
+          "generatedSql": {
+            "type": "string"
+          },
+          "explanation": {
+            "type": "string"
+          },
+          "confidenceScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "executionContext": {
+            "$ref": "#/components/schemas/QueryExecutionContext"
+          },
+          "outputSchema": {
+            "$ref": "#/components/schemas/QueryOutputSchema"
+          },
+          "safety": {
+            "$ref": "#/components/schemas/ExecutionSafety"
+          },
+          "cacheKey": {
+            "type": "string"
+          },
+          "isCached": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "QueryExecutionContext": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "queryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "schemaId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "databaseType": {
+            "type": "string"
+          },
+          "databaseName": {
+            "type": "string"
+          },
+          "connectionTemplate": {
+            "$ref": "#/components/schemas/ConnectionTemplate"
+          },
+          "outputSchema": {
+            "$ref": "#/components/schemas/QueryOutputSchema"
+          },
+          "estimatedRowCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "executionHints": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "executionSafety": {
+            "$ref": "#/components/schemas/ExecutionSafety"
+          },
+          "defaultPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "maxPageSize": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "generationModel": {
+            "type": "string"
+          },
+          "contextParameters": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "runtimeVariables": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "isolationLevel": {
+            "type": "string"
+          },
+          "readOnly": {
+            "type": "boolean"
+          },
+          "queryTimeoutSeconds": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "mightBeSlowQuery": {
+            "type": "boolean"
+          },
+          "accessesSensitiveTables": {
+            "type": "boolean"
+          },
+          "affectsLargeDataset": {
+            "type": "boolean"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "QueryOutputSchema": {
+        "type": "object",
+        "properties": {
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OutputColumn"
+            }
+          },
+          "estimatedRowCount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "sampleData": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "statistics": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "isAggregateQuery": {
+            "type": "boolean"
+          },
+          "hasJoins": {
+            "type": "boolean"
+          },
+          "estimatedMemoryBytes": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "estimatedTotalSizeBytes": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "columnNames": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "SafetyCheck": {
+        "type": "object",
+        "properties": {
+          "checkName": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "passed": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string"
+          }
+        }
+      },
+      "GenerateQueryRequest": {
+        "type": "object",
+        "properties": {
+          "naturalLanguageQuery": {
+            "type": "string",
+            "minLength": 1
+          },
+          "intent": {
+            "type": "string",
+            "enum": [
+              "SELECT",
+              "INSERT",
+              "UPDATE",
+              "DELETE",
+              "AGGREGATE",
+              "JOIN",
+              "REPORTING"
+            ]
+          },
+          "preferredTables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "maxResults": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "explainQuery": {
+            "type": "boolean"
+          },
+          "optimizeQuery": {
+            "type": "boolean"
+          },
+          "context": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "intent"
+        ]
+      },
+      "GenerateQueryResponse": {
+        "type": "object",
+        "properties": {
+          "queryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "schemaId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "naturalLanguageQuery": {
+            "type": "string"
+          },
+          "generatedSql": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "confidenceScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "usedTables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "usedColumns": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "explanation": {
+            "type": "string"
+          },
+          "suggestions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/OptimizationSuggestion"
+            }
+          },
+          "generationModel": {
+            "type": "string"
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "OptimizationSuggestion": {
+        "type": "object",
+        "properties": {
+          "suggestion": {
+            "type": "string"
+          },
+          "suggestedSql": {
+            "type": "string"
+          },
+          "estimatedImprovementPercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "INDEX",
+              "JOIN_ORDER",
+              "PARTITIONING",
+              "LIMIT"
+            ]
+          }
+        }
+      },
+      "ExecuteQueryRequest": {
+        "type": "object",
+        "properties": {
+          "naturalLanguageQuery": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contextParameters": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          },
+          "explainQuery": {
+            "type": "boolean"
+          },
+          "optimizeQuery": {
+            "type": "boolean"
+          }
+        }
+      },
+      "ExecuteQueryResponse": {
+        "type": "object",
+        "properties": {
+          "queryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "schemaId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "naturalLanguageQuery": {
+            "type": "string"
+          },
+          "generatedSql": {
+            "type": "string"
+          },
+          "explanation": {
+            "type": "string"
+          },
+          "confidenceScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "executionContext": {
+            "$ref": "#/components/schemas/QueryExecutionContext"
+          },
+          "outputSchema": {
+            "$ref": "#/components/schemas/QueryOutputSchema"
+          },
+          "safety": {
+            "$ref": "#/components/schemas/ExecutionSafety"
+          },
+          "connectionTemplate": {
+            "$ref": "#/components/schemas/ConnectionTemplate"
+          },
+          "cacheKey": {
+            "type": "string"
+          },
+          "isCached": {
+            "type": "boolean"
+          },
+          "cacheHitCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "lastCachedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetGeneratedQueryResponse": {
+        "type": "object",
+        "properties": {
+          "queryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "schemaId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "naturalLanguageQuery": {
+            "type": "string"
+          },
+          "generatedSql": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "confidenceScore": {
+            "type": "number",
+            "format": "double"
+          },
+          "explanation": {
+            "type": "string"
+          },
+          "generationModel": {
+            "type": "string"
+          },
+          "generatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "QueryExecutionRequest": {
+        "type": "object",
+        "properties": {
+          "executionParameters": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object"
+            }
+          }
+        }
+      },
+      "QueryExecutionResponse": {
+        "type": "object",
+        "properties": {
+          "queryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "executionResult": {
+            "type": "string"
+          },
+          "executionDurationMs": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "errorMessage": {
+            "type": "string"
+          },
+          "executionStartedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "executionCompletedAt": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -4235,6 +5831,294 @@
           }
         }
       },
+      "TrendEntryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "COMPLAINT_SPIKE",
+              "EMERGING_TOPIC",
+              "SENTIMENT_SHIFT"
+            ]
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "LOW",
+              "MEDIUM",
+              "HIGH",
+              "CRITICAL"
+            ]
+          },
+          "subject": {
+            "type": "string"
+          },
+          "currentCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "previousCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "changeRatio": {
+            "type": "number",
+            "format": "double"
+          },
+          "explanation": {
+            "type": "string"
+          },
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "detectedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status": {
+            "type": "string"
+          },
+          "affectedCustomers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "relatedFeedbackIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "previousPositivePercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "currentPositivePercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "previousNegativePercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "currentNegativePercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "previousNeutralPercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "currentNeutralPercent": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "TrendSnapshotResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "windowStart": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "windowEnd": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "windowDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "totalFeedbackInWindow": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendEntryResponse"
+            }
+          },
+          "detectedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TrendHistoryEntryResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "type": {
+            "type": "string"
+          },
+          "severity": {
+            "type": "string"
+          },
+          "subject": {
+            "type": "string"
+          },
+          "currentCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "previousCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "changeRatio": {
+            "type": "number",
+            "format": "double"
+          },
+          "explanation": {
+            "type": "string"
+          },
+          "categoryId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "clusterId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "firstDetectedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastSeenAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "peakChangeRatio": {
+            "type": "number",
+            "format": "double"
+          },
+          "status": {
+            "type": "string"
+          },
+          "affectedCustomers": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "relatedFeedbackIds": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          "previousPositivePercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "currentPositivePercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "previousNegativePercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "currentNegativePercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "previousNeutralPercent": {
+            "type": "number",
+            "format": "double"
+          },
+          "currentNeutralPercent": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "TrendHistoryResponse": {
+        "type": "object",
+        "properties": {
+          "entries": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TrendHistoryEntryResponse"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "page": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "size": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "TrendDetectionJobResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "RUNNING",
+              "COMPLETED",
+              "FAILED"
+            ]
+          },
+          "windowDays": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "resultSnapshotId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "errorMessage": {
+            "type": "string"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "startedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "completedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
       "SubscriptionInvoiceResponse": {
         "type": "object",
         "properties": {
@@ -4299,6 +6183,243 @@
           },
           "pdfUrl": {
             "type": "string"
+          }
+        }
+      },
+      "ListSchemasResponse": {
+        "type": "object",
+        "properties": {
+          "schemas": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SchemaSummaryDto"
+            }
+          },
+          "totalCount": {
+            "type": "integer",
+            "format": "int32"
+          }
+        }
+      },
+      "SchemaSummaryDto": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "databaseType": {
+            "type": "string",
+            "enum": [
+              "POSTGRESQL",
+              "MYSQL",
+              "SQL_SERVER",
+              "SQLITE"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "VALID",
+              "INVALID",
+              "ANALYZING",
+              "ANALYZED"
+            ]
+          },
+          "tableCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "uploadedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "GetSchemaResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "schemaName": {
+            "type": "string"
+          },
+          "databaseType": {
+            "type": "string",
+            "enum": [
+              "POSTGRESQL",
+              "MYSQL",
+              "SQL_SERVER",
+              "SQLITE"
+            ]
+          },
+          "description": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "PENDING",
+              "VALID",
+              "INVALID",
+              "ANALYZING",
+              "ANALYZED"
+            ]
+          },
+          "tableCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "columnCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "relationshipCount": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "uploadedAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "analyzedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "CacheStatisticsResponse": {
+        "type": "object",
+        "properties": {
+          "schemaId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "totalEntries": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "activeEntries": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "staleEntries": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "expiredEntries": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "totalHits": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "averageHitCount": {
+            "type": "number",
+            "format": "double"
+          },
+          "cacheHitRate": {
+            "type": "number",
+            "format": "double"
+          }
+        }
+      },
+      "QueryAnalyticsResponse": {
+        "type": "object",
+        "properties": {
+          "schemaId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "totalQueries": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "successfulQueries": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "failedQueries": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "averageGenerationTimeMs": {
+            "type": "number",
+            "format": "double"
+          },
+          "cacheHitRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "mostUsedTables": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "mostCommonIntents": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "RateLimitStats": {
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "organizationId": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "availableTokens": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "bucketCapacity": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "refillRate": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "refillPeriod": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "resetTime": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "nearLimit": {
+            "type": "boolean"
+          },
+          "exceeded": {
+            "type": "boolean"
+          },
+          "usagePercentage": {
+            "type": "number",
+            "format": "double"
           }
         }
       },
@@ -4408,11 +6529,11 @@
           "clusterName": {
             "type": "string"
           },
-          "occurrenceCount": {
+          "requestCount": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
-          "demandRate": {
+          "demandScore": {
             "type": "number",
             "format": "double"
           }
@@ -4466,6 +6587,30 @@
           },
           "complaintTrend": {
             "$ref": "#/components/schemas/ComplaintTrendSeriesDto"
+          },
+          "featureRequestTrend": {
+            "$ref": "#/components/schemas/FeatureRequestTrendSeriesDto"
+          }
+        }
+      },
+      "FeatureRequestTrendSeriesDto": {
+        "type": "object",
+        "properties": {
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "seriesByCluster": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int32"
+              }
+            }
           }
         }
       },
@@ -4760,9 +6905,9 @@
           },
           "occurrenceCount": {
             "type": "integer",
-            "format": "int32"
+            "format": "int64"
           },
-          "occurrenceRate": {
+          "severityScore": {
             "type": "number",
             "format": "double"
           }

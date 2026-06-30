@@ -46,7 +46,7 @@ export default function InvoicesPage() {
         <button
           onClick={loadData}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
         >
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           Refresh
@@ -54,7 +54,7 @@ export default function InvoicesPage() {
       </PageHeader>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>
@@ -71,16 +71,16 @@ export default function InvoicesPage() {
           description="Invoices will appear here once billing cycles are completed."
         />
       ) : (
-        <div className="bg-bg-card rounded-xl border border-border shadow-xs overflow-hidden">
+        <div className="bg-bg-card rounded-2xl border border-border shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
           <table className="w-full text-sm">
             <thead className="bg-bg-base border-b border-border">
               <tr>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Invoice #</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Date</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Due Date</th>
-                <th className="text-right px-4 py-3 font-medium text-text-secondary">Amount</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Status</th>
-                <th className="text-right px-4 py-3 font-medium text-text-secondary"></th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Invoice #</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Date</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Due Date</th>
+                <th className="text-right px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Amount</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Status</th>
+                <th className="text-right px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -90,33 +90,35 @@ export default function InvoicesPage() {
                 return (
                   <tr
                     key={invoice.id}
-                    className="hover:bg-bg-base/50 cursor-pointer"
+                    className="hover:bg-bg-base/50 cursor-pointer transition-colors"
                     onClick={() => setSelectedInvoice(invoice)}
                   >
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3.5">
                       <div className="flex items-center gap-2">
-                        <FileText size={14} className="text-primary-500" />
-                        <span className="font-medium text-text-primary">{invoice.invoiceNumber}</span>
+                        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center shadow-sm">
+                          <FileText size={14} className="text-primary-600" />
+                        </div>
+                        <span className="font-semibold text-text-primary">{invoice.invoiceNumber}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-text-secondary">
+                    <td className="px-4 py-3.5 text-text-secondary font-medium">
                       <div className="flex items-center gap-1.5">
                         <Calendar size={14} />
                         {invoice.createdAt ? new Date(invoice.createdAt).toLocaleDateString() : '—'}
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-text-secondary">
+                    <td className="px-4 py-3.5 text-text-secondary font-medium">
                       {invoice.dueDate ? new Date(invoice.dueDate).toLocaleDateString() : '—'}
                     </td>
-                    <td className="px-4 py-3 text-right font-medium text-text-primary">
+                    <td className="px-4 py-3.5 text-right font-bold text-text-primary">
                       {invoice.currency || '$'}{invoice.amount?.toFixed(2) || '0.00'}
                     </td>
-                    <td className="px-4 py-3">
-                      <span className={`inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium border ${status.className}`}>
+                    <td className="px-4 py-3.5">
+                      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold border ${status.className}`}>
                         {status.label}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-right">
+                    <td className="px-4 py-3.5 text-right">
                       <button className="p-1.5 rounded-lg hover:bg-border-light text-text-muted hover:text-text-primary transition-colors">
                         <Eye size={14} />
                       </button>

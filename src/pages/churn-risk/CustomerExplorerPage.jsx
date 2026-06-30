@@ -69,13 +69,13 @@ export default function CustomerExplorerPage() {
               value={identifier}
               onChange={(e) => setIdentifier(e.target.value)}
               placeholder="Enter customer identifier..."
-              className="w-full pl-9 pr-4 py-2.5 text-sm bg-bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
+              className="w-full pl-9 pr-4 py-2.5 text-sm bg-bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
             />
           </div>
           <button
             type="submit"
             disabled={loading || !identifier.trim()}
-            className="px-4 py-2.5 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50"
+            className="px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-primary-700 rounded-xl hover:from-primary-500 hover:to-primary-600 transition-all shadow-lg shadow-primary-500/20 disabled:opacity-50"
           >
             {loading ? <RefreshCw size={16} className="animate-spin" /> : 'Search'}
           </button>
@@ -83,7 +83,7 @@ export default function CustomerExplorerPage() {
             type="button"
             onClick={handleAssess}
             disabled={assessing || !identifier.trim()}
-            className="px-4 py-2.5 text-sm font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors disabled:opacity-50"
+            className="px-4 py-2.5 text-sm font-semibold text-primary-700 bg-gradient-to-r from-primary-50 to-primary-100 rounded-xl hover:from-primary-100 hover:to-primary-200 transition-all border border-primary-200 shadow-sm disabled:opacity-50"
           >
             {assessing ? <RefreshCw size={16} className="animate-spin" /> : 'Assess'}
           </button>
@@ -91,7 +91,7 @@ export default function CustomerExplorerPage() {
       </form>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>

@@ -125,14 +125,14 @@ export default function PlansPage() {
           <button
             onClick={loadData}
             disabled={loading}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
           >
             <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
             Refresh
           </button>
           <button
             onClick={handleOpenCreate}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all duration-200 shadow-sm"
           >
             <Plus size={16} />
             New Plan
@@ -141,7 +141,7 @@ export default function PlansPage() {
       </PageHeader>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>
@@ -154,7 +154,7 @@ export default function PlansPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search plans..."
-          className="w-full pl-9 pr-4 py-2 text-sm bg-bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+          className="w-full pl-9 pr-4 py-2.5 text-sm bg-bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
         />
       </div>
 
@@ -169,13 +169,13 @@ export default function PlansPage() {
           description="No subscription plans found."
         />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
           {filtered.map((plan) => (
-            <div key={plan.id} className="bg-bg-card rounded-xl border border-border p-5 shadow-xs flex flex-col">
+            <div key={plan.id} className="bg-bg-card rounded-2xl border border-border p-5 shadow-sm hover:shadow-md transition-shadow duration-300 flex flex-col">
               <div className="flex items-start justify-between mb-3">
                 <div>
-                  <h3 className="text-base font-semibold text-text-primary">{plan.name}</h3>
-                  <p className="text-xs text-text-muted uppercase tracking-wide">{plan.code}</p>
+                  <h3 className="text-base font-bold text-text-primary">{plan.name}</h3>
+                  <p className="text-xs text-text-muted font-bold uppercase tracking-wide">{plan.code}</p>
                 </div>
                 <div className="flex items-center gap-1">
                   {plan.active ? (
@@ -193,36 +193,36 @@ export default function PlansPage() {
                 </div>
               </div>
 
-              <p className="text-sm text-text-secondary mb-4">{plan.description || 'No description.'}</p>
+              <p className="text-sm text-text-secondary font-medium mb-4">{plan.description || 'No description.'}</p>
 
               <div className="space-y-2 text-sm mb-4 flex-1">
                 <div className="flex justify-between">
-                  <span className="text-text-muted">Monthly</span>
-                  <span className="font-medium text-text-primary">${plan.monthlyPrice ?? '—'}</span>
+                  <span className="text-text-muted font-medium">Monthly</span>
+                  <span className="font-bold text-text-primary">${plan.monthlyPrice ?? '—'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-text-muted">Yearly</span>
-                  <span className="font-medium text-text-primary">${plan.yearlyPrice ?? '—'}</span>
+                  <span className="text-text-muted font-medium">Yearly</span>
+                  <span className="font-bold text-text-primary">${plan.yearlyPrice ?? '—'}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-text-muted">Message Limit</span>
-                  <span className="font-medium text-text-primary">{plan.messageLimit?.toLocaleString() ?? '—'}</span>
+                  <span className="text-text-muted font-medium">Message Limit</span>
+                  <span className="font-bold text-text-primary">{plan.messageLimit?.toLocaleString() ?? '—'}</span>
                 </div>
               </div>
 
               <div className="flex flex-wrap gap-2">
                 {plan.aiRecommendationsEnabled && (
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-primary-50 text-primary-700">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-primary-50 text-primary-700">
                     AI Recommendations
                   </span>
                 )}
                 {plan.trendAnalysisEnabled && (
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-success-50 text-success-700">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-success-50 text-success-700">
                     Trend Analysis
                   </span>
                 )}
                 {plan.churnDetectionEnabled && (
-                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-warning-50 text-warning-700">
+                  <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-warning-50 text-warning-700">
                     Churn Detection
                   </span>
                 )}
@@ -235,9 +235,9 @@ export default function PlansPage() {
       {showForm && (
         <div className="fixed inset-0 z-50 flex items-center justify-center">
           <div className="absolute inset-0 bg-black/40" onClick={() => setShowForm(false)} />
-          <div className="relative w-full max-w-lg bg-bg-card rounded-xl border border-border shadow-xl max-h-[90vh] overflow-y-auto">
+          <div className="relative w-full max-w-lg bg-bg-card rounded-2xl border border-border shadow-xl max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between p-4 border-b border-border">
-              <h2 className="text-base font-semibold text-text-primary">
+              <h2 className="text-base font-bold text-text-primary">
                 {editingPlan ? 'Edit Plan' : 'Create Plan'}
               </h2>
               <button
@@ -250,47 +250,47 @@ export default function PlansPage() {
 
             <form onSubmit={handleSubmit} className="p-4 space-y-4">
               {formError && (
-                <div className="p-3 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700">
+                <div className="p-3 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 font-medium">
                   {formError}
                 </div>
               )}
 
               <div>
-                <label className="block text-sm text-text-secondary mb-1">Name</label>
+                <label className="block text-sm text-text-secondary mb-1 font-medium">Name</label>
                 <input
                   type="text"
                   value={form.name}
                   onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
                   required
-                  className="w-full px-3 py-2 text-sm bg-bg-base border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+                  className="w-full px-3 py-2.5 text-sm bg-bg-base border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-text-secondary mb-1">Code</label>
+                <label className="block text-sm text-text-secondary mb-1 font-medium">Code</label>
                 <input
                   type="text"
                   value={form.code}
                   onChange={(e) => setForm((f) => ({ ...f, code: e.target.value }))}
                   required
                   disabled={!!editingPlan}
-                  className="w-full px-3 py-2 text-sm bg-bg-base border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 disabled:opacity-50"
+                  className="w-full px-3 py-2.5 text-sm bg-bg-base border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all disabled:opacity-50"
                 />
               </div>
 
               <div>
-                <label className="block text-sm text-text-secondary mb-1">Description</label>
+                <label className="block text-sm text-text-secondary mb-1 font-medium">Description</label>
                 <textarea
                   value={form.description}
                   onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
                   rows={3}
-                  className="w-full px-3 py-2 text-sm bg-bg-base border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+                  className="w-full px-3 py-2.5 text-sm bg-bg-base border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                 />
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm text-text-secondary mb-1">Monthly Price</label>
+                  <label className="block text-sm text-text-secondary mb-1 font-medium">Monthly Price</label>
                   <input
                     type="number"
                     min={0}
@@ -298,11 +298,11 @@ export default function PlansPage() {
                     value={form.monthlyPrice}
                     onChange={(e) => setForm((f) => ({ ...f, monthlyPrice: e.target.value }))}
                     required
-                    className="w-full px-3 py-2 text-sm bg-bg-base border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+                    className="w-full px-3 py-2.5 text-sm bg-bg-base border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm text-text-secondary mb-1">Yearly Price</label>
+                  <label className="block text-sm text-text-secondary mb-1 font-medium">Yearly Price</label>
                   <input
                     type="number"
                     min={0}
@@ -310,25 +310,25 @@ export default function PlansPage() {
                     value={form.yearlyPrice}
                     onChange={(e) => setForm((f) => ({ ...f, yearlyPrice: e.target.value }))}
                     required
-                    className="w-full px-3 py-2 text-sm bg-bg-base border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+                    className="w-full px-3 py-2.5 text-sm bg-bg-base border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                   />
                 </div>
               </div>
 
               <div>
-                <label className="block text-sm text-text-secondary mb-1">Message Limit</label>
+                <label className="block text-sm text-text-secondary mb-1 font-medium">Message Limit</label>
                 <input
                   type="number"
                   min={1}
                   value={form.messageLimit}
                   onChange={(e) => setForm((f) => ({ ...f, messageLimit: e.target.value }))}
                   required
-                  className="w-full px-3 py-2 text-sm bg-bg-base border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+                  className="w-full px-3 py-2.5 text-sm bg-bg-base border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
                 />
               </div>
 
               <div className="space-y-3 pt-2">
-                <label className="flex items-center gap-3 text-sm text-text-secondary cursor-pointer">
+                <label className="flex items-center gap-3 text-sm text-text-secondary font-medium cursor-pointer">
                   <input
                     type="checkbox"
                     checked={form.aiRecommendationsEnabled}
@@ -337,7 +337,7 @@ export default function PlansPage() {
                   />
                   AI Recommendations
                 </label>
-                <label className="flex items-center gap-3 text-sm text-text-secondary cursor-pointer">
+                <label className="flex items-center gap-3 text-sm text-text-secondary font-medium cursor-pointer">
                   <input
                     type="checkbox"
                     checked={form.trendAnalysisEnabled}
@@ -346,7 +346,7 @@ export default function PlansPage() {
                   />
                   Trend Analysis
                 </label>
-                <label className="flex items-center gap-3 text-sm text-text-secondary cursor-pointer">
+                <label className="flex items-center gap-3 text-sm text-text-secondary font-medium cursor-pointer">
                   <input
                     type="checkbox"
                     checked={form.churnDetectionEnabled}
@@ -361,14 +361,14 @@ export default function PlansPage() {
                 <button
                   type="button"
                   onClick={() => setShowForm(false)}
-                  className="px-4 py-2 text-sm font-medium text-text-secondary bg-bg-base border border-border rounded-lg hover:border-primary-300 transition-colors"
+                  className="px-4 py-2.5 text-sm font-semibold text-text-secondary bg-bg-base border border-border rounded-xl hover:border-primary-300 transition-all duration-200"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={saving}
-                  className="px-4 py-2 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50"
+                  className="px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-br from-primary-600 to-primary-700 rounded-xl hover:from-primary-700 hover:to-primary-800 transition-all duration-200 disabled:opacity-50 shadow-sm"
                 >
                   {saving ? 'Saving...' : editingPlan ? 'Update Plan' : 'Create Plan'}
                 </button>

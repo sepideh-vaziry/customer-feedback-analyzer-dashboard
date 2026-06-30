@@ -10,11 +10,13 @@ export default function InsightsPage() {
         title="AI Insights"
         description="AI-generated summaries, recommendations, and anomaly detection"
       />
-      <EmptyState
-        icon={Sparkles}
-        title="AI Insights coming soon"
-        description="AI-powered analysis, recommendations, and summaries will appear here."
-      />
+      <div className="bg-bg-card rounded-2xl border border-border p-12 shadow-sm hover:shadow-md transition-shadow duration-300">
+        <EmptyState
+          icon={Sparkles}
+          title="AI Insights coming soon"
+          description="AI-powered analysis, recommendations, and summaries will appear here."
+        />
+      </div>
     </DashboardLayout>
   );
 }

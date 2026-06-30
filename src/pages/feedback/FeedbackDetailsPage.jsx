@@ -170,7 +170,7 @@ export default function FeedbackDetailsPage() {
             action={
               <button
                 onClick={() => navigate('/feedback')}
-                className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-primary-600 bg-gradient-to-r from-primary-50 to-primary-100 rounded-xl hover:from-primary-100 hover:to-primary-200 transition-all border border-primary-200 shadow-sm"
               >
                 <ArrowLeft size={16} />
                 Back to Feedback List
@@ -192,14 +192,14 @@ export default function FeedbackDetailsPage() {
           <button
             onClick={handleReanalyze}
             disabled={reanalyzing}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary-600 hover:text-primary-700 bg-primary-50 rounded-lg hover:bg-primary-100 transition-colors disabled:opacity-50"
+            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-primary-700 bg-gradient-to-r from-primary-50 to-primary-100 rounded-xl hover:from-primary-100 hover:to-primary-200 transition-all border border-primary-200 shadow-sm disabled:opacity-50"
           >
             <RefreshCw size={16} className={reanalyzing ? 'animate-spin' : ''} />
             {reanalyzing ? 'Analyzing...' : 'Reanalyze'}
           </button>
           <button
             onClick={() => navigate('/feedback')}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 shadow-sm"
           >
             <ArrowLeft size={16} />
             Back
@@ -216,7 +216,7 @@ export default function FeedbackDetailsPage() {
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium border-b-2 transition-colors ${
+                className={`flex items-center gap-2 px-5 py-3 text-sm font-semibold border-b-2 transition-all duration-200 ${
                   activeTab === tab.id
                     ? 'border-primary-500 text-primary-600'
                     : 'border-transparent text-text-muted hover:text-text-secondary'
@@ -233,20 +233,24 @@ export default function FeedbackDetailsPage() {
       {/* Tab Content */}
       {activeTab === 'overview' && (
         <div className="max-w-3xl">
-          <FeedbackDetailsCard feedback={feedback} />
+          <div className="bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+            <FeedbackDetailsCard feedback={feedback} />
+          </div>
         </div>
       )}
 
       {activeTab === 'analysis' && (
         <div className="max-w-4xl">
-          <AnalysisOverview
-            analysis={analysis}
-            complaints={complaints}
-            featureRequests={featureRequests}
-            churnRisk={churnRisk}
-            processing={reanalyzing}
-            feedbackStatus={feedback?.status}
-          />
+          <div className="bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
+            <AnalysisOverview
+              analysis={analysis}
+              complaints={complaints}
+              featureRequests={featureRequests}
+              churnRisk={churnRisk}
+              processing={reanalyzing}
+              feedbackStatus={feedback?.status}
+            />
+          </div>
         </div>
       )}
     </DashboardLayout>

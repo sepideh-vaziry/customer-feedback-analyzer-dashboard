@@ -36,7 +36,7 @@ export default function SearchHistoryPage() {
         {history.length > 0 && (
           <button
             onClick={clearHistory}
-            className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-danger-600 bg-danger-50 rounded-lg hover:bg-danger-100 transition-colors"
+            className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-danger-700 bg-gradient-to-r from-danger-50 to-danger-100 rounded-xl hover:from-danger-100 hover:to-danger-200 transition-all border border-danger-200 shadow-sm"
           >
             <Trash2 size={16} />
             Clear History
@@ -51,39 +51,41 @@ export default function SearchHistoryPage() {
           description="Your AI discovery searches will appear here. Start searching from the Semantic Search page."
         />
       ) : (
-        <div className="bg-bg-card rounded-xl border border-border shadow-xs overflow-hidden">
+        <div className="bg-bg-card rounded-2xl border border-border shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
           <table className="w-full text-sm">
             <thead className="bg-bg-base border-b border-border">
               <tr>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Query</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Date</th>
-                <th className="text-right px-4 py-3 font-medium text-text-secondary">Results</th>
-                <th className="text-right px-4 py-3 font-medium text-text-secondary"></th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Query</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Date</th>
+                <th className="text-right px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Results</th>
+                <th className="text-right px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide"></th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {history.map((item, i) => (
                 <tr
                   key={i}
-                  className="hover:bg-bg-base/50 cursor-pointer"
+                  className="hover:bg-bg-base/50 cursor-pointer transition-colors"
                   onClick={() => handleClick(item.query)}
                 >
-                  <td className="px-4 py-3">
+                  <td className="px-4 py-3.5">
                     <div className="flex items-center gap-2">
-                      <Search size={14} className="text-primary-500" />
-                      <span className="font-medium text-text-primary">{item.query}</span>
+                      <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center shadow-sm">
+                        <Search size={14} className="text-primary-600" />
+                      </div>
+                      <span className="font-semibold text-text-primary">{item.query}</span>
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-text-secondary">
+                  <td className="px-4 py-3.5 text-text-secondary font-medium">
                     <div className="flex items-center gap-1.5">
                       <Clock size={14} />
                       {item.date ? new Date(item.date).toLocaleString() : '—'}
                     </div>
                   </td>
-                  <td className="px-4 py-3 text-right text-text-secondary">
+                  <td className="px-4 py-3.5 text-right text-text-secondary font-medium">
                     {item.resultCount ?? '—'}
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3.5 text-right">
                     <ArrowRight size={16} className="text-text-muted inline" />
                   </td>
                 </tr>

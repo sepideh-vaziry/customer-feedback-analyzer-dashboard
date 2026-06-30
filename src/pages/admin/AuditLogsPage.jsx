@@ -59,7 +59,7 @@ export default function AuditLogsPage() {
         <button
           onClick={() => loadData()}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
         >
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           Refresh
@@ -67,7 +67,7 @@ export default function AuditLogsPage() {
       </PageHeader>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>
@@ -80,7 +80,7 @@ export default function AuditLogsPage() {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search audit logs..."
-          className="w-full pl-9 pr-4 py-2 text-sm bg-bg-card border border-border rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500"
+          className="w-full pl-9 pr-4 py-2.5 text-sm bg-bg-card border border-border rounded-xl focus:outline-none focus:ring-2 focus:ring-primary-500/20 focus:border-primary-500 transition-all"
         />
       </div>
 
@@ -95,35 +95,35 @@ export default function AuditLogsPage() {
           description="No audit logs found."
         />
       ) : (
-        <div className="bg-bg-card rounded-xl border border-border shadow-xs overflow-hidden">
+        <div className="bg-bg-card rounded-2xl border border-border shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
           <table className="w-full text-sm">
             <thead className="bg-bg-base border-b border-border">
               <tr>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Timestamp</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">User</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Organization</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Action</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Resource</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Result</th>
-                <th className="text-right px-4 py-3 font-medium text-text-secondary">Actions</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Timestamp</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">User</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Organization</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Action</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Resource</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Result</th>
+                <th className="text-right px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {filtered.map((log) => (
-                <tr key={log.id} className="hover:bg-bg-base/50">
-                  <td className="px-4 py-3 text-text-secondary whitespace-nowrap">
+                <tr key={log.id} className="hover:bg-bg-base/50 transition-colors">
+                  <td className="px-4 py-3.5 text-text-secondary font-medium whitespace-nowrap">
                     {log.timestamp ? new Date(log.timestamp).toLocaleString() : '—'}
                   </td>
-                  <td className="px-4 py-3 text-text-primary">{log.user || '—'}</td>
-                  <td className="px-4 py-3 text-text-secondary">{log.organization || '—'}</td>
-                  <td className="px-4 py-3">
-                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-medium bg-primary-50 text-primary-700">
+                  <td className="px-4 py-3.5 text-text-primary font-semibold">{log.user || '—'}</td>
+                  <td className="px-4 py-3.5 text-text-secondary font-medium">{log.organization || '—'}</td>
+                  <td className="px-4 py-3.5">
+                    <span className="inline-flex items-center px-2 py-0.5 rounded-md text-xs font-bold bg-primary-50 text-primary-700">
                       {log.action || '—'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-text-secondary">{log.resource || '—'}</td>
-                  <td className="px-4 py-3">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${
+                  <td className="px-4 py-3.5 text-text-secondary font-medium">{log.resource || '—'}</td>
+                  <td className="px-4 py-3.5">
+                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-bold ${
                       log.result === 'SUCCESS'
                         ? 'bg-success-50 text-success-700'
                         : log.result === 'FAILURE'
@@ -133,7 +133,7 @@ export default function AuditLogsPage() {
                       {log.result || '—'}
                     </span>
                   </td>
-                  <td className="px-4 py-3 text-right">
+                  <td className="px-4 py-3.5 text-right">
                     <button
                       onClick={() => setSelectedLog(log)}
                       className="p-1.5 rounded-lg hover:bg-border-light text-text-muted hover:text-text-primary transition-colors"

@@ -65,7 +65,7 @@ export default function PlansPage() {
         <button
           onClick={loadData}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
         >
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           Refresh
@@ -73,7 +73,7 @@ export default function PlansPage() {
       </PageHeader>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>
@@ -89,13 +89,13 @@ export default function PlansPage() {
             Back to Plans
           </button>
 
-          <div className="bg-bg-card rounded-xl border border-border p-6 shadow-xs">
+          <div className="bg-bg-card rounded-2xl border border-border p-6 shadow-sm hover:shadow-md transition-shadow duration-300">
             <h3 className="text-lg font-semibold text-text-primary mb-2">Confirm Plan Change</h3>
             <p className="text-sm text-text-secondary mb-6">
               You are about to change to the <strong>{selectedPlan.name}</strong> plan.
             </p>
 
-            <div className="p-4 rounded-xl bg-bg-base border border-border mb-6">
+            <div className="p-4 rounded-xl bg-gradient-to-br from-bg-base to-bg-card border border-border hover:border-primary-200 transition-colors mb-6">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-sm text-text-secondary">Plan</span>
                 <span className="text-sm font-medium text-text-primary">{selectedPlan.name}</span>
@@ -117,14 +117,14 @@ export default function PlansPage() {
             <div className="flex gap-3">
               <button
                 onClick={() => setSelectedPlan(null)}
-                className="flex-1 px-4 py-2.5 text-sm font-medium text-text-secondary bg-bg-base border border-border rounded-lg hover:border-primary-300 transition-colors"
+                className="flex-1 px-4 py-2.5 text-sm font-semibold text-text-secondary bg-bg-base border border-border rounded-xl hover:border-primary-300 transition-all"
               >
                 Cancel
               </button>
               <button
                 onClick={handleUpgrade}
                 disabled={upgrading}
-                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-medium text-white bg-primary-600 rounded-lg hover:bg-primary-700 transition-colors disabled:opacity-50"
+                className="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-primary-600 to-primary-700 rounded-xl hover:from-primary-500 hover:to-primary-600 transition-all shadow-lg shadow-primary-500/20 disabled:opacity-50"
               >
                 <Check size={14} />
                 {upgrading ? 'Processing...' : 'Confirm'}

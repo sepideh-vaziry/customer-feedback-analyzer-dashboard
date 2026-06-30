@@ -81,7 +81,7 @@ export default function SubscriptionHistoryPage() {
         <button
           onClick={loadData}
           disabled={loading}
-          className="inline-flex items-center gap-2 px-4 py-2 text-sm font-medium text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-lg hover:border-primary-300 transition-colors disabled:opacity-50"
+          className="inline-flex items-center gap-2 px-4 py-2.5 text-sm font-semibold text-text-secondary hover:text-text-primary bg-bg-card border border-border rounded-xl hover:border-primary-300 transition-all duration-200 disabled:opacity-50 shadow-sm"
         >
           <RefreshCw size={16} className={loading ? 'animate-spin' : ''} />
           Refresh
@@ -89,7 +89,7 @@ export default function SubscriptionHistoryPage() {
       </PageHeader>
 
       {error && (
-        <div className="mb-6 p-4 rounded-lg bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2">
+        <div className="mb-6 p-4 rounded-xl bg-danger-50 border border-danger-200 text-sm text-danger-700 flex items-center gap-2 font-medium">
           <AlertTriangle size={16} />
           {error}
         </div>
@@ -106,31 +106,33 @@ export default function SubscriptionHistoryPage() {
           description="Subscription history will appear here as changes are made to your plan."
         />
       ) : (
-        <div className="bg-bg-card rounded-xl border border-border shadow-xs overflow-hidden">
+        <div className="bg-bg-card rounded-2xl border border-border shadow-sm overflow-hidden hover:shadow-md transition-shadow duration-300">
           <table className="w-full text-sm">
             <thead className="bg-bg-base border-b border-border">
               <tr>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Action</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Old Plan</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">New Plan</th>
-                <th className="text-left px-4 py-3 font-medium text-text-secondary">Date</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Action</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Old Plan</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">New Plan</th>
+                <th className="text-left px-4 py-3.5 font-semibold text-text-secondary text-xs uppercase tracking-wide">Date</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {sortedHistory.map((item) => {
                 const Icon = actionIcons[item.action] || Clock;
                 return (
-                  <tr key={item.id} className="hover:bg-bg-base/50">
-                    <td className="px-4 py-3">
+                  <tr key={item.id} className="hover:bg-bg-base/50 transition-colors">
+                    <td className="px-4 py-3.5">
                       <div className="flex items-center gap-2">
-                        <Icon size={16} className="text-primary-500" />
-                        <span className="font-medium text-text-primary">{actionLabels[item.action] || item.action}</span>
+                        <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-primary-50 to-primary-100 flex items-center justify-center shadow-sm">
+                          <Icon size={14} className="text-primary-600" />
+                        </div>
+                        <span className="font-semibold text-text-primary">{actionLabels[item.action] || item.action}</span>
                       </div>
                     </td>
-                    <td className="px-4 py-3 text-text-secondary">{item.oldPlan || '—'}</td>
-                    <td className="px-4 py-3 text-text-secondary">{item.newPlan || '—'}</td>
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-1.5 text-text-secondary">
+                    <td className="px-4 py-3.5 text-text-secondary font-medium">{item.oldPlan || '—'}</td>
+                    <td className="px-4 py-3.5 text-text-secondary font-medium">{item.newPlan || '—'}</td>
+                    <td className="px-4 py-3.5">
+                      <div className="flex items-center gap-1.5 text-text-secondary font-medium">
                         <Calendar size={14} />
                         {item.date ? new Date(item.date).toLocaleString() : '—'}
                       </div>
