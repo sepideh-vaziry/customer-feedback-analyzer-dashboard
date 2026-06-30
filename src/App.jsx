@@ -42,6 +42,7 @@ import InvoicesPage from './pages/billing/InvoicesPage';
 import SubscriptionHistoryPage from './pages/billing/SubscriptionHistoryPage';
 import AnalyticsPage from './pages/analytics/AnalyticsPage';
 import InsightsPage from './pages/insights/InsightsPage';
+import QueryGeneratorPage from './pages/query-generator/QueryGeneratorPage';
 import SettingsPage from './pages/settings/SettingsPage';
 import PlatformOverviewPage from './pages/admin/PlatformOverviewPage';
 import OrganizationsPage from './pages/admin/OrganizationsPage';
@@ -226,6 +227,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <AnalyticsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/query-generator"
+          element={
+            <ProtectedRoute>
+              <QueryGeneratorPage />
             </ProtectedRoute>
           }
         />

@@ -28,6 +28,7 @@ import {
   Inbox,
   BookOpen,
   ChevronDown,
+  Wand2,
 } from 'lucide-react';
 import { useState, useMemo } from 'react';
 import { useAuth } from '../../contexts/AuthContext';
@@ -112,6 +113,7 @@ const baseNavItems = [
   },
   { to: '/analytics', label: 'Analytics', icon: BarChart3 },
   { to: '/insights', label: 'AI Insights', icon: Sparkles },
+  { to: '/query-generator', label: 'Query Generator', icon: Wand2 },
   { to: '/settings', label: 'Settings', icon: Settings },
 ];
 
